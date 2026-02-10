@@ -46,6 +46,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             TITLE: 'Coordination Dashboard',
             SUBTITLE: 'Overview of all assessments in your scope',
             NO_ASSESSMENTS: 'No assessments found for your scope'
+        },
+        QUESTION_CARD: {
+            EVIDENCE_TITLE: 'Proofs / Evidence',
+            LINK_LABEL: 'Link (URL)',
+            ADD_PHOTO: 'Add Photo',
+            CHANGE_PHOTO: 'Change Photo',
+            UPLOADING: 'Uploading...',
+            COMMENTS_LABEL: 'Comments',
+            COMMENTS_PLACEHOLDER: 'Specific observation...'
         }
     },
     FR: {
@@ -95,6 +104,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             TITLE: 'Tableau de bord Coordination',
             SUBTITLE: 'Vue d\'ensemble des évaluations de votre périmètre',
             NO_ASSESSMENTS: 'Aucune évaluation trouvée pour votre périmètre'
+        },
+        QUESTION_CARD: {
+            EVIDENCE_TITLE: 'Preuves / Evidence',
+            LINK_LABEL: 'Lien (URL)',
+            ADD_PHOTO: 'Ajouter Photo',
+            CHANGE_PHOTO: 'Changer Photo',
+            UPLOADING: 'Téléchargement en cours...',
+            COMMENTS_LABEL: 'Commentaires',
+            COMMENTS_PLACEHOLDER: 'Observation spécifique...'
         }
     }
 };

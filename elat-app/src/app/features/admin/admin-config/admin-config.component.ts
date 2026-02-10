@@ -330,19 +330,21 @@ export class AdminConfigComponent {
         const sections = this.sections();
 
         // 1. Apply Bulk Updates
-        // 1. Apply Bulk Updates (DISABLED to allow per-question edit without overwrite)
-        /*
+        // 1. Apply Bulk Updates
+        // Update all questions that match the ORIGINAL category name to the NEW name (FR and EN)
         this.categories().forEach(cat => {
             sections.forEach(s => {
                 s.questions.forEach(q => {
+                    // We match against 'original' because that's what we tracked.
+                    // Ideally we should track ids, but categories are string-based.
+                    // If multiple questions share a category, they get updated together.
                     if (q.category === cat.original) {
-                        q.category = cat.fr; // Update key if changed (careful with refs)
+                        q.category = cat.fr;
                         q.category_en = cat.en;
                     }
                 });
             });
         });
-        */
 
         this.responseTypes().forEach(type => {
             sections.forEach(s => {

@@ -64,10 +64,10 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
         <!-- Evidence Section -->
          <div class="evidence-section">
-            <h3>Preuves / Evidence</h3>
+            <h3>{{ 'QUESTION_CARD.EVIDENCE_TITLE' | translate }}</h3>
             
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Lien (URL)</mat-label>
+                <mat-label>{{ 'QUESTION_CARD.LINK_LABEL' | translate }}</mat-label>
                 <input matInput [ngModel]="proofLink()" (ngModelChange)="updateLink($event)" placeholder="https://..." [disabled]="readonly">
                 <mat-icon matSuffix>link</mat-icon>
             </mat-form-field>
@@ -75,11 +75,11 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
             <div class="photo-upload">
                 <button mat-stroked-button color="primary" (click)="fileInput.click()" [disabled]="readonly || isUploading()">
                     <mat-icon>camera_alt</mat-icon> 
-                    {{ proofPhoto() ? 'Changer Photo' : 'Ajouter Photo' }}
+                    {{ (proofPhoto() ? 'QUESTION_CARD.CHANGE_PHOTO' : 'QUESTION_CARD.ADD_PHOTO') | translate }}
                 </button>
                 <input #fileInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display: none;">
                 
-                <span *ngIf="isUploading()" class="uploading-text">Upload en cours...</span>
+                <span *ngIf="isUploading()" class="uploading-text">{{ 'QUESTION_CARD.UPLOADING' | translate }}</span>
             </div>
             
             <mat-progress-bar *ngIf="isUploading()" mode="indeterminate"></mat-progress-bar>
@@ -94,8 +94,8 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
          </div>
 
         <mat-form-field appearance="outline" class="comment-field">
-          <mat-label>Commentaires</mat-label>
-          <textarea matInput [ngModel]="comment()" (ngModelChange)="updateComment($event)" placeholder="Observation spécifique..." rows="2" [disabled]="readonly"></textarea>
+          <mat-label>{{ 'QUESTION_CARD.COMMENTS_LABEL' | translate }}</mat-label>
+          <textarea matInput [ngModel]="comment()" (ngModelChange)="updateComment($event)" [placeholder]="'QUESTION_CARD.COMMENTS_PLACEHOLDER' | translate" rows="2" [disabled]="readonly"></textarea>
         </mat-form-field>
       </mat-card-content>
     </mat-card>
