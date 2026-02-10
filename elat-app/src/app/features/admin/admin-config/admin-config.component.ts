@@ -11,6 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs'; // Import this
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessmentSection, AssessmentQuestion } from '../../../models/assessment.model';
 import { AdminConfig, DEFAULT_CONFIG } from '../../../models/admin-config.model';
+import { AdminService } from '../../../core/admin/admin.service';
 
 @Component({
     selector: 'app-admin-config',
@@ -260,6 +261,7 @@ import { AdminConfig, DEFAULT_CONFIG } from '../../../models/admin-config.model'
 })
 export class AdminConfigComponent {
     assessmentService = inject(AssessmentService);
+    adminService = inject(AdminService);
     snackBar = inject(MatSnackBar);
 
     sections = signal<AssessmentSection[]>(JSON.parse(JSON.stringify(this.assessmentService.sections())));
@@ -271,6 +273,25 @@ export class AdminConfigComponent {
 
     constructor() {
         this.extractMetadata();
+        this.loadFromBackend();
+    }
+
+    loadFromBackend() {
+        this.adminService.getConfig().subscribe({
+            next: (data) => {
+                if (data) {
+                    if (data.sections && data.sections.length > 0) {
+                        this.sections.set(data.sections);
+                    }
+                    if (data.settings) {
+                        this.config.set(data.settings);
+                    }
+                    this.extractMetadata();
+                    console.log('Admin Config loaded from Cloud');
+                }
+            },
+            error: (err) => console.error('Failed to load cloud config', err)
+        });
     }
 
     loadConfig(): AdminConfig {
@@ -340,14 +361,24 @@ export class AdminConfigComponent {
             });
         });
 
-        // Save Sections
+        // Save Sections locally for fallback/speed
         this.assessmentService.sections.set(sections);
         localStorage.setItem('elat-config-sections', JSON.stringify(sections));
-
-        // Save Config
         localStorage.setItem('elat-admin-config', JSON.stringify(this.config()));
 
-        this.snackBar.open('Configuration saved successfully!', 'Close', { duration: 3000 });
+        // Save to Backend (Source of Truth)
+        this.adminService.saveConfig({
+            sections: sections,
+            settings: this.config()
+        }).subscribe({
+            next: () => {
+                this.snackBar.open('Configuration saved to Check (Cloud) successfully!', 'Close', { duration: 3000 });
+            },
+            error: (err) => {
+                console.error(err);
+                this.snackBar.open('Error saving to Cloud. Saved locally only.', 'Close', { duration: 3000 });
+            }
+        });
 
         // Refresh metadata in case keys changed
         this.extractMetadata();

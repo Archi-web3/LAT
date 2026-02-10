@@ -15,6 +15,7 @@ export class AssessmentService {
   // Dependencies
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private adminService = inject(import('../core/admin/admin.service').AdminService);
 
   // Signals for state
   sections = signal<AssessmentSection[]>([]);
@@ -98,31 +99,54 @@ export class AssessmentService {
   }
 
   private loadData() {
+    // 1. Attempt to load from Backend
+    this.adminService.getConfig().subscribe({
+      next: (config) => {
+        if (config && config.sections && config.sections.length > 0) {
+          console.log('✅ Loaded configuration from Backend');
+          this.sections.set(config.sections);
+          // Fetch transversal components from default JSON as they change rarely
+          this.fetchDefaultTransversal();
+        } else {
+          console.log('⚠️ No backend config found, checking LocalStorage/Default...');
+          this.loadFromLocalOrDefault();
+        }
+      },
+      error: (err) => {
+        console.error('❌ Failed to load backend config', err);
+        this.loadFromLocalOrDefault();
+      }
+    });
+  }
+
+  private fetchDefaultTransversal() {
+    this.http.get<AssessmentData>(this.dataUrl).pipe(
+      tap(data => this.transversalComponents.set(data.transversalComponents)),
+      catchError(() => of(null))
+    ).subscribe();
+  }
+
+  private loadFromLocalOrDefault() {
     // Try to load custom config from LocalStorage first
     const customSections = localStorage.getItem('elat-config-sections');
     if (customSections) {
       try {
         const sections = JSON.parse(customSections);
         this.sections.set(sections);
-        // We still need transversalComponents, so we might need to fetch the JSON anyway or store them too.
-        // For now, let's fetch JSON to get valid transversalComponents if needed, but keep sections from LS.
-        this.http.get<AssessmentData>(this.dataUrl).pipe(
-          tap(data => this.transversalComponents.set(data.transversalComponents)),
-          catchError(err => of(null))
-        ).subscribe();
-
-        console.log('Loaded custom assessment config from storage');
+        this.fetchDefaultTransversal();
+        console.log('Loaded custom assessment config from storage (Legacy)');
         return;
       } catch (e) {
         console.error('Failed to parse custom config', e);
       }
     }
 
+    // Default to JSON file
     this.http.get<AssessmentData>(this.dataUrl).pipe(
       tap(data => {
         this.sections.set(data.sections);
         this.transversalComponents.set(data.transversalComponents);
-        console.log('Assessment data loaded', data);
+        console.log('Assessment data loaded from Default JSON');
       }),
       catchError(err => {
         console.error('Failed to load assessment data', err);

@@ -11,6 +11,7 @@ import { environment } from '../../../environments/environment';
 export class AdminService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/api/users`;
+  private configUrl = `${environment.apiUrl}/api/config`;
 
   users = signal<User[]>([]);
 
@@ -20,6 +21,16 @@ export class AdminService {
       headers: new HttpHeaders().set('x-auth-token', token || '')
     };
   }
+
+  // --- Config Methods ---
+  getConfig() {
+    return this.http.get<any>(this.configUrl);
+  }
+
+  saveConfig(config: any) {
+    return this.http.post<any>(this.configUrl, config, this.getHeaders());
+  }
+
 
   getUsers() {
     return this.http.get<User[]>(this.apiUrl, this.getHeaders()).pipe(

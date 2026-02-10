@@ -1,25 +1,11 @@
 const mongoose = require('mongoose');
 
 const ConfigSchema = new mongoose.Schema({
-    version: { type: String, required: true }, // e.g. "2025.1"
-    active: { type: Boolean, default: false },
-
-    // The structure matches our current JSON
-    sections: [{
-        id: String,
-        title: String,
-        questions: [{
-            id: String,
-            text: String,
-            type: String,
-            weight: Number,
-            options: [{ label: String, value: Number }],
-            transversalTags: [String],
-            verification: String
-        }]
-    }],
-
-    createdAt: { type: Date, default: Date.now }
+    key: { type: String, default: 'app-config', unique: true }, // Singleton pattern
+    sections: { type: Array, default: [] }, // Array of AssessmentSection
+    settings: { type: Object, default: {} }, // AdminConfig object
+    updatedAt: { type: Date, default: Date.now },
+    updatedBy: { type: String }
 });
 
 module.exports = mongoose.model('Config', ConfigSchema);
