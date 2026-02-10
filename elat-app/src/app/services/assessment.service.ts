@@ -5,6 +5,8 @@ import { AssessmentData, AssessmentSection } from '../models/assessment.model';
 import { AuthService } from '../core/auth/auth.service';
 import { environment } from '../../environments/environment';
 
+import { AdminService } from '../core/admin/admin.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +17,7 @@ export class AssessmentService {
   // Dependencies
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private adminService = inject(import('../core/admin/admin.service').AdminService);
+  private adminService = inject(AdminService);
 
   // Signals for state
   sections = signal<AssessmentSection[]>([]);
