@@ -4,10 +4,11 @@ import { AdminConfig, DEFAULT_CONFIG } from '../models/admin-config.model';
 import { AssessmentState } from '../models/assessment.model';
 import { AssessmentService } from './assessment.service';
 
+import { AdminService } from '../core/admin/admin.service';
+
 @Injectable({
     providedIn: 'root'
 })
-    import { AdminService } from '../core/admin/admin.service';
 
 @Injectable({
     providedIn: 'root'

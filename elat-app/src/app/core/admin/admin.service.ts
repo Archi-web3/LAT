@@ -13,7 +13,7 @@ export class AdminService {
   private apiUrl = `${environment.apiUrl}/api/users`;
   private configUrl = `${environment.apiUrl}/api/config`;
 
-  private configUrl = `${environment.apiUrl}/api/config`;
+
 
   users = signal<User[]>([]);
   config = signal<any>(null); // Holds global app config (settings)
