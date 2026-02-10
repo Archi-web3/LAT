@@ -13,7 +13,10 @@ export class AdminService {
   private apiUrl = `${environment.apiUrl}/api/users`;
   private configUrl = `${environment.apiUrl}/api/config`;
 
+  private configUrl = `${environment.apiUrl}/api/config`;
+
   users = signal<User[]>([]);
+  config = signal<any>(null); // Holds global app config (settings)
 
   private getHeaders() {
     const token = localStorage.getItem('token');
@@ -24,7 +27,13 @@ export class AdminService {
 
   // --- Config Methods ---
   getConfig() {
-    return this.http.get<any>(this.configUrl);
+    return this.http.get<any>(this.configUrl).pipe(
+      tap(cfg => {
+        if (cfg && cfg.settings) {
+          this.config.set(cfg.settings);
+        }
+      })
+    );
   }
 
   saveConfig(config: any) {

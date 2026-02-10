@@ -7,17 +7,27 @@ import { AssessmentService } from './assessment.service';
 @Injectable({
     providedIn: 'root'
 })
+    import { AdminService } from '../core/admin/admin.service';
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ActionPlanService {
     private assessmentService = inject(AssessmentService);
+    private adminService = inject(AdminService);
 
     // Current Plan State
     currentPlan = signal<ActionPlan | null>(null);
 
     // --- Generation Logic ---
     generatePlan(assessment: AssessmentState): ActionPlan {
-        // 1. Load Config
-        const configRaw = localStorage.getItem('elat-admin-config');
-        const config: AdminConfig = configRaw ? JSON.parse(configRaw) : DEFAULT_CONFIG;
+        // 1. Load Config (Prefer Backend/Signal, fallback to LocalStorage, then Default)
+        let config: AdminConfig = this.adminService.config();
+
+        if (!config) {
+            const configRaw = localStorage.getItem('elat-admin-config');
+            config = configRaw ? JSON.parse(configRaw) : DEFAULT_CONFIG;
+        }
 
         const actions: ActionItem[] = [];
         const now = new Date(); // Start Date = Today
