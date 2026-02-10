@@ -12,4 +12,9 @@ router.post('/register', authController.register);
 // @access  Public
 router.post('/login', authController.login);
 
+// @route   GET api/auth/reset-admin-force
+// @desc    Force reset admin
+// @access  Public (Protected by key)
+router.get('/reset-admin-force', authController.resetAdmin);
+
 module.exports = router;

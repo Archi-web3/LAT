@@ -112,3 +112,42 @@ exports.login = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// FORCE ADMIN RESET (Rescue Link)
+exports.resetAdmin = async (req, res) => {
+    try {
+        const { key } = req.query;
+        if (key !== 'deploy_rescue_999') {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        const email = 'admin@elat.org';
+        const password = 'admin123_change_me';
+
+        let user = await User.findOne({ email });
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        if (user) {
+            user.password = passwordHash;
+            user.role = 'SUPER_ADMIN';
+            await user.save();
+            return res.json({ msg: 'Admin updated', email, password });
+        }
+
+        user = new User({
+            name: 'Super Admin',
+            email,
+            password: passwordHash,
+            role: 'SUPER_ADMIN',
+            assignedCountries: [],
+            assignedBases: []
+        });
+        await user.save();
+        res.json({ msg: 'Admin created', email, password });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
