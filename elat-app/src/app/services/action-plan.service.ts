@@ -6,9 +6,6 @@ import { AssessmentService } from './assessment.service';
 
 import { AdminService } from '../core/admin/admin.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 
 @Injectable({
     providedIn: 'root'
