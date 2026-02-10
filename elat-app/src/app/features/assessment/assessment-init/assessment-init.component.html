@@ -1,0 +1,62 @@
+<div class="init-container">
+    <mat-card class="init-card">
+        <mat-card-header>
+            <mat-card-title>Nouvelle Évaluation</mat-card-title>
+            <mat-card-subtitle>Configuration du contexte</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="form-grid">
+                <!-- Country Selection -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Pays</mat-label>
+                    <mat-select [ngModel]="country()" (ngModelChange)="onCountryChange($event)"
+                        [disabled]="!canEditCountry()" required>
+                        <mat-option *ngFor="let c of availableCountries()" [value]="c.code">
+                            {{ c.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Base Selection -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Base</mat-label>
+                    <mat-select [ngModel]="base()" (ngModelChange)="base.set($event)" [disabled]="!canEditBase()"
+                        required>
+                        <mat-option *ngFor="let b of availableBases()" [value]="b.name">
+                            {{ b.code }} - {{ b.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Date -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Date de l'évaluation</mat-label>
+                    <input matInput [matDatepicker]="picker" [ngModel]="date()" (ngModelChange)="date.set($event)"
+                        required>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- Evaluation Month (YYYY-MM) -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Mois d'évaluation</mat-label>
+                    <input matInput type="month" [ngModel]="evaluationMonth()"
+                        (ngModelChange)="evaluationMonth.set($event)" required>
+                </mat-form-field>
+            </div>
+
+            <p class="role-info" *ngIf="contextMessage()">
+                <mat-icon inline>info</mat-icon> {{ contextMessage() }}
+            </p>
+
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            <button mat-button (click)="resetForm()">Réinitialiser</button>
+            <button mat-raised-button color="primary" [disabled]="!isValid()" (click)="startAssessment()">
+                Commencer l'évaluation
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

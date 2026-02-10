@@ -1,0 +1,953 @@
+[
+    {
+        "code": "AF",
+        "name": "Afghanistan",
+        "bases": [
+            {
+                "code": "CCN",
+                "name": "Chaghcharan (Ghor)",
+                "type": "Base"
+            },
+            {
+                "code": "DKD",
+                "name": "Daykundi",
+                "type": "Base"
+            },
+            {
+                "code": "FBD",
+                "name": "Faizabad (Badakhshan)",
+                "type": "Base"
+            },
+            {
+                "code": "HLM",
+                "name": "Lashkar Gah (Helmand)",
+                "type": "Base"
+            },
+            {
+                "code": "KBL",
+                "name": "Kabul",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "BD",
+        "name": "Bangladesh",
+        "bases": [
+            {
+                "code": "COX",
+                "name": "Cox's Bazar",
+                "type": "Base"
+            },
+            {
+                "code": "DHK",
+                "name": "Dhaka",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "BF",
+        "name": "Burkina Faso",
+        "bases": [
+            {
+                "code": "BOY",
+                "name": "Bobo-Dioulasso",
+                "type": "Base"
+            },
+            {
+                "code": "DIA",
+                "name": "Diapaga",
+                "type": "Base"
+            },
+            {
+                "code": "DOR",
+                "name": "Dori",
+                "type": "Base"
+            },
+            {
+                "code": "FAD",
+                "name": "Fada N'Gourma",
+                "type": "Base"
+            },
+            {
+                "code": "ORO",
+                "name": "Orodara",
+                "type": "SousBase"
+            },
+            {
+                "code": "OUA",
+                "name": "Ouagadougou",
+                "type": "Coordination"
+            },
+            {
+                "code": "OUH",
+                "name": "Ouahigouya",
+                "type": "Base"
+            },
+            {
+                "code": "TEG",
+                "name": "Tenkodogo",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CD",
+        "name": "Congo RDC",
+        "bases": [
+            {
+                "code": "BAM",
+                "name": "Bambo",
+                "type": "Base"
+            },
+            {
+                "code": "BIK",
+                "name": "Bikoro (Equateur)",
+                "type": "Base"
+            },
+            {
+                "code": "BUN",
+                "name": "Bunia (Ituri)",
+                "type": "Base"
+            },
+            {
+                "code": "DRO",
+                "name": "Drodro (Ituri)",
+                "type": "Base"
+            },
+            {
+                "code": "GOM",
+                "name": "Goma",
+                "type": "Base"
+            },
+            {
+                "code": "KIL",
+                "name": "Kinshasa (Coordination)",
+                "type": "Coordination"
+            },
+            {
+                "code": "KWA",
+                "name": "Kwamouth",
+                "type": "Base"
+            },
+            {
+                "code": "MAM",
+                "name": "Mambassa (Ituri)",
+                "type": "SousBase"
+            },
+            {
+                "code": "MBU",
+                "name": "Mbuzimayi (Kasai)",
+                "type": "Base"
+            },
+            {
+                "code": "MWE",
+                "name": "Mweso (Kivu)",
+                "type": "Base"
+            },
+            {
+                "code": "PUN",
+                "name": "Punia",
+                "type": "SousBase"
+            },
+            {
+                "code": "TSH",
+                "name": "Tshikapa",
+                "type": "Base"
+            },
+            {
+                "code": "TSIP",
+                "name": "Tshikapa",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CF",
+        "name": "Centrafrique",
+        "bases": [
+            {
+                "code": "ALI",
+                "name": "Alindao",
+                "type": "Base"
+            },
+            {
+                "code": "BGF",
+                "name": "Bangui (Base)",
+                "type": "Base"
+            },
+            {
+                "code": "BGU",
+                "name": "Bangui (Coordo)",
+                "type": "Coordination"
+            },
+            {
+                "code": "BOU",
+                "name": "Bouar",
+                "type": "Base"
+            },
+            {
+                "code": "BSG",
+                "name": "Bossangoa",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CI",
+        "name": "Côte d'Ivoire",
+        "bases": [
+            {
+                "code": "ABI",
+                "name": "Abidjan",
+                "type": "Coordination"
+            },
+            {
+                "code": "KOR",
+                "name": "Korhogo",
+                "type": "Base"
+            },
+            {
+                "code": "TCH",
+                "name": "Tchirri",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CM",
+        "name": "Cameroun",
+        "bases": [
+            {
+                "code": "BAT",
+                "name": "Batouri",
+                "type": "Base"
+            },
+            {
+                "code": "BUE",
+                "name": "Buea (West)",
+                "type": "Base"
+            },
+            {
+                "code": "KOU",
+                "name": "Kousseri",
+                "type": "Base"
+            },
+            {
+                "code": "MAR",
+                "name": "Maroua",
+                "type": "Base"
+            },
+            {
+                "code": "YAO",
+                "name": "Yaoundé",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "DE",
+        "name": "Germany",
+        "bases": [
+            {
+                "code": "BRL",
+                "name": "Berlin",
+                "type": "HQ"
+            }
+        ]
+    },
+    {
+        "code": "ES",
+        "name": "Spain",
+        "bases": [
+            {
+                "code": "MDR",
+                "name": "Madrid",
+                "type": "HQ"
+            }
+        ]
+    },
+    {
+        "code": "ET",
+        "name": "Ethiopia",
+        "bases": [
+            {
+                "code": "ADA",
+                "name": "Addis Ababa",
+                "type": "Coordination"
+            },
+            {
+                "code": "AWA",
+                "name": "Awassa",
+                "type": "Base"
+            },
+            {
+                "code": "BOR",
+                "name": "Borena",
+                "type": "Base"
+            },
+            {
+                "code": "MEG",
+                "name": "Mega",
+                "type": "Base"
+            },
+            {
+                "code": "NYN",
+                "name": "Ny Nyang",
+                "type": "Base"
+            },
+            {
+                "code": "SEK",
+                "name": "Sekota",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "FR",
+        "name": "France",
+        "bases": [
+            {
+                "code": "PAR",
+                "name": "Paris (HQ)",
+                "type": "HQ"
+            }
+        ]
+    },
+    {
+        "code": "GB",
+        "name": "United Kingdom",
+        "bases": [
+            {
+                "code": "LDN",
+                "name": "London",
+                "type": "HQ"
+            }
+        ]
+    },
+    {
+        "code": "HT",
+        "name": "Haiti",
+        "bases": [
+            {
+                "code": "BOM",
+                "name": "Bombardopolis",
+                "type": "Base"
+            },
+            {
+                "code": "GON",
+                "name": "Gonaives",
+                "type": "Base"
+            },
+            {
+                "code": "PAP",
+                "name": "Port-Au-Prince",
+                "type": "Coordination"
+            },
+            {
+                "code": "PDP",
+                "name": "Port de Paix",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "IN",
+        "name": "India",
+        "bases": [
+            {
+                "code": "BAR",
+                "name": "Baran",
+                "type": "Base"
+            },
+            {
+                "code": "DEL",
+                "name": "Delhi",
+                "type": "Coordination"
+            },
+            {
+                "code": "DHA",
+                "name": "Dhar",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "IQ",
+        "name": "Iraq",
+        "bases": [
+            {
+                "code": "BAG",
+                "name": "Baghdad",
+                "type": "Base"
+            },
+            {
+                "code": "EBL",
+                "name": "Erbil (Coordo)",
+                "type": "Coordination"
+            },
+            {
+                "code": "MOS",
+                "name": "Mosul",
+                "type": "Base"
+            },
+            {
+                "code": "SIN",
+                "name": "Sinjar",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "JO",
+        "name": "Jordan",
+        "bases": [
+            {
+                "code": "AMM",
+                "name": "Amman",
+                "type": "Coordination"
+            },
+            {
+                "code": "AZR",
+                "name": "Azraq",
+                "type": "Base"
+            },
+            {
+                "code": "IRB",
+                "name": "Irbid",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "LB",
+        "name": "Lebanon",
+        "bases": [
+            {
+                "code": "BEY",
+                "name": "Beyrouth",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "LR",
+        "name": "Liberia",
+        "bases": [
+            {
+                "code": "MON",
+                "name": "Monrovia",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "LY",
+        "name": "Libya",
+        "bases": []
+    },
+    {
+        "code": "MD",
+        "name": "Moldova",
+        "bases": [
+            {
+                "code": "KIS",
+                "name": "Chisinau",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "MF",
+        "name": "Mission France",
+        "bases": [
+            {
+                "code": "PAC",
+                "name": "Paris (Mission France)",
+                "type": "Coordination"
+            },
+            {
+                "code": "MRS",
+                "name": "Marseille",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "MG",
+        "name": "Madagascar",
+        "bases": [
+            {
+                "code": "AMV",
+                "name": "Ambovombe",
+                "type": "Base"
+            },
+            {
+                "code": "AMP",
+                "name": "Ampanihy",
+                "type": "Base"
+            },
+            {
+                "code": "BEK",
+                "name": "Bekily",
+                "type": "Base"
+            },
+            {
+                "code": "BET",
+                "name": "Betiohy",
+                "type": "SousBase"
+            },
+            {
+                "code": "FOB",
+                "name": "Foba?",
+                "type": "Base"
+            },
+            {
+                "code": "MAN",
+                "name": "Manakara",
+                "type": "Base"
+            },
+            {
+                "code": "TNR",
+                "name": "Antananarivo (Coordo)",
+                "type": "Coordination"
+            },
+            {
+                "code": "TUL",
+                "name": "Tulear",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "MM",
+        "name": "Myanmar",
+        "bases": [
+            {
+                "code": "BMK",
+                "name": "Bamakh",
+                "type": "Coordination"
+            },
+            {
+                "code": "BTD",
+                "name": "Buthidaung",
+                "type": "SousBase"
+            },
+            {
+                "code": "LOK",
+                "name": "Loikaw",
+                "type": "Base"
+            },
+            {
+                "code": "MGD",
+                "name": "Maungdaw",
+                "type": "SousBase"
+            },
+            {
+                "code": "NRS",
+                "name": "North Rakhine State",
+                "type": "Base"
+            },
+            {
+                "code": "RGN",
+                "name": "Yangon",
+                "type": "Coordination"
+            },
+            {
+                "code": "STW",
+                "name": "Sittwe",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "MZ",
+        "name": "Mozambique",
+        "bases": [
+            {
+                "code": "MOU",
+                "name": "Moushat?",
+                "type": "Coordination"
+            },
+            {
+                "code": "MUED",
+                "name": "Mueda",
+                "type": "Base"
+            },
+            {
+                "code": "PCD",
+                "name": "Pemba (Cabo Delgado)",
+                "type": "Base"
+            },
+            {
+                "code": "PEM",
+                "name": "Pemba (Coordination)",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "NE",
+        "name": "Niger",
+        "bases": [
+            {
+                "code": "NIA",
+                "name": "Niamey",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "NG",
+        "name": "Nigeria",
+        "bases": [
+            {
+                "code": "ABU",
+                "name": "Abuja",
+                "type": "Coordination"
+            },
+            {
+                "code": "DAM",
+                "name": "Damaturu (Yobe)",
+                "type": "Base"
+            },
+            {
+                "code": "DMK",
+                "name": "Damasak (Borno)",
+                "type": "SousBase"
+            },
+            {
+                "code": "DUT",
+                "name": "Dutse",
+                "type": "Base"
+            },
+            {
+                "code": "MAI",
+                "name": "Maiduguri (Borno)",
+                "type": "Base"
+            },
+            {
+                "code": "MGU",
+                "name": "Monguno (Borno)",
+                "type": "SousBase"
+            },
+            {
+                "code": "SOK",
+                "name": "Sokoto",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "NP",
+        "name": "Nepal",
+        "bases": [
+            {
+                "code": "KTM",
+                "name": "Kathmandu",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "OR",
+        "name": "Office Régional Afrique Centrale",
+        "bases": [
+            {
+                "code": "CRN",
+                "name": "N'Djamena (Resilac)",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "PK",
+        "name": "Pakistan",
+        "bases": [
+            {
+                "code": "HYD",
+                "name": "Hyderabad",
+                "type": "Base"
+            },
+            {
+                "code": "ISB",
+                "name": "Islamabad",
+                "type": "Coordination"
+            },
+            {
+                "code": "QUE",
+                "name": "Quetta (Balochistan)",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "PL",
+        "name": "Poland",
+        "bases": []
+    },
+    {
+        "code": "RO",
+        "name": "Romania",
+        "bases": []
+    },
+    {
+        "code": "SL",
+        "name": "Sierra Leone",
+        "bases": [
+            {
+                "code": "EFT",
+                "name": "East Freetown",
+                "type": "Base"
+            },
+            {
+                "code": "FTN",
+                "name": "Freetown",
+                "type": "Coordination"
+            },
+            {
+                "code": "MOY",
+                "name": "Moyamba",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "SN",
+        "name": "Senegal",
+        "bases": [
+            {
+                "code": "DAR",
+                "name": "Dakar",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "SO",
+        "name": "Somalia",
+        "bases": [
+            {
+                "code": "DOL",
+                "name": "Dollow",
+                "type": "Base"
+            },
+            {
+                "code": "ELB",
+                "name": "El Berde",
+                "type": "Base"
+            },
+            {
+                "code": "GAR",
+                "name": "Garowe",
+                "type": "Base"
+            },
+            {
+                "code": "MOG",
+                "name": "Mogadiscio",
+                "type": "Coordination"
+            },
+            {
+                "code": "PUL",
+                "name": "Puntland",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "SY",
+        "name": "Syria",
+        "bases": [
+            {
+                "code": "DMS",
+                "name": "Damascus",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "TD",
+        "name": "Tchad",
+        "bases": [
+            {
+                "code": "ADR",
+                "name": "Adré",
+                "type": "Base"
+            },
+            {
+                "code": "BGS",
+                "name": "Bagassola",
+                "type": "Base"
+            },
+            {
+                "code": "GOB",
+                "name": "Goz Beida",
+                "type": "Base"
+            },
+            {
+                "code": "GOR",
+                "name": "Goré",
+                "type": "Base"
+            },
+            {
+                "code": "MAO",
+                "name": "Mao (Kanem)",
+                "type": "Base"
+            },
+            {
+                "code": "MOU",
+                "name": "Moussoro (Bar El Gazel)",
+                "type": "Base"
+            },
+            {
+                "code": "NDJ",
+                "name": "N'Djamena",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "TZ",
+        "name": "Tanzania",
+        "bases": [
+            {
+                "code": "DAR",
+                "name": "Dar es Salaam",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "UA",
+        "name": "Ukraine",
+        "bases": [
+            {
+                "code": "DNI",
+                "name": "Dnipro",
+                "type": "Base"
+            },
+            {
+                "code": "HRK",
+                "name": "Kharkiv",
+                "type": "Base"
+            },
+            {
+                "code": "KYI",
+                "name": "Kyiv (Coordination)",
+                "type": "Coordination"
+            },
+            {
+                "code": "MZO",
+                "name": "Mykolaiv",
+                "type": "Base"
+            },
+            {
+                "code": "ZAP",
+                "name": "Zaporijia",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "UG",
+        "name": "Uganda",
+        "bases": [
+            {
+                "code": "KLA",
+                "name": "Kampala",
+                "type": "Base"
+            },
+            {
+                "code": "MOR",
+                "name": "Moroto",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "US",
+        "name": "USA",
+        "bases": [
+            {
+                "code": "NYC",
+                "name": "New York",
+                "type": "HQ"
+            }
+        ]
+    },
+    {
+        "code": "WA",
+        "name": "West Africa",
+        "bases": [
+            {
+                "code": "DAW",
+                "name": "Dakar (ROWCA)",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "YE",
+        "name": "Yemen",
+        "bases": [
+            {
+                "code": "ADN",
+                "name": "Aden (Base)",
+                "type": "Base"
+            },
+            {
+                "code": "AKK",
+                "name": "Al Khokha",
+                "type": "Base"
+            },
+            {
+                "code": "HOD",
+                "name": "Hodaida",
+                "type": "Base"
+            },
+            {
+                "code": "SAN",
+                "name": "Sanaa",
+                "type": "Coordination"
+            }
+        ]
+    },
+    {
+        "code": "ZM",
+        "name": "Zambia",
+        "bases": [
+            {
+                "code": "LUS",
+                "name": "Lusaka",
+                "type": "Base"
+            },
+            {
+                "code": "MNR",
+                "name": "Mungu",
+                "type": "Base"
+            },
+            {
+                "code": "SRS",
+                "name": "Sesheke",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "ZW",
+        "name": "Zimbabwe",
+        "bases": [
+            {
+                "code": "HAR",
+                "name": "Harare",
+                "type": "Coordination"
+            },
+            {
+                "code": "KOW",
+                "name": "Karoi?",
+                "type": "Base"
+            }
+        ]
+    }
+]

@@ -1,0 +1,3458 @@
+{
+  "generatedAt": "2026-02-03T10:16:19.268Z",
+  "sections": [
+    {
+      "id": "section-1",
+      "title": "1 - Sécurité - opérationnelle",
+      "questions": [
+        {
+          "id": "q-1-1",
+          "category": "Documentation & sensibilisation",
+          "text": "Le LSOP Sécurité est disponible, lu et compris par l’équipe logistique.",
+          "verification": "Security LSOP",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-2",
+          "category": "Préparation & planification",
+          "text": "Le plan de contingence est à jour et couvre les éléments essentiels (zones & salles sécurité, kits, eau, etc.).",
+          "verification": "Contingency Plan",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-3",
+          "category": "Suivi des mouvements",
+          "text": "Les mouvements terrain sont suivis et les contacts d’urgence sont définis (app de suivi, tableau blanc, opérateur radio, traceurs...).",
+          "verification": "Movement Follow-up",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Performance",
+            "Traçabilité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-4",
+          "category": "Identification & visibilité ",
+          "text": "Les règles d’identification (bâtiments, véhicules, personnel) sont définies et appliquées.",
+          "verification": "Visibility in place",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-5",
+          "category": "Gestion des incidents",
+          "text": "Le système de signalement et de gestion des incidents (notamment incidents véhicule/électrique/incendie) est en place et connu du personnel logistique concerné. P.ex : un incident lié à la sécurité électrique doit donné lieu à des mesures correctives.",
+          "verification": "Incident report",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Qualité de rapport",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-6",
+          "category": "Équipements de sécurité",
+          "text": "Des trousses médicales (trousse de premiers secours + kit PEP) sont-elles présentes sur la base, contrôlées et non périmées ?",
+          "verification": "Medical kits with updated packing list",
+          "weight": 1,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-7",
+          "category": "Général",
+          "text": "Les équipements de sûreté sont en place et fonctionnels : extincteurs, détecteurs de fumée, CO2, bac à sable, etc.",
+          "verification": "Safety equipement in place",
+          "weight": 3,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-8",
+          "category": "Moyens de communication",
+          "text": "Les moyens de communication disponibles sont-ils conformes au LSOP sécurité et fonctionnels ?",
+          "verification": "Communication means",
+          "weight": 3,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-1-9",
+          "category": "Sécurité des locaux ",
+          "text": "La sécurité des locaux est-elle assurée pour l'ensemble des bâtiments et conformément aux règles définies dans le LSOP Sécurité ?",
+          "verification": "Security campound",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-2",
+      "title": "2 - Gestion de Cycle de Projet & Coordination",
+      "questions": [
+        {
+          "id": "q-2-1",
+          "category": "Implication projet",
+          "text": "La logistique est impliquée dans la conception des propositions de projets, conformément au manuel de gestion de projet terrain.",
+          "verification": "Project Proposal & PPP",
+          "weight": 2,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-2-2",
+          "category": "Reporting",
+          "text": "Le rapport logistique mensuel est envoyé à temps et contient toutes les informations nécessaires.",
+          "verification": "Monthy Log report (MLR)",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Qualité de rapport",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-2-3",
+          "category": "Stratégie & préparation",
+          "text": "La stratégie logistique est définie, alignée avec celle du bureau pays, et inclut la préparation aux urgences.",
+          "verification": "Logistics Strategy",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-2-4",
+          "category": "Évaluation des capacités",
+          "text": "L’évaluation des capacités logistiques est réalisée et partagée sur NHF.",
+          "verification": "LCA",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-2-5",
+          "category": "Coordination financière",
+          "text": "La logistique contribue à l’élaboration du plan financier (volume, fréquence, prix).",
+          "verification": "Financial Plan",
+          "weight": 2,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-2-6",
+          "category": "Général",
+          "text": "La logistique est impliquée dans la mise à jour des BFU et échange régulièrement avec la finance.",
+          "verification": "BFU & interdep meeting",
+          "weight": 1,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-3",
+      "title": "3 - Partenariat et localisation",
+      "questions": [
+        {
+          "id": "q-3-1",
+          "category": "Sélection & contractualisation",
+          "text": "La logistique est impliquée dans l’évaluation et la sélection des partenaires locaux. Les documents logistiques requis sont annexés au contrat signé avec le partenaire.",
+          "verification": "Log evaluation Local partner table",
+          "weight": 2,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-3-2",
+          "category": "Renforcement des capacités",
+          "text": "Le personnel logistique participe à la formation et au renforcement des capacités du partenaire, idéalement via un plan annuel.",
+          "verification": "Partner training plan",
+          "weight": 2,
+          "responseType": "Échelle de maîtrise",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Maîtrisé",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement maîtrisé",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non maîtrisé",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-3-3",
+          "category": "Collaboration régulière",
+          "text": "Un mécanisme de collaboration régulière avec les partenaire est en place, en accord avec MoU (visites mensuelles, validation des achats...).",
+          "verification": "Partner validation table",
+          "weight": 2,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-4",
+      "title": "4 - Urgence",
+      "questions": [
+        {
+          "id": "q-4-1",
+          "category": "Préparation & outils",
+          "text": "Le plan de préparation aux urgences est en place et actualisé (stock, contrats, télécom, entrepôts, staff list, etc) et le SLU est connu du personnel logistique. ",
+          "verification": "Briefing SLU, PPRU",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-4-2",
+          "category": "Évaluation terrain",
+          "text": "La logistique est impliquée dans les évaluations terrain et utilise les outils adaptés.",
+          "verification": "Log assessment report",
+          "weight": 1,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Qualité de rapport",
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-4-3",
+          "category": "Reporting en urgence",
+          "text": "Durant une reponse d'urgence, le rythme de rapport est defini, adapté et respecté.",
+          "verification": "Log Sitrep",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-4-4",
+          "category": "Clôture de projet",
+          "text": "À la fin d’une urgence, les ressources logistiques sont mobilisées pour une fermeture efficace (tri, inventaire, réallocation).",
+          "verification": "Closure of project or end of ACF QIP",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-5",
+      "title": "5 - Chaîne d'approvisionnement",
+      "questions": [
+        {
+          "id": "q-5-1",
+          "category": "Structure & autorisations",
+          "text": "Le tableau des signatures est à jour et les droits LINK sont paramétrés. Ils sont conformes à l’organigramme, et accessibles. Les anciennes versions sont archivées.",
+          "verification": "Autorisation signature table",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-2",
+          "category": "Planification",
+          "text": "Un Plan d’Achat par Projet (PAP) est préparé pour chaque projet, incluant les marchés stratégiques (ex: médicament, papèterie, véhicules de location…) et les dérogations ont été préparés et validés le cas échéant.",
+          "verification": "PAP",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-3",
+          "category": "Général",
+          "text": "Le Plan d'approvisionnement est disponible au niveau bureau pays.",
+          "verification": "PA",
+          "weight": 1,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-4",
+          "category": "Général",
+          "text": "La matrice des risques ESG pour les principaux marchés est remplie en collaboration avec les programmes.",
+          "verification": "ESG Matrice",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Environnement"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-5",
+          "category": "Processus & contrôle",
+          "text": "Des réunions régulières sont formalisées avec les demandeurs et la finance : validation des demandes d'achat, planning, transport.",
+          "verification": "\r\nInterdep meeting planning",
+          "weight": 3,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-6",
+          "category": "Général",
+          "text": "Une politique de gestion des accords cadres est en place, les principaux marchés sont couverts, et leur suivi/renouvellement est assuré dans LINK.",
+          "verification": "Framework Agreement (FA)",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-7",
+          "category": "Général",
+          "text": "Un contrôle qualité systématique est appliqué aux approvisionnements sensibles (médicaments, denrées alimentaires, véhicules...).",
+          "verification": "Checklist quality",
+          "weight": 3,
+          "responseType": "Échelle de qualité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Maitrise du risque financier",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Bonne",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Mauvaise",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-8",
+          "category": "Général",
+          "text": "La procédure de donation en nature est appliquée et les dons sont enregistrés dans LINK ou dans un suivi dédié.",
+          "verification": "Suivi DEN / Link",
+          "weight": 1,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-5-9",
+          "category": "Général",
+          "text": "Tous les documents de la chaine d'approvisionnement sont archivés selon la procédure ACF (papier et électronique).",
+          "verification": "Archiving",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-6",
+      "title": "6 - Gestion des achats",
+      "questions": [
+        {
+          "id": "q-6-1",
+          "category": "Général",
+          "text": "Des études de marché sont réalisées régulièrement pour l'ensemble des marchés clés.",
+          "verification": "Market Survey",
+          "weight": 1,
+          "responseType": "Échelle de qualité",
+          "transversalTags": [
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Bonne",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Mauvaise",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-2",
+          "category": "Général",
+          "text": "Les demandes d’achat sont correctement crées, avec spécifications claires, précises et incluant des critères ESG.",
+          "verification": "Purchase Line (PL)",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-3",
+          "category": "Général",
+          "text": "Les achats directs sont conformes, documentés et validés. Un audit est réalisé sur un échantillon de minimum 5 dossiers pour répondre à cette question.",
+          "verification": "LINK",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-4",
+          "category": "Général",
+          "text": "Les procédures négociées sont conformes, documentées et validées. Un audit est réalisé sur un échantillon de minimum 5 dossiers pour répondre à cette question.",
+          "verification": "LINK",
+          "weight": 3,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-5",
+          "category": "Général",
+          "text": "Les procédures d’appel d’offres sont conformes, documentées et validées. Un audit est réalisé sur un échantillon de minimum 3 dossiers pour répondre à cette question.",
+          "verification": "LINK",
+          "weight": 3,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-6",
+          "category": "Général",
+          "text": "Les principes d’achat responsable d’ACF sont respectés.",
+          "weight": 1,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Stratégie",
+            "Environnement",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-6-7",
+          "category": "Général",
+          "text": "La base de données fournisseurs est remplie, les évaluations sont réalisées en fin de contrat (obligatoires pour les achats > 50 000 €), et l’enregistrement est effectué pour tous les achats supérieurs à 10 000 €.",
+          "verification": "Supplier database & evaluation",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-7",
+      "title": "7 - Stocks",
+      "questions": [
+        {
+          "id": "q-7-1",
+          "category": "Gestion de l'entrepôt",
+          "text": "Chaque entrepôt ACF est sélectionné via l’outil OEE, mis aux normes ACF, et un plan d’action est en place si nécessaire pour se conformer aux standards minimums et, dans la mesure du possible, aux bonnes pratiques.",
+          "verification": "OEE - WAT",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-2",
+          "category": "Gestion des stocks",
+          "text": "Tous les articles sont identifiés par leurs numéros de ligne d'achat (sur le BL, Fiche de pile, Fiche de Stock, DSS, rapport de perte).",
+          "verification": "Numbering & labelling",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-3",
+          "category": "Général",
+          "text": "Les règles de gestion des stocks sont appliquées (FIFO, FEFO, etc.)",
+          "verification": "Stock card and Stock report",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-4",
+          "category": "Général",
+          "text": "Les Fiches de Stock sont correctement remplies et vérifiées. Un audit par échantillonnage prouve que les Fiches de Stock sont fiables.",
+          "verification": "Stock card",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-5",
+          "category": "Général",
+          "text": "Les produits dangereux, corrosifs, à détruire, en quarantaine ou stock décentralisé sont entreposés séparément (séparation physique) et clairement identifiés.",
+          "verification": "Physical separation",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Environnement",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-6",
+          "category": "Général",
+          "text": "L'élimination des produits ou matériels hors d'état ou périmés ont été définis en accord avec les procédures ACF, le contexte et la réglementation locale.",
+          "weight": 1,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Environnement"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-7",
+          "category": "Général",
+          "text": "Les stocks ne contienent pas de produits immobiles ou non utilisés depuis plus de 2 ans (hors contingence).",
+          "verification": "0 Dead stock",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-8",
+          "category": "Général",
+          "text": "La qualité des produits est vérifiée à la réception selon les procédures (ex: checklist de réception des produits alimentaires et nutritionnels).",
+          "verification": "Quality control",
+          "weight": 1,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-9",
+          "category": "Général",
+          "text": "Le suivi des stocks est complété, à jour, et disponible régulièrement (toutes les deux semaines minimum) pour l’ensemble des équipes programmes.",
+          "verification": "SFU/Link",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Qualité de rapport",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-7-10",
+          "category": "Général",
+          "text": "Un planning des inventaires est disponible, communiqué et suivi. Les inventaires sont réalisés conformément aux procédures de stocks (inclus le stock décentralisé et stocks médicaux). Les inventaires annuels dont stock D sont réalisés au 31 décembre et finalisés avant le 15 janvier (Correction des écarts et HQPR de régularisation transmises).",
+          "verification": "Last Inventory",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-8",
+      "title": "8 - Stocks medicaux",
+      "questions": [
+        {
+          "id": "q-8-1",
+          "category": "Conditions de stockage & équipements",
+          "text": "Les produits médicaux et nutritionnels sont stockés dans des locaux ou équipements adaptés (pièce température contrôllé ou équipement chaîne de froid selon les spécifications). Les équipements de chaîne de froid sont correctement installés (ventilation, stabilisation électrique, etc.) et entretenus régulièrement (nettoyage, dégivrage, etc.).",
+          "verification": "Controlled temperature\r\n",
+          "weight": 3,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-8-2",
+          "category": "Suivi & traçabilité",
+          "text": "Le suivi de la température et de l’humidité est effectué deux fois par jour, 7j/7, avec utilisation des équipements standards ACF (3M, Freeze tag, Log tag, etc.)  et enregistré sur une fiche de suivi. ",
+          "verification": "Temperature FU sheet",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-8-3",
+          "category": "Mécanisme d’alerte qualité",
+          "text": "Tout le personnel logistique et technique connaît le mécanisme d'alerte qualité, et le formulaire d'alerte est disponible.",
+          "weight": 1,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-8-4",
+          "category": "Planification des seuils critiques",
+          "text": "Les stocks de sécurité et seuils d'alertes sont défins avec le RP Santé et/ou le pharmacien pour les articles médicaux standards ou autre produits critiques.",
+          "verification": "Security Stock set up",
+          "weight": 1,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Maitrise du risque financier",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-8-5",
+          "category": "Procédures & conformité",
+          "text": "Les règles de gestion de la chaîne de froid (emballage, stockage, transport, plan de contingence, etc.) sont appliquées et vérifiées au moins une fois par an. Une personne responsable de la chaîne de froid est identifiée, un backup est prévu, et le personnel impliqué est formé et connaît ses responsabilités, notamment en cas de rupture de la chaîne.",
+          "verification": "Cold Chain rules & contigency plan",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Stratégie",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-9",
+      "title": "9 - Stocks décentralisés ",
+      "questions": [
+        {
+          "id": "q-9-1",
+          "category": "Process en place",
+          "text": "Les condtions du MOU sont respectées :\r\nLes pré-requis dans le MOU listés dans la check-list sont bien opérationnel\r\nLa stratégie pour couvrir les coûts annexes et les risques externes est bien appliquée",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-9-2",
+          "category": "Limiter les risques de pertes",
+          "text": "La rotation des articles en stock est de moins de un an.",
+          "verification": "Stock report",
+          "weight": 2,
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-9-3",
+          "category": "Risque de perte lié aux expirations",
+          "text": "Respect des numéros de lot et de série lors de sortie de stock (pas de régularisation lors du dernier inventaire).",
+          "verification": "Inventory result",
+          "weight": 2,
+          "transversalTags": [
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-9-4",
+          "category": "Efficacité opérationnelle",
+          "text": "Les sorties de stock sont réalisées sous 5 jours une fois la Dispatch note transmise par le siège / Dipsatch note signée & cloture du dossier à effectuer dans le Link.",
+          "verification": "Rapport BI",
+          "weight": 2,
+          "transversalTags": [
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-9-5",
+          "category": "Risque financier en cas de litige fournisseur si non-respect des procédures de réception pour remonter des litiges.",
+          "text": "Lors des réceptions de stocks décentralisés, les procédures de réceptions sont respectées afin que des réserves soient remontées dans les 72 heures au sièges après reception des marchandises par le transitaire (Comptage et pesage des colis) et après réception des marchandises par ACF (Vérification de la conformité des packing list des packing List).",
+          "verification": "Previous claims\r\nChecking delivery documents",
+          "weight": 2,
+          "transversalTags": [
+            "Qualité de rapport",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-10",
+      "title": "11 - Transport & livraison",
+      "questions": [
+        {
+          "id": "q-10-1",
+          "category": "Planification & anticipation",
+          "text": "Les transports internationaux sont anticipés dans les propositions de projets et les plans d’approvisionnement. Les délais de pré-dédouanement sont connus et enregistrés.",
+          "verification": "Supply Plan\r\nPre-clearance Lead time filled",
+          "weight": 2,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-10-2",
+          "category": "Conformité douanière & partenaires",
+          "text": "Les procédures douanières (import, transit, export) sont disponibles, documentées, et archivées. Les services de transporteurs et agents en douane sont identifiés, et les règles/coûts d’importation sont maîtrisés.",
+          "verification": "Customs Procedures folder\r\nTransport services list",
+          "weight": 3,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-10-3",
+          "category": "Suivi & documentation",
+          "text": "Les délais de livraison sont suivis et cohérents avec les dates demandées. Les frets sont documentés (BL, packing list, etc.), identifiés, et archivés correctement.",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-10-4",
+          "category": "Traçabilité & conformité",
+          "text": "Lors d'une réception d'une livraison internationale (inclus stock décentralisé), les procédures de réceptions sont respectées afin que des réserves soient remontées dans les 72 heures au sièges après reception des marchandises par le transitaire (Comptage et pesage des colis) et après réception des marchandises par ACF (Vérification de la conformité des packing list des packing List).",
+          "verification": "Claims",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance",
+            "Maitrise du risque financier",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-11",
+      "title": "12 - Gestion de flotte de véhicules",
+      "questions": [
+        {
+          "id": "q-11-1",
+          "category": "Dimensionnement & stratégie",
+          "text": "Une analyse du parc est réalisée tous les 6 mois pour garantir que le nombre et les types de véhicules sont adaptés aux besoins (activités, sécurité, routes, climat). Les projections sont anticipées et budgétisées (renouvellement, location / achat).",
+          "verification": "Fleet analysis",
+          "weight": 3,
+          "responseType": "Échelle de qualité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Bonne",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Mauvaise",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-2",
+          "category": "Organisation des déplacements",
+          "text": "Un processus structuré de demande et de planification des déplacements est en place (soumission, consolidation, vérifications de sécurité). Un planning hebdomadaire est établi.",
+          "verification": "Movement management & planning",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Performance",
+            "Traçabilité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-3",
+          "category": "Compétences & sécurité",
+          "text": "Tous les chauffeurs (ACF et prestataires) sont formés aux règles de conduite ACF (éco-conduite incluse), au profil de poste et à leurs responsabilités.",
+          "verification": "Driver's training list",
+          "weight": 3,
+          "responseType": "Échelle de maîtrise",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Maîtrisé",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement maîtrisé",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non maîtrisé",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-4",
+          "category": "Équipement & conformité",
+          "text": "Les véhicules sont équipés (kit de premiers secours, eau, etc.) et respectent les standards mécaniques et de sécurité d’ACF.",
+          "verification": "Vehicle's kits in the car",
+          "weight": 2,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-5",
+          "category": "Traçabilité & maintenance",
+          "text": "Chaque véhicule dispose d’un logbook pour les déplacements et le carburant, d’un carnet d’entretien, et d’un dossier administratif complet. Les anciens logbooks sont archivés.",
+          "verification": "Trip, fuel & maintenance logbook available",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-6",
+          "category": "Performance & efficacité",
+          "text": "Le suivi de la consommation est effectué, des actions sont prises en cas de surconsommation, et un test de consommation sur 100 km est réalisé pour chaque véhicule (et générateurs, si pertinent).",
+          "verification": "Fuel consumption FU",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-11-7",
+          "category": "Carburant & sécurité",
+          "text": "Une source fiable est identifiée pour le carburant, avec un stock de sécurité si nécessaire. La qualité est contrôlée et un système de décantation/filtration est mis en place si besoin.",
+          "verification": "Fuel & safety",
+          "weight": 2,
+          "responseType": "Échelle de qualité",
+          "transversalTags": [
+            "Stratégie",
+            "Maitrise du risque financier",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Bonne",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Mauvaise",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-12",
+      "title": "13 - Equipement",
+      "questions": [
+        {
+          "id": "q-12-1",
+          "category": "Traçabilité & inventaire",
+          "text": "Chaque équipement est correctement codifié et étiqueté. La liste des équipements est à jour et complète, incluant leur allocation et propriété.",
+          "verification": "labelling & inventory",
+          "weight": 3,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-12-2",
+          "category": "Conformité réglementaire",
+          "text": "Les règles bailleurs concernant la propriété et la destination finale des équipements sont connues et respectées. Des échanges avec le référent logistique sont effectués si besoin.",
+          "verification": "Donor rules respected",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-12-3",
+          "category": "Fin de vie & durabilité",
+          "text": "Les équipements vieux, obsolètes ou cassés sont pris en charge selon une politique de gestion des rebus (recyclage, dons, destruction, etc.).",
+          "verification": "Disposal plan",
+          "weight": 1,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Environnement"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-12-4",
+          "category": "Fonctionnalité & disponibilité",
+          "text": "La gestion des équipements en termes de maintenance, attribution et réapprovisionnement est conforme aux besoins.",
+          "verification": "Equipment & maintenance plan",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-13",
+      "title": "14 - Technologies de l'Information et des Communications ",
+      "questions": [
+        {
+          "id": "q-13-1",
+          "category": "Protection des données",
+          "text": "A data backup system is in place for both individual user data and shared data. Precise frequency of backup and schedule testing to ensure reliability",
+          "verification": "Backup system → Backup log (export / capture d’écran)",
+          "weight": 3,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-2",
+          "category": "Connectivité & infrastructure",
+          "text": "A shared folder is configured to shared data in the NAS for the users, individual department for collaboration. A follow-up and monitoring mechanism is implemented and additional backup is in place.",
+          "verification": "Shared NAS folder → Capture permissions + arborescence",
+          "weight": 1,
+          "responseType": "Échelle de présence",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-3",
+          "category": "Gestion & maintenance",
+          "text": "The antivirus requested by the HQ is installed and updated on all computers.",
+          "verification": "Antivirus HQ → Capture mise à jour antivirus",
+          "weight": 3,
+          "responseType": "Échelle d’implication",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Forte implication",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Implication moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible implication",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-4",
+          "category": "Conformité & suivi",
+          "text": "A standard infra kit is installed and configured and working properly",
+          "verification": "Standard infra kit → Check‑list infra signée",
+          "weight": 1,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-5",
+          "category": "Communication opérationnelle",
+          "text": "There is an ICT officer (or someone responsible for IT if the dedicated IT is not available) who regularly takes care of the ICT equipment fleet like computers, network, and telecom equipment.",
+          "verification": "ICT officer → Registre des interventions ICT (Excel)",
+          "weight": 2,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-6",
+          "category": "Général",
+          "text": "All communication costs are monitored",
+          "verification": "Communication costs → Suivi des coûts telecom (Excel)",
+          "weight": 1,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-7",
+          "category": "Général",
+          "text": "Communication during all field movements are possible to follow on the totality of the trip",
+          "verification": "Field movement comms → historique des tests",
+          "weight": 1,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-8",
+          "category": "Général",
+          "text": "Satellite equipment kits (including accessories) are at least checked every 3 months",
+          "verification": "Satellite kits check → Checklist trimestrielle signée",
+          "weight": 2,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-9",
+          "category": "Général",
+          "text": "You can communicate (voice) with other bases and capital. Precise the technology used (GSM, Radio, Sat,…)",
+          "verification": "Communication inter-bases : Liste équipements, test call",
+          "weight": 1,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-10",
+          "category": "Général",
+          "text": "Radios are working, properly installed and earthed",
+          "verification": "Radios : Photos installation, tests radio",
+          "weight": 1,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-11",
+          "category": "Général",
+          "text": "You have reliable main internet access and a backup internet access?",
+          "verification": "Internet + backup : Factures, schéma réseau, tests",
+          "weight": 3,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-12",
+          "category": "Général",
+          "text": "Computer standards are respected (Hardware and Software)",
+          "verification": "Standards ordinateurs : Inventaire, standard ICT, logs patch",
+          "weight": 2,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-13",
+          "category": "Général",
+          "text": "Software's license are inventoried, monitored and updated",
+          "verification": "Licences logicielles : Registre licences, factures",
+          "weight": 3,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-13-14",
+          "category": "Général",
+          "text": "IT equipments are electrically protected and backup",
+          "verification": "Protection électrique : Photos UPS, tests, registre",
+          "weight": 3,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-14",
+      "title": "15 - Energie",
+      "questions": [
+        {
+          "id": "q-14-1",
+          "category": "Analyse & conformité des installations",
+          "text": "Le dimensionnement des installations électriques est basé sur une analyse des besoins (outil “generator/solar sizing” du KitLog) et on connaît-on l’énergie disponible de la ville, la fréquence moyenne des coupures et la variabilité de la tension ?",
+          "verification": "Energy sizing tool",
+          "weight": 3,
+          "responseType": "Yes_no",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Maitrise du risque financier"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-2",
+          "category": "Fiabilité des sources",
+          "text": " Le bâtiment dispose-t-il d’une source principale fiable et d’un backup fonctionnel couvrant les équipements essentiels ?",
+          "verification": "Reliable energy sources & backup",
+          "weight": 3,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [
+            "Performance",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-3",
+          "category": "Protection & securité",
+          "text": "Le diagnostic energy safety est-il rempli lors de l'arrivée dans bâtiment, et de façon annuelle ou lors de modifications et cela pour tout les bâtiments. Les 10/10 standards minimum sont-ils atteints ?",
+          "verification": "Date of last Elec diag tool",
+          "weight": 3,
+          "responseType": "Échelle simplifiée",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-4",
+          "category": "Général",
+          "text": "En cas de connexion actuelle ou future au réseau électrique de la ville présentant des fluctuations de tension, les équipements sensibles doivent être alimentés via des stabilisateurs pour garantir une tension stable — notamment pour l’armoire ICT, les imprimantes et les réfrigérateurs.\r\nIl est recommandé de privilégier l’installation d’un stabilisateur principal en tête d’installation, plutôt que de multiplier les petits stabilisateurs individuels.",
+          "verification": "Stabilizers presence",
+          "weight": 2,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-5",
+          "category": "Maintenance des équipements",
+          "text": "Les générateurs sont-ils bien installés, mis à la terre, et leur maintenance suivie (log book, planning de maintenance, etc.) ?\r\nTous les équipements électriques ou liés à l'énergie ont-ils un plan de maintenance conforme aux gammes préventives ? Suivie via un carnet de bord ou fichier conforme aux standards ACF. La qualité du carburant est contrôlée et filtrée (décantée) si nécessaire.",
+          "verification": "Maintenance planning",
+          "weight": 2,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Contrôle qualité",
+            "Sécurité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-6",
+          "category": "Autres",
+          "text": "Les incidents de sécurité sont rapportés et les coûts sont suivis (factures, consommation, maintenance).",
+          "verification": "Follow-up of incident reports",
+          "weight": 2,
+          "transversalTags": [],
+          "options": [
+            {
+              "label": "Oui",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-14-7",
+          "category": "Traçabilité & gestion",
+          "text": "Les installations électriques sont documentées (plans, dimensionnement, diagnostics, manuels, plan de contingence).",
+          "verification": "Documentation",
+          "weight": 1,
+          "responseType": "Échelle de présence",
+          "transversalTags": [
+            "Stratégie",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Présent / Disponible",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement présent",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Absent",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-15",
+      "title": "16 - Gestion d'équipe",
+      "questions": [
+        {
+          "id": "q-15-1",
+          "category": "Structure & rôles",
+          "text": "Un organigramme RH de l’équipe logistique est disponible, à jour et cohérent. Les tâches et responsabilités sont définies dans des fiches de poste claires, et les employés les comprennent.",
+          "verification": "Log Organigramm & JDs",
+          "weight": 2,
+          "responseType": "Échelle de conformité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Conforme",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement conforme",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non conforme",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-15-2",
+          "category": "Renforcement des capacités",
+          "text": "Tous les employés reçoivent une formation adaptée sur les outils logistiques utilisés. Les besoins en formation sont identifiés, un planning est suivi, et l’historique des formations est disponible.",
+          "verification": "Training plan and FU",
+          "weight": 2,
+          "responseType": "Échelle de maîtrise",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Maîtrisé",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Partiellement maîtrisé",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Non maîtrisé",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-15-3",
+          "category": "Performance & pilotage",
+          "text": "Des évaluations périodiques sont menées selon le cadre RH. Des objectifs SMART et des plans d’action individuels sont définis.",
+          "verification": "Evaluation & objectives",
+          "weight": 2,
+          "responseType": "Échelle de performance",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Performance élevée",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Performance moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Faible performance",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-15-4",
+          "category": "Organisation & priorités",
+          "text": "Le planning des congés est fait et suivi. Des réunions d’équipe régulières sont organisées. Tous les collaborateurs connaissent leurs priorités via un plan d’action formel ou une liste de tâches à réaliser.",
+          "verification": "Holidays & meeting planning",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-15-5",
+          "category": "Climat d’équipe",
+          "text": "Tous les membres de l’équipe logistique peuvent partager leurs opinions et préoccupations (gardiens et chauffeurs inclus), quelle que soit la méthodologie utilisée.",
+          "verification": "Expression & well-being",
+          "weight": 1,
+          "responseType": "Échelle de qualité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance"
+          ],
+          "options": [
+            {
+              "label": "Bonne",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Moyenne",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Mauvaise",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        },
+        {
+          "id": "q-15-6",
+          "category": "Traçabilité RH",
+          "text": "L'organigramme, les fiches de poste, et le plan d’action du départment sont accessibles et communiqués aux managers de la base et aux personnes concernées.",
+          "verification": "Archiving",
+          "weight": 2,
+          "responseType": "Échelle de traçabilité",
+          "transversalTags": [
+            "Stratégie",
+            "Performance",
+            "Traçabilité"
+          ],
+          "options": [
+            {
+              "label": "Traçabilité complète",
+              "value": 1,
+              "color": "green"
+            },
+            {
+              "label": "Traçabilité partielle",
+              "value": 0.5,
+              "color": "orange"
+            },
+            {
+              "label": "Aucune traçabilité",
+              "value": 0,
+              "color": "red"
+            },
+            {
+              "label": "N/A",
+              "value": -1,
+              "color": "grey"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "transversalComponents": [
+    "Qualité de rapport",
+    "Contrôle qualité",
+    "Stratégie",
+    "Environnement",
+    "Performance",
+    "Maitrise du risque financier",
+    "Traçabilité",
+    "Sécurité",
+    "Remarques RLR"
+  ]
+}
