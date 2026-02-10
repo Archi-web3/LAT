@@ -18,6 +18,8 @@ export interface AuthResponse {
   user: User;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,8 +27,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // Determine API URL based on environment (hardcoded for now, should be in environment.ts)
-  private apiUrl = 'http://localhost:3000/api/auth';
+  // Determine API URL based on environment
+  private apiUrl = `${environment.apiUrl}/api/auth`;
 
   // Signals for reactive UI
   currentUser = signal<User | null>(null);

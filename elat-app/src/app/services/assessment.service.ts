@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, of, tap } from 'rxjs';
 import { AssessmentData, AssessmentSection } from '../models/assessment.model';
 import { AuthService } from '../core/auth/auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssessmentService {
   private dataUrl = 'assets/data/assessment-data.json';
+  private apiUrl = `${environment.apiUrl}/api/assessments`;
 
   // Dependencies
   private http = inject(HttpClient);
@@ -505,7 +507,7 @@ export class AssessmentService {
 
     try {
       const headers = { 'x-auth-token': token };
-      this.http.post('http://localhost:3000/api/assessments/sync', unsynced, { headers })
+      this.http.post(`${this.apiUrl}/sync`, unsynced, { headers })
         .subscribe({
           next: (res: any) => {
             console.log('Sync successful!', res);
@@ -525,13 +527,13 @@ export class AssessmentService {
   getRemoteHistory() {
     const token = localStorage.getItem('token');
     const headers = { 'x-auth-token': token || '' };
-    return this.http.get<any[]>('http://localhost:3000/api/assessments/history', { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/history`, { headers });
   }
 
   deleteRemoteAssessment(id: string) {
     const token = localStorage.getItem('token');
     const headers = { 'x-auth-token': token || '' };
-    return this.http.delete(`http://localhost:3000/api/assessments/${id}`, { headers });
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
   }
 
   // --- Export Logic ---
