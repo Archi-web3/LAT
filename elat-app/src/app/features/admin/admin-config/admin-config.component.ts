@@ -122,9 +122,20 @@ import { AdminService } from '../../../core/admin/admin.service';
                                             </mat-form-field>
                                         </div>
 
+                                        <div class="dual-input">
+                                            <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Vérification / Livrable (FR)</mat-label>
+                                                <input matInput [(ngModel)]="q.verification">
+                                            </mat-form-field>
+                                             <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Verification / Deliverable (EN)</mat-label>
+                                                <input matInput [(ngModel)]="q.verification_en">
+                                            </mat-form-field>
+                                        </div>
+
                                         <mat-form-field appearance="outline" class="full-width">
                                             <mat-label>Expertises Transversales</mat-label>
-                                            <mat-select multiple [(ngModel)]="q.transversalTags">
+                                            <mat-select multiple [(ngModel)]="q.transversalTags" placeholder="Sélectionner...">
                                                 @for (exp of config().transversalExpertises; track exp.id) {
                                                     <mat-option [value]="exp.label_fr">{{ exp.label_fr }}</mat-option>
                                                 }
