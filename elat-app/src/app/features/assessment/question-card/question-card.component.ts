@@ -165,6 +165,8 @@ export class QuestionCardComponent {
 
   assessmentService = inject(AssessmentService);
   cloudinaryService = inject(CloudinaryService);
+  adminService = inject(AdminService);
+  translationService = inject(TranslationService);
 
   // Signals for current values
   answer = computed(() => this.assessmentService.answers()[this.question.id]);
@@ -289,7 +291,7 @@ export class QuestionCardComponent {
     if (!config || !config.transversalExpertises) return tag;
 
     // Find expertise by ID or Label FR (backward compatibility)
-    const expertise = config.transversalExpertises.find(e => e.label_fr === tag || e.id === tag);
+    const expertise = config.transversalExpertises.find((e: any) => e.label_fr === tag || e.id === tag);
 
     if (!expertise) return tag;
 
