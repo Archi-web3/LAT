@@ -46,7 +46,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
                     <ul>
                         <li><strong>Navigation</strong> : Utilisez le menu de gauche pour passer d'une section à l'autre (ex: "Supply Chain", "Fleet").</li>
                         <li><strong>Réponses</strong> : Cochez <strong>Oui (1)</strong>, <strong>Non (0)</strong> ou <strong>N/A (-1)</strong>. La sauvegarde est automatique.</li>
-                        <li><strong>Scores</strong> : Suivez votre progression (barres vertes) et votre score en temps réel en haut de l'écran.</li>
+                        <li><strong>Scores</strong> : Suivez votre progression (barres vertes) et votre score en temps réel en haut de l'écran.
+                            <br><em>Le score est calculé sur la base des questions répondues. Les réponses <strong>N/A</strong> sont exclues du calcul (elles ne comptent pas dans le total possible).</em>
+                        </li>
                         <li><strong>Reset</strong> : Le bouton "Reset" en haut à droite efface TOUTES les réponses de l'évaluation en cours. À utiliser avec précaution.</li>
                     </ul>
                 </mat-card-content>

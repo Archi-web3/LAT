@@ -433,7 +433,8 @@ export class AssessmentService {
     sections.forEach(s => {
       s.questions.forEach(q => {
         const val = this.answers()[q.id];
-        if (val !== undefined && val !== -1) {
+        // Robust check for NA
+        if (val !== undefined && val != -1) {
           totalPoints += (val * q.weight);
           maxPoints += (1 * q.weight);
         }
