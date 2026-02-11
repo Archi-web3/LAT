@@ -468,7 +468,7 @@ export class AssessmentService {
 
     section.questions.forEach(q => {
       const val = this.answers()[q.id];
-      if (val !== undefined && val !== -1) {
+      if (val !== undefined && val != -1) {
         totalPoints += (val * q.weight);
         maxPoints += (1 * q.weight);
       }
