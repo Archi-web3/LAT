@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -382,7 +382,7 @@ export class AdminConfigComponent {
         const sections = this.sections();
 
         // 1. Bulk Update Categories
-        this.categories().forEach(cat => {
+        this.categories().forEach((cat: any) => {
             sections.forEach(s => {
                 s.questions.forEach(q => {
                     if (q.category === cat.original) {
@@ -394,7 +394,7 @@ export class AdminConfigComponent {
         });
 
         // 2. Bulk Update Response Types
-        this.responseTypes().forEach(type => {
+        this.responseTypes().forEach((type: any) => {
             sections.forEach(s => {
                 s.questions.forEach(q => {
                     if (q.responseType === type.name) {
