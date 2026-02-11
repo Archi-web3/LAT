@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AssessmentQuestion, AssessmentOption } from '../../../models/assessment.model';
 import { AssessmentService } from '../../../services/assessment.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { LocalizePipe } from '../../../core/i18n/localize.pipe';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { AdminService } from '../../../core/admin/admin.service';
