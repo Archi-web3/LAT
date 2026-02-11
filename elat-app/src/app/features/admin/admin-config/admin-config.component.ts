@@ -430,9 +430,12 @@ export class AdminConfigComponent {
     doesQuestionMatch(q: AssessmentQuestion): boolean {
         const term = this.searchTerm().toLowerCase();
         if (!term) return true;
-        return (q.text && q.text.toLowerCase().includes(term)) ||
-            (q.category && q.category.toLowerCase().includes(term)) ||
-            (q.id && q.id.toLowerCase().includes(term));
+
+        const textMatch = q.text?.toLowerCase().includes(term) ?? false;
+        const catMatch = q.category?.toLowerCase().includes(term) ?? false;
+        const idMatch = q.id?.toLowerCase().includes(term) ?? false;
+
+        return textMatch || catMatch || idMatch;
     }
 
     filterByCategory(category: string) {
