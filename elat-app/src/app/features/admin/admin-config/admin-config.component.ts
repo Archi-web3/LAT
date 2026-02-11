@@ -172,7 +172,9 @@ import { AdminService } from '../../../core/admin/admin.service';
                             <div class="options-grid">
                                 @for (opt of type.options; track opt.value) {
                                     <div class="opt-row">
-                                        <div class="opt-val" [style.color]="opt.color">{{ opt.value }}</div>
+                                        <div class="opt-val" [style.color]="opt.color" [style.font-size]="opt.value === -1 ? '0.8rem' : 'inherit'">
+                                            {{ opt.value === -1 ? 'Exclu' : opt.value }}
+                                        </div>
                                         <mat-form-field appearance="outline" class="dense">
                                             <mat-label>Label (FR)</mat-label>
                                             <input matInput [(ngModel)]="opt.label">
