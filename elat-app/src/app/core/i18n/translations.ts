@@ -55,6 +55,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             UPLOADING: 'Uploading...',
             COMMENTS_LABEL: 'Comments',
             COMMENTS_PLACEHOLDER: 'Specific observation...'
+        },
+        TRANSVERSAL_TAGS: {
+            'Sécurité': 'Security',
+            'Stratégie': 'Strategy',
+            'Opérations': 'Operations',
+            'Juridique': 'Legal',
+            'Finance': 'Finance',
+            'RH': 'HR',
+            'Informatique': 'IT'
         }
     },
     FR: {
@@ -113,6 +122,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             UPLOADING: 'Téléchargement en cours...',
             COMMENTS_LABEL: 'Commentaires',
             COMMENTS_PLACEHOLDER: 'Observation spécifique...'
+        },
+        TRANSVERSAL_TAGS: {
+            'Sécurité': 'Sécurité',
+            'Stratégie': 'Stratégie',
+            'Opérations': 'Opérations',
+            'Juridique': 'Juridique',
+            'Finance': 'Finance',
+            'RH': 'RH',
+            'Informatique': 'Informatique'
         }
     }
 };

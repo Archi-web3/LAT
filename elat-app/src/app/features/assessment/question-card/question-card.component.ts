@@ -48,7 +48,9 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
         <div class="tags" *ngIf="question.transversalTags.length > 0">
           <mat-chip-set>
-            <mat-chip *ngFor="let tag of question.transversalTags">{{ tag }}</mat-chip>
+            <mat-chip *ngFor="let tag of question.transversalTags" class="tag-chip">
+                {{ 'TRANSVERSAL_TAGS.' + tag | translate }}
+            </mat-chip>
           </mat-chip-set>
         </div>
 

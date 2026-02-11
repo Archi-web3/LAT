@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs'; // Import this
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessmentSection, AssessmentQuestion } from '../../../models/assessment.model';
 import { AdminConfig, DEFAULT_CONFIG } from '../../../models/admin-config.model';
@@ -25,7 +26,8 @@ import { AdminService } from '../../../core/admin/admin.service';
         MatExpansionModule,
         MatIconModule,
         MatSnackBarModule,
-        MatTabsModule
+        MatTabsModule,
+        MatChipsModule
     ],
     template: `
     <div class="container">
@@ -117,6 +119,24 @@ import { AdminService } from '../../../core/admin/admin.service';
                                                 <input matInput [(ngModel)]="q.category_en">
                                             </mat-form-field>
                                         </div>
+
+                                        <mat-form-field appearance="outline" class="full-width">
+                                            <mat-label>Expertises Transversales (Tags)</mat-label>
+                                            <mat-chip-grid #chipGrid aria-label="Enter tags">
+                                                @for (tag of q.transversalTags; track tag) {
+                                                    <mat-chip-row (removed)="removeTag(q, tag)">
+                                                        {{ tag }}
+                                                        <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                                                            <mat-icon>cancel</mat-icon>
+                                                        </button>
+                                                    </mat-chip-row>
+                                                }
+                                                <input placeholder="New tag..."
+                                                       [matChipInputFor]="chipGrid"
+                                                       (matChipInputTokenEnd)="addTag(q, $event)"/>
+                                            </mat-chip-grid>
+                                            <mat-hint>Press Enter to add (e.g., Sécurité, Stratégie)</mat-hint>
+                                        </mat-form-field>
 
                                         <mat-form-field appearance="outline" class="q-weight">
                                             <mat-label>Weight</mat-label>
@@ -334,6 +354,10 @@ export class AdminConfigComponent {
                 const c = cats.get(q.category)!;
                 c.count++;
 
+                if (!q.transversalTags) {
+                    q.transversalTags = [];
+                }
+
                 // Response Types
                 if (q.responseType && q.options && q.options.length > 0) {
                     if (!types.has(q.responseType)) {
@@ -442,5 +466,23 @@ export class AdminConfigComponent {
         this.searchTerm.set(category);
         this.selectedTabIndex.set(0); // Switch to Structure tab
         this.snackBar.open(`Filtering by category: ${category}`, 'Close', { duration: 2000 });
+    }
+
+    addTag(question: AssessmentQuestion, event: any) {
+        const value = (event.value || '').trim();
+        if (value) {
+            if (!question.transversalTags) {
+                question.transversalTags = [];
+            }
+            question.transversalTags.push(value);
+        }
+        event.chipInput!.clear();
+    }
+
+    removeTag(question: AssessmentQuestion, tag: string) {
+        const index = question.transversalTags.indexOf(tag);
+        if (index >= 0) {
+            question.transversalTags.splice(index, 1);
+        }
     }
 }
