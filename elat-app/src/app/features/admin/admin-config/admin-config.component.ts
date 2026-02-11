@@ -135,11 +135,15 @@ import { AdminService } from '../../../core/admin/admin.service';
 
                                         <mat-form-field appearance="outline" class="full-width">
                                             <mat-label>Expertises Transversales</mat-label>
-                                            <mat-select multiple [(ngModel)]="q.transversalTags" placeholder="Sélectionner...">
+                                            <mat-select multiple [(ngModel)]="q.transversalTags" [compareWith]="compareStrings" placeholder="Sélectionner...">
                                                 @for (exp of config().transversalExpertises; track exp.id) {
                                                     <mat-option [value]="exp.label_fr">{{ exp.label_fr }}</mat-option>
                                                 }
                                             </mat-select>
+                                            <mat-hint>
+                                                {{ config().transversalExpertises?.length || 0 }} expertises disponibles. 
+                                                <a href="javascript:void(0)" (click)="switchToDictionaryTab()">Gérer la liste / Traductions</a>
+                                            </mat-hint>
                                         </mat-form-field>
 
                                         <mat-form-field appearance="outline" class="q-weight">
@@ -446,6 +450,15 @@ export class AdminConfigComponent {
             transversalTags: [],
             options: []
         });
+    }
+
+    // --- Navigation & Helpers ---
+    switchToDictionaryTab() {
+        this.selectedTabIndex.set(4); // Assuming Dictionary is the 5th tab (index 4)
+    }
+
+    compareStrings(o1: any, o2: any): boolean {
+        return o1 === o2;
     }
 
     removeQuestion(section: AssessmentSection, index: number) {
