@@ -41,13 +41,22 @@ import { AdminService } from '../../../core/admin/admin.service';
         </button>
       </div>
 
-      <mat-tab-group>
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
         <!-- TAB 1: QUESTIONS & STRUCTURE -->
         <mat-tab label="Structures & Questions">
             <div class="tab-content">
+                <mat-form-field appearance="outline" class="full-width search-bar">
+                    <mat-label>Search Questions (ID, Text, Category)</mat-label>
+                    <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="Type 'Général' to find general questions...">
+                    <mat-icon matSuffix>search</mat-icon>
+                    <button *ngIf="searchTerm()" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm.set('')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+
                 <mat-accordion multi>
                 @for (section of sections(); track section.id) {
-                <mat-expansion-panel>
+                <mat-expansion-panel [expanded]="searchTerm().length > 0">
                     <mat-expansion-panel-header>
                     <mat-panel-title>
                         <strong>{{ section.title }}</strong>
@@ -57,7 +66,7 @@ import { AdminService } from '../../../core/admin/admin.service';
                     </mat-panel-description>
                     </mat-expansion-panel-header>
 
-                    <div class="section-edit">
+                    <div class="section-edit" *ngIf="searchTerm().length === 0">
                         <div class="dual-input">
                             <mat-form-field appearance="outline" class="half-width">
                                 <mat-label>Titre Section (FR)</mat-label>
@@ -72,50 +81,53 @@ import { AdminService } from '../../../core/admin/admin.service';
 
                     <div class="questions-list">
                         @for (q of section.questions; track q.id; let i = $index) {
-                            <div class="question-item">
-                                <div class="q-header">
-                                    <span class="q-id">{{ q.id }}</span>
-                                    <div class="q-meta">
-                                        <span class="badge">{{ q.responseType }}</span>
-                                        <span class="badge category">{{ q.category }}</span>
+                            <!-- FILTERING LOGIC -->
+                            @if (doesQuestionMatch(q)) {
+                                <div class="question-item">
+                                    <div class="q-header">
+                                        <span class="q-id">{{ q.id }}</span>
+                                        <div class="q-meta">
+                                            <span class="badge">{{ q.responseType }}</span>
+                                            <span class="badge category">{{ q.category }}</span>
+                                        </div>
+                                        <button mat-icon-button color="warn" (click)="removeQuestion(section, i)" matTooltip="Remove Question">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
                                     </div>
-                                    <button mat-icon-button color="warn" (click)="removeQuestion(section, i)" matTooltip="Remove Question">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </div>
-                                
-                                <div class="q-body">
-                                    <div class="dual-input">
-                                        <mat-form-field appearance="outline" class="half-width">
-                                            <mat-label>Question (FR)</mat-label>
-                                            <textarea matInput [(ngModel)]="q.text" rows="3"></textarea>
-                                        </mat-form-field>
-                                        <mat-form-field appearance="outline" class="half-width">
-                                            <mat-label>Question (EN)</mat-label>
-                                            <textarea matInput [(ngModel)]="q.text_en" rows="3"></textarea>
-                                        </mat-form-field>
-                                    </div>
+                                    
+                                    <div class="q-body">
+                                        <div class="dual-input">
+                                            <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Question (FR)</mat-label>
+                                                <textarea matInput [(ngModel)]="q.text" rows="3"></textarea>
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Question (EN)</mat-label>
+                                                <textarea matInput [(ngModel)]="q.text_en" rows="3"></textarea>
+                                            </mat-form-field>
+                                        </div>
 
-                                    <div class="dual-input">
-                                        <mat-form-field appearance="outline" class="half-width">
-                                            <mat-label>Categorie (Clé/FR)</mat-label>
-                                            <input matInput [(ngModel)]="q.category">
-                                        </mat-form-field>
-                                         <mat-form-field appearance="outline" class="half-width">
-                                            <mat-label>Category (EN)</mat-label>
-                                            <input matInput [(ngModel)]="q.category_en">
+                                        <div class="dual-input">
+                                            <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Categorie (Clé/FR)</mat-label>
+                                                <input matInput [(ngModel)]="q.category">
+                                            </mat-form-field>
+                                             <mat-form-field appearance="outline" class="half-width">
+                                                <mat-label>Category (EN)</mat-label>
+                                                <input matInput [(ngModel)]="q.category_en">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <mat-form-field appearance="outline" class="q-weight">
+                                            <mat-label>Weight</mat-label>
+                                            <input matInput type="number" [(ngModel)]="q.weight" step="0.5">
                                         </mat-form-field>
                                     </div>
-
-                                    <mat-form-field appearance="outline" class="q-weight">
-                                        <mat-label>Weight</mat-label>
-                                        <input matInput type="number" [(ngModel)]="q.weight" step="0.5">
-                                    </mat-form-field>
                                 </div>
-                            </div>
+                            }
                         }
                         
-                        <button mat-stroked-button (click)="addQuestion(section)">
+                        <button mat-stroked-button (click)="addQuestion(section)" *ngIf="searchTerm().length === 0">
                             <mat-icon>add</mat-icon> Add Question
                         </button>
                     </div>
@@ -152,7 +164,11 @@ import { AdminService } from '../../../core/admin/admin.service';
                                         <input matInput [(ngModel)]="cat.en" placeholder="No translation">
                                     </mat-form-field>
                                 </td>
-                                <td>{{ cat.count }}</td>
+                                <td>
+                                    <a href="javascript:void(0)" (click)="filterByCategory(cat.original)" style="color: #3f51b5; font-weight: bold; text-decoration: none;">
+                                        {{ cat.count }} questions
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -273,6 +289,10 @@ export class AdminConfigComponent {
     categories = signal<{ original: string, fr: string, en: string, count: number }[]>([]);
     responseTypes = signal<{ name: string, options: any[] }[]>([]);
 
+    // Filter
+    searchTerm = signal<string>('');
+    selectedTabIndex = signal<number>(0);
+
     constructor() {
         this.extractMetadata();
         this.loadFromBackend();
@@ -331,15 +351,10 @@ export class AdminConfigComponent {
     saveConfiguration() {
         const sections = this.sections();
 
-        // 1. Apply Bulk Updates
-        // 1. Apply Bulk Updates
-        // Update all questions that match the ORIGINAL category name to the NEW name (FR and EN)
+        // 1. Bulk Update Categories
         this.categories().forEach(cat => {
             sections.forEach(s => {
                 s.questions.forEach(q => {
-                    // We match against 'original' because that's what we tracked.
-                    // Ideally we should track ids, but categories are string-based.
-                    // If multiple questions share a category, they get updated together.
                     if (q.category === cat.original) {
                         q.category = cat.fr;
                         q.category_en = cat.en;
@@ -348,11 +363,11 @@ export class AdminConfigComponent {
             });
         });
 
+        // 2. Bulk Update Response Types
         this.responseTypes().forEach(type => {
             sections.forEach(s => {
                 s.questions.forEach(q => {
                     if (q.responseType === type.name) {
-                        // Merge options labels
                         q.options?.forEach((qOpt, idx) => {
                             const masterOpt = type.options[idx];
                             if (masterOpt) {
@@ -365,26 +380,22 @@ export class AdminConfigComponent {
             });
         });
 
-        // Save Sections locally for fallback/speed
+        // Save
         this.assessmentService.sections.set(sections);
         localStorage.setItem('elat-config-sections', JSON.stringify(sections));
         localStorage.setItem('elat-admin-config', JSON.stringify(this.config()));
 
-        // Save to Backend (Source of Truth)
         this.adminService.saveConfig({
             sections: sections,
             settings: this.config()
         }).subscribe({
-            next: () => {
-                this.snackBar.open('Configuration saved to Check (Cloud) successfully!', 'Close', { duration: 3000 });
-            },
+            next: () => this.snackBar.open('Configuration saved successfully!', 'Close', { duration: 3000 }),
             error: (err) => {
                 console.error(err);
                 this.snackBar.open('Error saving to Cloud. Saved locally only.', 'Close', { duration: 3000 });
             }
         });
 
-        // Refresh metadata in case keys changed
         this.extractMetadata();
     }
 
@@ -405,7 +416,7 @@ export class AdminConfigComponent {
             category_en: 'General',
             responseType: 'Échelle de conformité',
             transversalTags: [],
-            options: [] // Should probably pick default options based on type
+            options: []
         });
     }
 
@@ -413,5 +424,20 @@ export class AdminConfigComponent {
         if (confirm('Delete this question?')) {
             section.questions.splice(index, 1);
         }
+    }
+
+    // --- Filtering Logic ---
+    doesQuestionMatch(q: AssessmentQuestion): boolean {
+        const term = this.searchTerm().toLowerCase();
+        if (!term) return true;
+        return (q.text && q.text.toLowerCase().includes(term)) ||
+            (q.category && q.category.toLowerCase().includes(term)) ||
+            (q.id && q.id.toLowerCase().includes(term));
+    }
+
+    filterByCategory(category: string) {
+        this.searchTerm.set(category);
+        this.selectedTabIndex.set(0); // Switch to Structure tab
+        this.snackBar.open(`Filtering by category: ${category}`, 'Close', { duration: 2000 });
     }
 }
