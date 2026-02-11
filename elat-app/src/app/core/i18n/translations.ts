@@ -57,13 +57,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             COMMENTS_PLACEHOLDER: 'Specific observation...'
         },
         TRANSVERSAL_TAGS: {
-            'Sécurité': 'Security',
+            'Audit': 'Audit',
+            'Qualité de rapport': 'Report Quality',
+            'Contrôle qualité': 'Quality Control',
             'Stratégie': 'Strategy',
-            'Opérations': 'Operations',
-            'Juridique': 'Legal',
-            'Finance': 'Finance',
-            'RH': 'HR',
-            'Informatique': 'IT'
+            'Environnement': 'Environment',
+            'Performance': 'Performance',
+            'Maîtrise du risque financier': 'Financial Risk Control',
+            'Traçabilité': 'Traceability',
+            'Sécurité': 'Security'
         }
     },
     FR: {
@@ -124,13 +126,15 @@ export const TOP_LEVEL_TRANSLATIONS = {
             COMMENTS_PLACEHOLDER: 'Observation spécifique...'
         },
         TRANSVERSAL_TAGS: {
-            'Sécurité': 'Sécurité',
+            'Audit': 'Audit',
+            'Qualité de rapport': 'Qualité de rapport',
+            'Contrôle qualité': 'Contrôle qualité',
             'Stratégie': 'Stratégie',
-            'Opérations': 'Opérations',
-            'Juridique': 'Juridique',
-            'Finance': 'Finance',
-            'RH': 'RH',
-            'Informatique': 'Informatique'
+            'Environnement': 'Environnement',
+            'Performance': 'Performance',
+            'Maîtrise du risque financier': 'Maîtrise du risque financier',
+            'Traçabilité': 'Traçabilité',
+            'Sécurité': 'Sécurité'
         }
     }
 };
