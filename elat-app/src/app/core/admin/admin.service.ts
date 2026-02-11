@@ -4,6 +4,7 @@ import { tap } from 'rxjs/operators';
 import { User } from '../auth/auth.service';
 
 import { environment } from '../../../environments/environment';
+import { DEFAULT_CONFIG } from '../../models/admin-config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,17 @@ export class AdminService {
     return this.http.get<any>(this.configUrl).pipe(
       tap(cfg => {
         if (cfg && cfg.settings) {
-          this.config.set(cfg.settings);
+          // Merge backend config with default config to ensure new fields (like transversalExpertises) are present
+          const mergedConfig = { ...DEFAULT_CONFIG, ...cfg.settings };
+
+          // Ensure nested arrays/objects are also merged if needed, or at least present
+          if (!mergedConfig.transversalExpertises) {
+            mergedConfig.transversalExpertises = DEFAULT_CONFIG.transversalExpertises;
+          }
+
+          this.config.set(mergedConfig);
+        } else {
+          this.config.set(DEFAULT_CONFIG);
         }
       })
     );
