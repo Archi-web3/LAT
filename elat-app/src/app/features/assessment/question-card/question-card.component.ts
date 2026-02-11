@@ -15,6 +15,7 @@ import { AssessmentService } from '../../../services/assessment.service';
 import { CloudinaryService } from '../../../services/cloudinary.service';
 import { LocalizePipe } from '../../../core/i18n/localize.pipe';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { AdminService } from '../../../core/admin/admin.service';
 
 @Component({
   selector: 'app-question-card',
@@ -49,7 +50,7 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
         <div class="tags" *ngIf="question.transversalTags.length > 0">
           <mat-chip-set>
             <mat-chip *ngFor="let tag of question.transversalTags" class="tag-chip">
-                {{ 'TRANSVERSAL_TAGS.' + tag | translate }}
+                {{ getExpertiseLabel(tag) }}
             </mat-chip>
           </mat-chip-set>
         </div>
@@ -250,6 +251,7 @@ export class QuestionCardComponent {
   }
 
   resizeImage(file: File): Promise<Blob> {
+
     return new Promise((resolve, reject) => {
       const img = document.createElement('img');
       const reader = new FileReader();
@@ -278,5 +280,20 @@ export class QuestionCardComponent {
       };
       img.onerror = reject;
     });
+  }
+
+  getExpertiseLabel(tag: string): string {
+    const config = this.adminService.config();
+
+    // Safety check: if config not loaded yet, return tag
+    if (!config || !config.transversalExpertises) return tag;
+
+    // Find expertise by ID or Label FR (backward compatibility)
+    const expertise = config.transversalExpertises.find(e => e.label_fr === tag || e.id === tag);
+
+    if (!expertise) return tag;
+
+    const lang = this.translationService.currentLang();
+    return lang === 'FR' ? expertise.label_fr : (expertise.label_en || expertise.label_fr);
   }
 }

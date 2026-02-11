@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessmentSection, AssessmentQuestion } from '../../../models/assessment.model';
 import { AdminConfig, DEFAULT_CONFIG } from '../../../models/admin-config.model';
@@ -27,7 +28,8 @@ import { AdminService } from '../../../core/admin/admin.service';
         MatIconModule,
         MatSnackBarModule,
         MatTabsModule,
-        MatChipsModule
+        MatChipsModule,
+        MatSelectModule
     ],
     template: `
     <div class="container">
@@ -121,21 +123,12 @@ import { AdminService } from '../../../core/admin/admin.service';
                                         </div>
 
                                         <mat-form-field appearance="outline" class="full-width">
-                                            <mat-label>Expertises Transversales (Tags)</mat-label>
-                                            <mat-chip-grid #chipGrid aria-label="Enter tags">
-                                                @for (tag of q.transversalTags; track tag) {
-                                                    <mat-chip-row (removed)="removeTag(q, tag)">
-                                                        {{ tag }}
-                                                        <button matChipRemove [attr.aria-label]="'remove ' + tag">
-                                                            <mat-icon>cancel</mat-icon>
-                                                        </button>
-                                                    </mat-chip-row>
+                                            <mat-label>Expertises Transversales</mat-label>
+                                            <mat-select multiple [(ngModel)]="q.transversalTags">
+                                                @for (exp of config().transversalExpertises; track exp.id) {
+                                                    <mat-option [value]="exp.label_fr">{{ exp.label_fr }}</mat-option>
                                                 }
-                                                <input placeholder="New tag..."
-                                                       [matChipInputFor]="chipGrid"
-                                                       (matChipInputTokenEnd)="addTag(q, $event)"/>
-                                            </mat-chip-grid>
-                                            <mat-hint>Press Enter to add (e.g., Sécurité, Stratégie)</mat-hint>
+                                            </mat-select>
                                         </mat-form-field>
 
                                         <mat-form-field appearance="outline" class="q-weight">
@@ -483,6 +476,24 @@ export class AdminConfigComponent {
         const index = question.transversalTags.indexOf(tag);
         if (index >= 0) {
             question.transversalTags.splice(index, 1);
+        }
+    }
+
+    // --- Expertises Dictionary Management ---
+    addExpertise() {
+        if (!this.config().transversalExpertises) {
+            this.config().transversalExpertises = [];
+        }
+        this.config().transversalExpertises.push({
+            id: 'new-' + Date.now(),
+            label_fr: 'Nouvelle Expertise',
+            label_en: ''
+        });
+    }
+
+    removeExpertise(index: number) {
+        if (confirm('Supprimer cette expertise ? Cela ne la retirera pas des questions existantes mais elle ne sera plus proposée.')) {
+            this.config().transversalExpertises.splice(index, 1);
         }
     }
 }
