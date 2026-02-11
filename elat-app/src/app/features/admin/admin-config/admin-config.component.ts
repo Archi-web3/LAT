@@ -45,7 +45,7 @@ import { AdminService } from '../../../core/admin/admin.service';
         </button>
       </div>
 
-      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+      <mat-tab-group [selectedIndex]="selectedTabIndex()" (selectedIndexChange)="selectedTabIndex.set($event)">
         <!-- TAB 1: QUESTIONS & STRUCTURE -->
         <mat-tab label="Structures & Questions">
             <div class="tab-content">
@@ -311,14 +311,12 @@ export class AdminConfigComponent {
     snackBar = inject(MatSnackBar);
 
     sections = signal<AssessmentSection[]>(JSON.parse(JSON.stringify(this.assessmentService.sections())));
-    config = signal<AdminConfig>(this.loadConfig());
+    // Signals
+    config = this.adminService.config;
+    categories = computed(() => this.adminService.config()?.categories || []);
+    responseTypes = computed(() => this.adminService.config()?.responseTypes || []);
 
-    // Computed for UI
-    categories = signal<{ original: string, fr: string, en: string, count: number }[]>([]);
-    responseTypes = signal<{ name: string, options: any[] }[]>([]);
-
-    // Filter
-    searchTerm = signal<string>('');
+    searchTerm = signal('');
     selectedTabIndex = signal<number>(0);
 
     constructor() {
