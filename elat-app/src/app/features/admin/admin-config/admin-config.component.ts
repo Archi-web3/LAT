@@ -313,8 +313,10 @@ export class AdminConfigComponent {
     sections = signal<AssessmentSection[]>(JSON.parse(JSON.stringify(this.assessmentService.sections())));
     // Signals
     config = this.adminService.config;
-    categories = computed(() => this.adminService.config()?.categories || []);
-    responseTypes = computed(() => this.adminService.config()?.responseTypes || []);
+
+    // Writable signals initialized from config but updatable by extractMetadata
+    categories = signal<{ original: string, fr: string, en: string, count: number }[]>(this.adminService.config()?.categories || []);
+    responseTypes = signal<{ name: string, options: any[] }[]>(this.adminService.config()?.responseTypes || []);
 
     searchTerm = signal('');
     selectedTabIndex = signal<number>(0);
