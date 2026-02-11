@@ -45,10 +45,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
                 <mat-card-content>
                     <ul>
                         <li><strong>Navigation</strong> : Utilisez le menu de gauche pour passer d'une section à l'autre (ex: "Supply Chain", "Fleet").</li>
-                        <li><strong>Réponses</strong> : Cochez <strong>Oui (1)</strong>, <strong>Non (0)</strong> ou <strong>N/A (-1)</strong>. La sauvegarde est automatique.</li>
-                        <li><strong>Scores</strong> : Suivez votre progression (barres vertes) et votre score en temps réel en haut de l'écran.
-                            <br><em>Le score est calculé sur la base des questions répondues. Les réponses <strong>N/A</strong> sont exclues du calcul (elles ne comptent pas dans le total possible).</em>
+                        <li><strong>Réponses</strong> : Sélectionnez l'option appropriée pour chaque question (ex: Conforme, Partiellement, Non Conforme).
+                            <br><em>Les échelles varient (0, 0.5, 1) selon le type de question (Conformité, Traçabilité, Présence...).</em>
                         </li>
+                        <li><strong>N/A (Non Applicable)</strong> : Une question marquée <strong>N/A</strong> est <strong>exclue</strong> du calcul. Elle n'impacte pas la moyenne (le dénominateur est ajusté).</li>
+                        <li><strong>Scores</strong> : Suivez votre progression (barres vertes) et votre score en temps réel en haut de l'écran.</li>
                         <li><strong>Reset</strong> : Le bouton "Reset" en haut à droite efface TOUTES les réponses de l'évaluation en cours. À utiliser avec précaution.</li>
                     </ul>
                 </mat-card-content>
