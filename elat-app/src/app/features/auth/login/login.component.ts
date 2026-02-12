@@ -27,9 +27,10 @@ import { TranslationService } from '../../../core/i18n/translation.service';
       <mat-card class="login-card">
         <mat-card-header class="centered-header">
           <div class="logo-container">
-            <img src="/assets/logo-full-transparent.png" alt="ACF" class="login-logo">
+            <!-- New App Logo -->
+            <img src="assets/logo.jpeg" alt="LAT Logo" class="login-logo" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
           </div>
-          <h1>ELAT</h1>
+          <h1>{{ 'APP_NAME' | translate }}</h1>
         </mat-card-header>
         
         <mat-card-content>
