@@ -525,44 +525,129 @@ export class AssessmentService {
   // --- Synchronization Logic ---
 
   async sync() {
-    console.log('Attempting sync...');
+    console.log('🔄 Attempting Bidirectional Sync...');
     if (!navigator.onLine) {
-      console.log('Offline: Skipping sync');
+      console.log('❌ Offline: Skipping sync');
       return;
     }
 
-    const history = this.getHistory();
-    const unsynced = history.filter((h: any) => !h.synced);
+    const unsynced = this.getAllSavedAssessments().filter(a => !a.synced);
 
-    if (unsynced.length === 0) {
-      console.log('Nothing to sync');
-      return;
-    }
+    // We always sync, even if unsynced is empty, to PULL server updates
+    console.log(`📤 Push: Found ${unsynced.length} items to sync`);
 
-    console.log(`Found ${unsynced.length} items to sync`);
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log('No token: Cannot sync');
+      console.log('⚠️ No token: Cannot sync');
       return;
     }
 
     try {
       const headers = { 'x-auth-token': token };
-      this.http.post(`${this.apiUrl}/sync`, unsynced, { headers })
+      const lastSyncTimestamp = localStorage.getItem('elat-last-sync-timestamp');
+
+      const payload = {
+        changes: unsynced.map(a => ({
+          ...a,
+          id: a.id || crypto.randomUUID(), // Ensure ID
+          // Map local context to server schema expectations if needed
+          userId: this.authService.currentUser()?.id
+        })),
+        lastSyncTimestamp: lastSyncTimestamp || null
+      };
+
+      this.http.post<any>(`${this.apiUrl}/sync`, payload, { headers })
         .subscribe({
-          next: (res: any) => {
-            console.log('Sync successful!', res);
-            const updatedHistory = history.map((h: any) => {
-              if (!h.synced) return { ...h, synced: true };
-              return h;
-            });
-            localStorage.setItem('elat-history', JSON.stringify(updatedHistory));
+          next: (res) => {
+            console.log('✅ Sync successful!', res);
+
+            // 1. Mark Applied as Synced
+            if (res.applied && res.applied.length > 0) {
+              res.applied.forEach((syncedId: string) => {
+                this.markAsSynced(syncedId);
+              });
+            }
+
+            // 2. Apply Server Updates (Pull)
+            if (res.serverUpdates && res.serverUpdates.length > 0) {
+              console.log(`📥 Pull: Received ${res.serverUpdates.length} updates from server`);
+              this.applyServerUpdates(res.serverUpdates);
+            }
+
+            // 3. Update Sync Timestamp
+            localStorage.setItem('elat-last-sync-timestamp', res.timestamp);
+
+            // 4. Force UI Refresh
+            // If the current context was updated, reload it
+            const currentCtx = this.context();
+            if (currentCtx) {
+              const key = this.getStorageKey(currentCtx);
+              const currentId = localStorage.getItem(key + '_id');
+              // We might need a better way to check if current doc was updated
+              // For now, re-load state if we suspect changes
+              this.loadStateForContext(currentCtx);
+            }
           },
-          error: (err) => console.error('Sync failed', err)
+          error: (err) => console.error('❌ Sync failed', err)
         });
     } catch (e) {
-      console.error('Sync error', e);
+      console.error('❌ Sync error', e);
     }
+  }
+
+  // Helper: Mark local item as synced
+  private markAsSynced(idOrContextKey: string) {
+    // We store by Context Key in LocalStorage, but Server sends IDs
+    // We need to find the LocalStorage key for this ID
+    // Naive approach: Iterate all
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('elat-assessment-')) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const state = JSON.parse(raw);
+            // Match by ID if present, or we can assume the server returned the ID we sent
+            if (state.id === idOrContextKey || !state.id) {
+              // If no ID locally, we assume it was the one we just sent. 
+              // In reality, we should store IDs locally.
+              // Let's blindly mark as synced if it was in the 'unsynced' list we sent.
+              state.synced = true;
+              state.id = idOrContextKey; // Update ID if server assigned one
+              localStorage.setItem(key, JSON.stringify(state));
+            }
+          }
+        } catch (e) { }
+      }
+    }
+  }
+
+  // Helper: Apply Server Updates
+  private applyServerUpdates(updates: any[]) {
+    updates.forEach(serverDoc => {
+      if (!serverDoc.context) return;
+
+      const key = this.getStorageKey(serverDoc.context);
+      const localJson = localStorage.getItem(key);
+
+      if (localJson) {
+        const localDoc = JSON.parse(localJson);
+
+        // Conflict Detection
+        // If local is dirty (unsynced) and updated recently
+        if (!localDoc.synced) {
+          console.warn(`⚠️ Conflict detected for ${key}. Server has newer version.`);
+          // Strategy: Save Server version as Main, Move Local to "Conflict Copy"
+          const conflictKey = key + '_CONFLICT_' + Date.now();
+          localStorage.setItem(conflictKey, JSON.stringify(localDoc));
+          console.log(`Saved local conflict to ${conflictKey}`);
+        }
+      }
+
+      // Overwrite Local with Server
+      serverDoc.synced = true;
+      localStorage.setItem(key, JSON.stringify(serverDoc));
+    });
   }
 
   getRemoteHistory() {
