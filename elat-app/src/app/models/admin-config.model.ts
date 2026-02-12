@@ -37,7 +37,7 @@ export const DEFAULT_CONFIG: AdminConfig = {
     ],
     roadmap: [
         // Robustesse & Mode Hors-Ligne
-        { id: 'pwa-offline', category: 'TECH', title: 'Mode Hors-Ligne Avancé (PWA)', description: 'Configuration agressive du Service Worker pour cache total données + assets.', status: 'TODO' },
+        { id: 'pwa-offline', category: 'TECH', title: 'Mode Hors-Ligne Avancé (PWA)', description: 'Configuration agressive du Service Worker pour cache total données + assets.', status: 'DONE' },
         { id: 'sync-bidir', category: 'TECH', title: 'Synchronisation Bidirectionnelle', description: 'Permettre l\'envoi et la réception de données (push/pull) pour travail collaboratif.', status: 'TODO' },
         { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'Mécanisme pour gérer les écrasements de données si plusieurs utilisateurs éditent.', status: 'TODO' },
 

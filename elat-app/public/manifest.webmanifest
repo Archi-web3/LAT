@@ -1,6 +1,7 @@
-{
-  "name": "elat-app",
-  "short_name": "elat-app",
+  "name": "ELAT - Emergency Logistics Assessment Tool",
+  "short_name": "ELAT",
+  "theme_color": "#1976d2",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
