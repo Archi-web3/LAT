@@ -531,35 +531,7 @@ export class AssessmentService {
     return total > 0 ? Math.round((naCount / total) * 100) : 0;
   }
 
-  private saveState() {
-    const ctx = this.context();
-    if (!ctx) return;
 
-    const state: import('../models/assessment.model').AssessmentState = {
-      status: this.status(),
-      answers: this.answers(),
-      comments: this.comments(),
-      proofLinks: this.proofLinks(),
-      proofPhotos: this.proofPhotos(),
-      context: ctx,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-
-      // Save Calculated Score
-      score: this.getGlobalScore(),
-
-      // Save logs
-      submittedBy: this.submittedBy(),
-      submittedAt: this.submittedAt(),
-      validatedBy: this.validatedBy(),
-      validatedAt: this.validatedAt()
-    };
-
-    const key = this.getStorageKey(ctx);
-    localStorage.setItem(key, JSON.stringify(state));
-
-    localStorage.setItem('elat-last-context', JSON.stringify(ctx));
-  }
 
   // ... existing loadStateForContext ...
 
