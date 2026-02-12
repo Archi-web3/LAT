@@ -3,7 +3,7 @@ const Config = require('../models/Config');
 // Get Configuration
 exports.getConfig = async (req, res) => {
     try {
-        let config = await Config.findOne({ key: 'app-config' });
+        let config = await Config.findOne({ key: 'app-config' }).lean();
         if (!config) {
             // Return null or empty object if not found, let frontend handle default
             return res.json(null);

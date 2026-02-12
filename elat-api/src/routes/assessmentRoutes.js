@@ -11,6 +11,7 @@ router.post('/sync', auth, assessmentController.sync);
 // @route   GET api/assessments/history
 // @desc    Get assessment history (filtered by Role)
 // @access  Private
+// Optimized: Uses lean() in controller for performance
 router.get('/history', auth, assessmentController.getHistory);
 
 // @route   DELETE api/assessments/:id

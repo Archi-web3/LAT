@@ -86,7 +86,11 @@ exports.getHistory = async (req, res) => {
         }
 
         console.log('[API] Assessment Query:', JSON.stringify(query));
-        const assessments = await Assessment.find(query).sort({ date: -1 }).populate('userId', 'name email');
+        const assessments = await Assessment.find(query)
+            .sort({ date: -1 })
+            .populate('userId', 'name email')
+            .lean(); // Optimize for read-only
+
         console.log(`[API] Found ${assessments.length} assessments`);
 
         res.json(assessments);

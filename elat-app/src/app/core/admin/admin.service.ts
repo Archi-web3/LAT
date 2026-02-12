@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { User } from '../auth/auth.service';
 
 import { environment } from '../../../environments/environment';
@@ -30,9 +31,11 @@ export class AdminService {
   getConfig() {
     return this.http.get<any>(this.configUrl).pipe(
       tap(cfg => {
-        if (cfg && cfg.settings) {
+        if (cfg) { // Check if cfg is not null/undefined
           // Merge backend config with default config to ensure new fields (like transversalExpertises) are present
-          const mergedConfig = { ...DEFAULT_CONFIG, ...cfg.settings };
+          // If cfg.settings exists use it, otherwise use cfg itself or empty object
+          const settings = cfg.settings || cfg;
+          const mergedConfig = { ...DEFAULT_CONFIG, ...settings };
 
           // Ensure nested arrays/objects are also merged if needed, or at least present
           if (!mergedConfig.transversalExpertises) {
@@ -43,6 +46,11 @@ export class AdminService {
         } else {
           this.config.set(DEFAULT_CONFIG);
         }
+      }),
+      catchError(err => {
+        console.error('Failed to load config from backend, using default:', err);
+        this.config.set(DEFAULT_CONFIG);
+        return of(DEFAULT_CONFIG);
       })
     );
   }
