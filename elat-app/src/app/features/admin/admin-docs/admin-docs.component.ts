@@ -90,13 +90,29 @@ import { MatExpansionModule } from '@angular/material/expansion';
                         <li><strong>Génération Automatique</strong> :
                             Un algorithme analyse vos scores et crée des actions pour chaque point faible.
                             <ul>
-                                <li><strong style="color: #d32f2f">Priorité CRITIQUE</strong> : Score &lt; Seuil Critique (Défaut 50%). Échéance : +1 Mois.</li>
+                                <li style="margin-bottom: 4px;"><strong style="color: #d32f2f">Priorité CRITIQUE</strong> : Score &lt; Seuil Critique (Défaut 50%). Échéance : +1 Mois.</li>
                                 <li><strong style="color: #f57c00">Priorité ÉLEVÉE</strong> : Score &lt; Seuil Élevé (Défaut 80%). Échéance : +3 Mois.</li>
                             </ul>
                         </li>
                         <li><strong>Suivi</strong> : Assignez des responsables, modifiez les statuts (To Do / Doing / Done) et ajoutez des commentaires.</li>
                         <li><strong>Vue Gantt</strong> : Visualisez la planification temporelle de toutes les actions correctives.</li>
                         <li><strong>Configuration</strong> : Les seuils de priorité sont ajustables dans le menu <em>"Questions Config"</em>.</li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mt-2" style="border-left: 4px solid #4CAF50;">
+                <mat-card-header>
+                    <mat-card-title>6. Mode Hors Ligne & Synchronisation <mat-icon color="primary" inline>sync</mat-icon></mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>L'application est conçue pour fonctionner intégralement sans connexion internet (PWA).</p>
+                    <p><strong>Ce qui change concrètement :</strong></p>
+                    <ul>
+                        <li><strong>Envoi (Push)</strong> : Vos données (réponses, commentaires) partent sur le serveur dès que vous retrouvez une connexion internet.</li>
+                        <li><strong>Réception (Pull)</strong> : Si quelqu'un d'autre (ou vous-même sur un autre PC) a modifié des données, vous recevez automatiquement les mises à jour sur votre appareil.</li>
+                        <li><strong>Bouton Manuel</strong> : Un bouton "Sync" (icône <mat-icon inline>sync</mat-icon>) est disponible en haut à droite pour forcer la synchronisation si besoin.</li>
+                        <li><strong>Sécurité Conflits</strong> : Si deux personnes modifient la même fiche en même temps alors qu'elles sont hors-ligne, l'application créera automatiquement une <strong>copie de sauvegarde</strong> (ex: <em>"Assessment [...]_CONFLICT_..."</em>) pour ne rien perdre et vous permettre de comparer.</li>
                     </ul>
                 </mat-card-content>
             </mat-card>
@@ -153,11 +169,25 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
-                        <mat-panel-title>Stratégie Hors Ligne (Offline)</mat-panel-title>
+                        <mat-panel-title>Stratégie Hors Ligne (Offline & Sync)</mat-panel-title>
                     </mat-expansion-panel-header>
                     <ul>
-                        <li><strong>Local First</strong> : Données écrites prioritairement en local.</li>
-                        <li><strong>Sync Service</strong> : Tente de synchroniser avec le backend dès que la connexion est disponible (<code>navigator.onLine</code>).</li>
+                        <li><strong>PWA (Progressive Web App)</strong> : 
+                            Service Worker configuré pour mettre en cache l'ensemble de l'application (Assets + CSS + JS) et les données statiques (Pays/Bases via <code>LocationService</code>).
+                        </li>
+                        <li><strong>Local-First Architecture</strong> : 
+                            Toutes les écritures se font d'abord dans le <code>LocalStorage</code>. L'interface reste réactive même sans réseau.
+                        </li>
+                        <li><strong>Synchronisation Bidirectionnelle</strong> :
+                            <ul>
+                                <li><strong>Trigger</strong> : Événement <code>window.online</code> ou bouton manuel.</li>
+                                <li><strong>Flow</strong> : Push des données locales modifiées -> Pull des mises à jour serveur (basé sur <code>lastSyncTimestamp</code>).</li>
+                                <li><strong>Endpoint</strong> : <code>POST /api/assessments/sync</code> gère la logique de fusion côté backend.</li>
+                            </ul>
+                        </li>
+                         <li><strong>Gestion des Conflits</strong> :
+                            Stratégie "Server Wins" pour la version principale, mais <strong>préservation systématique</strong> de la version locale dans une copie suffixée <code>_CONFLICT_TIMESTAMP</code>. Cela garantit aucune perte de données utilisateur.
+                        </li>
                     </ul>
                 </mat-expansion-panel>
              </mat-accordion>
