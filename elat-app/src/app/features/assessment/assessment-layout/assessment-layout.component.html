@@ -46,6 +46,11 @@
             <mat-icon>file_download</mat-icon>
         </button>
 
+        <button mat-icon-button (click)="exportPDF()" matTooltip="Export as PDF Report" color="primary"
+            class="desktop-only">
+            <mat-icon>picture_as_pdf</mat-icon>
+        </button>
+
         <button mat-icon-button (click)="resetAssessment()" matTooltip="Reset All Answers" color="warn"
             class="desktop-only">
             <mat-icon>restart_alt</mat-icon>

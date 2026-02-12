@@ -14,6 +14,7 @@ import { getCategoryColor } from '../../../core/constants/category-colors';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { LocalizePipe } from '../../../core/i18n/localize.pipe';
+import { PdfService } from '../../../services/pdf.service';
 
 @Component({
   selector: 'app-assessment-layout',
@@ -39,6 +40,7 @@ export class AssessmentLayoutComponent {
   assessmentService = inject(AssessmentService);
   authService = inject(AuthService);
   translationService = inject(TranslationService);
+  pdfService = inject(PdfService);
   sections = this.assessmentService.sections;
 
   // Responsive State
@@ -102,6 +104,29 @@ export class AssessmentLayoutComponent {
 
   exportCSV() {
     this.assessmentService.exportToCSV();
+  }
+
+  exportPDF() {
+    const state = {
+      context: this.assessmentService.context(),
+      answers: this.assessmentService.answers(),
+      comments: this.assessmentService.comments(),
+      proofLinks: this.assessmentService.proofLinks(),
+      proofPhotos: this.assessmentService.proofPhotos(),
+      status: this.assessmentService.status(),
+      score: this.assessmentService.getGlobalScore(),
+      submittedBy: this.assessmentService.submittedBy(),
+      submittedAt: this.assessmentService.submittedAt(),
+      validatedBy: this.assessmentService.validatedBy(),
+      validatedAt: this.assessmentService.validatedAt(),
+      createdAt: '',
+      updatedAt: ''
+    };
+
+    if (!state.context) return;
+
+    // @ts-ignore
+    this.pdfService.generateAssessmentReport(state, this.sections(), []);
   }
 
   manualSync() {
