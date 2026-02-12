@@ -40,6 +40,12 @@ export class AssessmentService {
   constructor() {
     this.loadData();
     this.restoreLastContext();
+
+    // Auto-Sync on Reconnect
+    window.addEventListener('online', () => {
+      console.log('🌐 Network restored! Attempting auto-sync...');
+      this.sync();
+    });
   }
 
   private restoreLastContext() {
@@ -397,6 +403,11 @@ export class AssessmentService {
     localStorage.setItem('elat-history', JSON.stringify(history));
 
     this.sync();
+  }
+
+  hasUnsyncedChanges() {
+    const history = this.getHistory();
+    return history.some((h: any) => !h.synced);
   }
 
   getHistory(): any[] {

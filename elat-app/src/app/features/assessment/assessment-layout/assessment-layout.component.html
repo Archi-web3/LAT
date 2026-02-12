@@ -13,6 +13,18 @@
     <!-- Spacer - Pushes everything else to the Right -->
     <span class="spacer"></span>
 
+    <!-- Offline Indicator -->
+    <div class="offline-badge" *ngIf="!isOnline()" matTooltip="You are offline. Changes are saved locally.">
+        <mat-icon>cloud_off</mat-icon>
+        <span class="desktop-only">Offline Mode</span>
+    </div>
+
+    <div class="sync-badge" *ngIf="isOnline() && assessmentService.hasUnsyncedChanges()"
+        matTooltip="Syncing changes...">
+        <mat-icon class="spin">sync</mat-icon>
+        <span class="desktop-only">Syncing...</span>
+    </div>
+
     <!-- Context-Aware Controls (Right Side) -->
     <ng-container *ngIf="assessmentService.context()">
 

@@ -1,59 +1,83 @@
     .toolbar-logo {
-      height: 40px;
-      margin-right: 15px;
-      border-radius: 4px;
+        height: 40px;
+        margin-right: 15px;
+        border-radius: 4px;
     }
+
     .sidenav-container {
-      height: calc(100vh - 64px);
-      background-color: #f8f9fa; /* Lighter background for the container */
+        height: calc(100vh - 64px);
+        background-color: #f8f9fa;
+        /* Lighter background for the container */
     }
+
     .sidenav {
-      width: 320px; /* Widened from 250px */
-      border-right: 1px solid rgba(0,0,0,0.08);
-      background: white;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+        width: 320px;
+        /* Widened from 250px */
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
+        background: white;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.03);
     }
+
     .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15); /* Slightly deeper shadow */
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        /* Slightly deeper shadow */
     }
+
     .spacer {
-      flex: 1 1 auto;
+        flex: 1 1 auto;
     }
-    
+
     /* Navigation List Items */
     .mat-nav-list .mat-list-item {
-        height: auto; /* Allow height to adjust for content */
+        height: auto;
+        /* Allow height to adjust for content */
         min-height: 48px;
         margin-bottom: 2px;
     }
 
     .active-link {
-      background: rgba(63, 81, 181, 0.08); /* Softer active background */
-      color: #3f51b5; /* Primary color for active text */
-      font-weight: 500;
-      border-right: 4px solid #3f51b5;
+        background: rgba(63, 81, 181, 0.08);
+        /* Softer active background */
+        color: #3f51b5;
+        /* Primary color for active text */
+        font-weight: 500;
+        border-right: 4px solid #3f51b5;
     }
 
     /* Collapsible Styles */
     .sidebar-header {
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         cursor: pointer;
-        padding: 16px 16px; /* More padding */
-        font-weight: 600; 
+        padding: 16px 16px;
+        /* More padding */
+        font-weight: 600;
         color: #444;
         font-size: 0.95rem;
         background: #fdfdfd;
         border-bottom: 1px solid #f0f0f0;
         transition: background 0.2s;
     }
-    .sidebar-header:hover { background: #f5f5f5; color: #222; }
-    .toggle-icon { font-size: 20px; height: 20px; width: 20px; opacity: 0.6; }
-    .collapsible-menu { 
-        background: #fafafa; 
-        border-bottom: 1px solid #eee; 
+
+    .sidebar-header:hover {
+        background: #f5f5f5;
+        color: #222;
+    }
+
+    .toggle-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+        opacity: 0.6;
+    }
+
+    .collapsible-menu {
+        background: #fafafa;
+        border-bottom: 1px solid #eee;
         padding-top: 4px;
         padding-bottom: 4px;
     }
@@ -71,36 +95,44 @@
 
     /* Section Item with Dynamic Color Border */
     .section-item {
-      border-left: 5px solid transparent; /* Placeholder for dynamic color */
-      transition: all 0.2s ease;
-      position: relative;
+        border-left: 5px solid transparent;
+        /* Placeholder for dynamic color */
+        transition: all 0.2s ease;
+        position: relative;
     }
+
     .section-item:hover {
-      background: rgba(0,0,0,0.03);
+        background: rgba(0, 0, 0, 0.03);
     }
+
     .section-item.active-link {
-      border-right: none; /* remove right border for sections */
-      background: rgba(0,0,0,0.06);
+        border-right: none;
+        /* remove right border for sections */
+        background: rgba(0, 0, 0, 0.06);
     }
-    
+
     /* Section Title - Neutral Color */
     .section-title {
-        color: #333; /* Neutral color instead of category color */
+        color: #333;
+        /* Neutral color instead of category color */
         font-size: 0.95rem;
         line-height: 1.4;
         display: block;
         padding-top: 8px;
         padding-bottom: 2px;
     }
-    
+
     .section-meta {
         display: flex;
         justify-content: space-between;
         margin-top: 2px;
-        margin-bottom: 8px; /* Give it some breathing room */
+        margin-bottom: 8px;
+        /* Give it some breathing room */
         font-size: 0.8rem;
-        color: #888; /* Lighter text for meta info */
+        color: #888;
+        /* Lighter text for meta info */
     }
+
     .section-progress {
         font-weight: 600;
         color: #f57c00; // Orange for ongoing
@@ -108,6 +140,7 @@
         border-radius: 4px;
         background: rgba(245, 124, 0, 0.1);
     }
+
     .section-progress.complete {
         color: #2e7d32; // Darker green
         background: rgba(76, 175, 80, 0.1);
@@ -115,36 +148,43 @@
 
     .metrics {
         display: flex;
-        gap: 20px; /* More spacing */
+        gap: 20px;
+        /* More spacing */
         margin-right: 15px;
         padding-right: 15px;
-        border-right: 1px solid rgba(255,255,255,0.2);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
     }
+
     .metric-item {
         display: flex;
         flex-direction: column;
         align-items: center;
         line-height: 1.1;
     }
+
     .metric-item .label {
-        font-size: 0.7rem; /* Slightly larger */
+        font-size: 0.7rem;
+        /* Slightly larger */
         text-transform: uppercase;
         opacity: 0.8;
         letter-spacing: 0.5px;
     }
+
     .metric-item .value {
         font-weight: 700;
         font-size: 1.2rem;
     }
+
     .context-badge {
         font-size: 0.85rem;
-        background: rgba(255,255,255,0.15);
+        background: rgba(255, 255, 255, 0.15);
         padding: 5px 12px;
-        border-radius: 20px; /* Rounder badge */
+        border-radius: 20px;
+        /* Rounder badge */
         margin-left: 15px;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     .status-badge {
         padding: 4px 12px;
         border-radius: 16px;
@@ -152,64 +192,112 @@
         font-size: 0.8rem;
         text-transform: uppercase;
         margin-right: 16px;
-        border: 1px solid rgba(255,255,255,0.3);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
-    .status-badge.draft { background: rgba(255,255,255,0.1); color: #ddd; }
-    .status-badge.submitted { background: #ff9800; color: white; border-color: #ff9800; }
-    .status-badge.validated { background: #4caf50; color: white; border-color: #4caf50; }
-    
-    .lifecycle-actions { display: flex; gap: 8px; margin-right: 16px; }
-    .spacer-mini { width: 10px; }
-    
+
+    .status-badge.draft {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ddd;
+    }
+
+    .status-badge.submitted {
+        background: #ff9800;
+        color: white;
+        border-color: #ff9800;
+    }
+
+    .status-badge.validated {
+        background: #4caf50;
+        color: white;
+        border-color: #4caf50;
+    }
+
+    .lifecycle-actions {
+        display: flex;
+        gap: 8px;
+        margin-right: 16px;
+    }
+
+    .spacer-mini {
+        width: 10px;
+    }
+
     .user-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-right: 15px; /* More margin */
-      line-height: 1.2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-right: 15px;
+        /* More margin */
+        line-height: 1.2;
     }
-    .user-name { font-weight: 600; font-size: 0.9rem; }
-    .user-role { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .user-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .user-role {
+        font-size: 0.7rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
     /* Logging Info */
     .log-info {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        margin-right: 25px; /* More margin */
+        margin-right: 25px;
+        /* More margin */
         font-size: 0.75rem;
         opacity: 0.9;
         text-align: right;
     }
+
     .log-line {
         display: flex;
         align-items: center;
-        justify-content: flex-end; /* Right align */
+        justify-content: flex-end;
+        /* Right align */
         gap: 6px;
     }
-    .log-line mat-icon { font-size: 14px; height: 14px; width: 14px; }
-    .log-line.validated { color: #ccff90; }
+
+    .log-line mat-icon {
+        font-size: 14px;
+        height: 14px;
+        width: 14px;
+    }
+
+    .log-line.validated {
+        color: #ccff90;
+    }
 
     .lang-btn {
         min-width: 0;
         padding: 0 10px;
-        color: rgba(255,255,255,0.7);
+        color: rgba(255, 255, 255, 0.7);
         font-weight: normal;
         border-radius: 14px;
     }
+
     .lang-btn.active {
         color: #3f51b5;
         background: white;
         font-weight: bold;
     }
-    .lang-divider { color: rgba(255,255,255,0.3); margin: 0 5px; }
+
+    .lang-divider {
+        color: rgba(255, 255, 255, 0.3);
+        margin: 0 5px;
+    }
 
     /* --- MOBILE RESPONSIVE STYLES --- */
     @media (max-width: 600px) {
         .desktop-only {
             display: none !important;
         }
-        
+
         .toolbar {
             padding-left: 8px;
             padding-right: 8px;
@@ -220,7 +308,8 @@
             margin-right: 8px;
         }
 
-        .user-info, .log-info {
+        .user-info,
+        .log-info {
             display: none;
         }
 
@@ -234,7 +323,7 @@
         .metric-item .value {
             font-size: 1rem;
         }
-        
+
         .lifecycle-actions {
             margin-right: 5px;
         }
@@ -242,8 +331,64 @@
         .spacer-mini {
             width: 5px;
         }
-        
+
         .lang-btn {
             padding: 0 5px;
+        }
+    }
+
+    /* Offline/Sync Badges */
+    .offline-badge {
+        background: #f44336;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-right: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .sync-badge {
+        background: #ff9800;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        .offline-badge,
+        .sync-badge {
+            padding: 4px 8px;
+            margin-right: 8px;
+        }
+
+        .offline-badge span,
+        .sync-badge span {
+            display: none;
         }
     }
