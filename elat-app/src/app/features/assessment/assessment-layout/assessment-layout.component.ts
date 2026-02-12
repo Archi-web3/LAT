@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -40,8 +41,19 @@ export class AssessmentLayoutComponent {
   translationService = inject(TranslationService);
   sections = this.assessmentService.sections;
 
+  // Responsive State
+  private breakpointObserver = inject(BreakpointObserver);
+  isMobile = signal(false);
+
   // UI State
-  showDashboards = signal(false); // Collapsed by default
+  showDashboards = signal(false);
+
+  constructor() {
+    this.breakpointObserver.observe(['(max-width: 960px)']) // Tablet/Mobile breakpoint
+      .subscribe(result => {
+        this.isMobile.set(result.matches);
+      });
+  }
 
   setLang(lang: 'EN' | 'FR') {
     console.log('Switching language to', lang);
@@ -97,6 +109,14 @@ export class AssessmentLayoutComponent {
 
   unlock() {
     this.assessmentService.unlockAssessment();
+  }
+
+  @ViewChild('drawer') drawer!: any;
+
+  closeOnMobile() {
+    if (this.isMobile()) {
+      this.drawer.close();
+    }
   }
 
   canValidate(): boolean {

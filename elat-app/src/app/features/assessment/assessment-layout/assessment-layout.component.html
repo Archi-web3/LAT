@@ -94,8 +94,8 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer mode="side" opened class="sidenav">
-        <mat-nav-list>
+    <mat-sidenav #drawer [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()" class="sidenav">
+        <mat-nav-list (click)="closeOnMobile()">
 
             <!-- Collapsible Header -->
             <div mat-subheader class="sidebar-header" (click)="showDashboards.set(!showDashboards())">
