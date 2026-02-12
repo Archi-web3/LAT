@@ -65,25 +65,35 @@ exports.register = async (req, res) => {
 
 // Login User
 exports.login = async (req, res) => {
+    const { email } = req.body;
+    console.log(`[AUTH] Login attempt for: ${email}`);
+
     try {
-        const { email, password } = req.body;
+        const { password } = req.body;
 
         // Check User
-        let user = await User.findOne({ email });
+        console.log(`[AUTH] Finding user in DB...`);
+        let user = await User.findOne({ email }).lean(); // Use lean for speed, careful if user methods needed (none used here)
+
         if (!user) {
+            console.warn(`[AUTH] Login failed: User not found (${email})`);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+        console.log(`[AUTH] User found. Verifying password...`);
 
         // Check Password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            console.warn(`[AUTH] Login failed: Invalid password (${email})`);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+
+        console.log(`[AUTH] Password verified. Generating token...`);
 
         // Return Token
         const payload = {
             user: {
-                id: user.id,
+                id: user._id, // lean() returns _id, not id getter
                 role: user.role
             }
         };
@@ -94,10 +104,11 @@ exports.login = async (req, res) => {
             { expiresIn: '30d' },
             (err, token) => {
                 if (err) throw err;
+                console.log(`[AUTH] Token generated. Sending response.`);
                 res.json({
                     token,
                     user: {
-                        id: user.id,
+                        id: user._id,
                         name: user.name,
                         role: user.role,
                         assignedCountry: user.assignedCountry,
@@ -108,7 +119,7 @@ exports.login = async (req, res) => {
             }
         );
     } catch (err) {
-        console.error(err.message);
+        console.error(`[AUTH] Server Error during login for ${email}:`, err.message);
         res.status(500).send('Server Error');
     }
 };

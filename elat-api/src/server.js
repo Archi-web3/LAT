@@ -51,10 +51,15 @@ app.get('/', (req, res) => {
 // Database Connection
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        console.log('⏳ Connecting to MongoDB...');
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 5000 // Fail after 5 seconds instead of hanging
+        });
         console.log('✅ MongoDB Connected');
     } catch (err) {
-        console.error('❌ MongoDB Connection Error:', err);
+        console.error('❌ MongoDB Connection Error:', err.message);
+        // Log generic error if message is missing
+        if (!err.message) console.error('❌ Full Error:', err);
         process.exit(1);
     }
 };
