@@ -415,6 +415,27 @@ export class AssessmentService {
     return saved ? JSON.parse(saved) : [];
   }
 
+  // --- Scoring Helper ---
+  private calculateScore(answers: Record<string, number>, sections: AssessmentSection[]): number {
+    if (!sections || sections.length === 0) return 0;
+
+    let totalPoints = 0;
+    let maxPoints = 0;
+
+    sections.forEach(s => {
+      s.questions.forEach(q => {
+        const val = answers[q.id];
+        // Robust check for NA
+        if (val !== undefined && val != -1) {
+          totalPoints += (val * q.weight);
+          maxPoints += (1 * q.weight);
+        }
+      });
+    });
+
+    return maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+  }
+
   // --- Scoring & Progress Logic ---
 
   getGlobalProgress(): number {
@@ -438,27 +459,11 @@ export class AssessmentService {
   }
 
   getGlobalScore(): number {
-    const sections = this.sections();
-    if (sections.length === 0) return 0;
-
-    let totalPoints = 0;
-    let maxPoints = 0;
-
-    sections.forEach(s => {
-      s.questions.forEach(q => {
-        const val = this.answers()[q.id];
-        // Robust check for NA
-        if (val !== undefined && val != -1) {
-          totalPoints += (val * q.weight);
-          maxPoints += (1 * q.weight);
-        }
-      });
-    });
-
-    return maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+    return this.calculateScore(this.answers(), this.sections());
   }
 
   getSectionProgress(sectionId: string): number {
+    // ... existing implementation ...
     const section = this.sections().find(s => s.id === sectionId);
     if (!section) return 0;
 
@@ -476,7 +481,8 @@ export class AssessmentService {
   getSectionScore(sectionId: string): number {
     const section = this.sections().find(s => s.id === sectionId);
     if (!section) return 0;
-
+    // Reuse helper logic for single section? Or keep as is.
+    // Keeping as is for minimal diff, but logic is same.
     let totalPoints = 0;
     let maxPoints = 0;
 
@@ -522,6 +528,48 @@ export class AssessmentService {
     return total > 0 ? Math.round((naCount / total) * 100) : 0;
   }
 
+  private saveState() {
+    const ctx = this.context();
+    if (!ctx) return;
+
+    const state: import('../models/assessment.model').AssessmentState = {
+      status: this.status(),
+      answers: this.answers(),
+      comments: this.comments(),
+      proofLinks: this.proofLinks(),
+      proofPhotos: this.proofPhotos(),
+      context: ctx,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+
+      // Save Calculated Score
+      score: this.getGlobalScore(),
+
+      // Save logs
+      submittedBy: this.submittedBy(),
+      submittedAt: this.submittedAt(),
+      validatedBy: this.validatedBy(),
+      validatedAt: this.validatedAt()
+    };
+
+    const key = this.getStorageKey(ctx);
+    localStorage.setItem(key, JSON.stringify(state));
+
+    localStorage.setItem('elat-last-context', JSON.stringify(ctx));
+  }
+
+  // ... existing loadStateForContext ...
+
+  // ... existing resetToEmpty ...
+
+  // ... existing getAllSavedAssessments ...
+
+  // ... existing saveAssessmentSnapshot ...
+
+  // ... existing hasUnsyncedChanges ...
+
+  // ... existing getHistory ...
+
   // --- Synchronization Logic ---
 
   async sync() {
@@ -546,13 +594,24 @@ export class AssessmentService {
       const headers = { 'x-auth-token': token };
       const lastSyncTimestamp = localStorage.getItem('elat-last-sync-timestamp');
 
-      const payload = {
-        changes: unsynced.map(a => ({
+      // Prepare payload with calculated scores if missing
+      const changes = unsynced.map(a => {
+        let score = a.score;
+        if (score === undefined) {
+          console.log(`Calculating missing score for ${a.id || 'unsynced item'}`);
+          score = this.calculateScore(a.answers, this.sections());
+        }
+
+        return {
           ...a,
           id: a.id || crypto.randomUUID(), // Ensure ID
-          // Map local context to server schema expectations if needed
+          score: score, // Enforce score presence
           userId: this.authService.currentUser()?.id
-        })),
+        };
+      });
+
+      const payload = {
+        changes: changes,
         lastSyncTimestamp: lastSyncTimestamp || null
       };
 
