@@ -41,22 +41,19 @@
             </div>
         </div>
 
-        <button mat-icon-button (click)="exportCSV()" matTooltip="Export to CSV (PowerBI)" color="accent"
-            class="desktop-only">
+        <button mat-icon-button (click)="exportCSV()" matTooltip="Export to CSV (PowerBI)" class="desktop-only">
             <mat-icon>file_download</mat-icon>
         </button>
 
-        <button mat-icon-button (click)="exportPDF()" matTooltip="Export as PDF Report" color="primary"
-            class="desktop-only">
+        <button mat-icon-button (click)="exportPDF()" matTooltip="Export as PDF Report" class="desktop-only">
             <mat-icon>picture_as_pdf</mat-icon>
         </button>
 
-        <button mat-icon-button (click)="resetAssessment()" matTooltip="Reset All Answers" color="warn"
-            class="desktop-only">
+        <button mat-icon-button (click)="resetAssessment()" matTooltip="Reset All Answers" class="desktop-only">
             <mat-icon>restart_alt</mat-icon>
         </button>
 
-        <button mat-icon-button routerLink="/assessment/history" matTooltip="View History" color="primary">
+        <button mat-icon-button routerLink="/assessment/history" matTooltip="View History">
             <mat-icon>history</mat-icon>
         </button>
 
