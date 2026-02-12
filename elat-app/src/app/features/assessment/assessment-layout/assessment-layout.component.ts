@@ -104,6 +104,10 @@ export class AssessmentLayoutComponent {
     this.assessmentService.exportToCSV();
   }
 
+  manualSync() {
+    this.assessmentService.sync();
+  }
+
   // --- Lifecycle Methods ---
 
   submit() {

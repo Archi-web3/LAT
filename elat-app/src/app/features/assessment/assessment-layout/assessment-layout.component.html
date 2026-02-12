@@ -19,11 +19,12 @@
         <span class="desktop-only">Offline Mode</span>
     </div>
 
-    <div class="sync-badge" *ngIf="isOnline() && assessmentService.hasUnsyncedChanges()"
-        matTooltip="Syncing changes...">
-        <mat-icon class="spin">sync</mat-icon>
-        <span class="desktop-only">Syncing...</span>
-    </div>
+    <!-- Sync Indicator & Manual Trigger -->
+    <button mat-icon-button *ngIf="isOnline()" (click)="manualSync()"
+        [matTooltip]="assessmentService.hasUnsyncedChanges() ? 'Unsynced changes. Click to Sync.' : 'Click to Sync with Server'"
+        [disabled]="!isOnline()">
+        <mat-icon [class.spin]="assessmentService.hasUnsyncedChanges()">sync</mat-icon>
+    </button>
 
     <!-- Context-Aware Controls (Right Side) -->
     <ng-container *ngIf="assessmentService.context()">
