@@ -41,7 +41,7 @@ export const DEFAULT_CONFIG: AdminConfig = {
         { id: 'branding', category: 'UX', title: 'Branding & Identité', description: 'DONE: Nouveau Logo LAT (Engrenage), Animation Flip Login (ACF->LAT), Renommage Application.', status: 'DONE' },
         { id: 'mobile-ux', category: 'UX', title: 'Expérience Mobile', description: 'DONE: Menu latéral responsive (Overlay), Adaptation Layout, Icones PWA corrigées.', status: 'DONE' },
 
-        { id: 'sync-bidir', category: 'TECH', title: 'Synchronisation Bidirectionnelle', description: 'Permettre l\'envoi et la réception de données (push/pull) pour travail collaboratif.', status: 'TODO' },
+        { id: 'sync-bidir', category: 'TECH', title: 'Synchronisation Bidirectionnelle', description: 'DONE: Envoi/Réception des données (push/pull), Création de copies en cas de conflit.', status: 'DONE' },
         { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'Mécanisme pour gérer les écrasements de données si plusieurs utilisateurs éditent.', status: 'TODO' },
 
         // Analyse & Reporting
