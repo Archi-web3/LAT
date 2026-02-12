@@ -100,6 +100,7 @@ import { AdminService } from '../../../core/admin/admin.service';
                 </button>
             </div>
          </div>
+      </div>
 
         <mat-form-field appearance="outline" class="comment-field">
           <mat-label>{{ 'QUESTION_CARD.COMMENTS_LABEL' | translate }}</mat-label>
