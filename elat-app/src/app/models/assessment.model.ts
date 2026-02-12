@@ -49,13 +49,19 @@ export interface AssessmentState {
     proofLinks?: Record<string, string>; // questionId -> URL
     proofPhotos?: Record<string, string>; // questionId -> URL (Cloudinary) or Base64
     context?: AssessmentContext;
-    synced?: boolean;
 
     // Lifecycle Metadata
     createdAt: string;
     updatedAt: string;
 
-    // Submission Log
+    // Sync
+    id?: string;
+    synced?: boolean;
+
+    // Scoring
+    score?: number;
+
+    // Logs
     submittedBy?: string;
     submittedAt?: string;
     validatedBy?: string;
