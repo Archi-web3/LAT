@@ -30,7 +30,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
               <div class="logo-flipper" [class.flipped]="loading()">
                   <!-- Front: Brand Logo -->
                   <div class="logo-face logo-front">
-                      <img src="assets/login-front-logo.jpg" alt="ACF" class="login-logo">
+                      <img src="assets/login-front-logo.png" alt="ACF" class="login-logo">
                   </div>
                   <!-- Back: LAT Logo -->
                   <div class="logo-face logo-back">
