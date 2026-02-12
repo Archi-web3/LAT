@@ -60,6 +60,10 @@ import { TranslationService } from '../../../core/i18n/translation.service';
                     {{ loading() ? ('COMMON.LOADING' | translate) : ('LOGIN.BUTTON' | translate) }}
                 </button>
             </div>
+
+            <div class="secondary-logo-container">
+               <img src="assets/acf-logo-mini.jpg" alt="ACF" class="secondary-logo">
+            </div>
           </form>
         </mat-card-content>
       </mat-card>
@@ -131,6 +135,17 @@ import { TranslationService } from '../../../core/i18n/translation.service';
       color: #3f51b5;
     }
     .divider { margin: 0 4px; color: #ccc; }
+    
+    .secondary-logo-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+        opacity: 0.8;
+    }
+    .secondary-logo {
+        height: 60px; /* Adjust size as needed */
+        width: auto;
+    }
   `]
 })
 export class LoginComponent {
