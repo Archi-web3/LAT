@@ -176,7 +176,7 @@ import { LocalizePipe } from '../../../core/i18n/localize.pipe';
             </div>
         }
 
-          <h3 matSubheader>Sections</h3>
+          <h3 matSubheader>Sections ({{ sections().length }})</h3>
           @for (section of sections(); track section.id) {
              <a mat-list-item 
                 [routerLink]="['/assessment', section.id]" 
@@ -420,11 +420,19 @@ export class AssessmentLayoutComponent {
   showDashboards = signal(false); // Collapsed by default
 
   setLang(lang: 'EN' | 'FR') {
+    console.log('Switching language to', lang);
     this.translationService.setLanguage(lang);
   }
 
   getCategoryColor(category: string): string {
     return getCategoryColor(category);
+  }
+
+  // Debug getter
+  get sectionsCount() {
+    const count = this.sections().length;
+    console.log('SideNav sections count:', count);
+    return count;
   }
 
   globalProgress() {
