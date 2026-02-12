@@ -251,6 +251,48 @@ import { AdminService } from '../../../core/admin/admin.service';
                         <input matInput type="number" [(ngModel)]="config().priorityThresholds.high" min="0" max="100">
                     </mat-form-field>
                 </div>
+                </div>
+            </div>
+        </mat-tab>
+
+        <!-- TAB 5: DICTIONNAIRE EXPERTISES -->
+        <mat-tab label="Dictionnaire Expertises">
+            <div class="tab-content">
+                <p class="hint">Gérez la liste des expertises transversales disponibles (FR/EN).</p>
+                
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Expertise (FR)</th>
+                            <th>Traduction (EN)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (exp of config().transversalExpertises; track exp.id; let i = $index) {
+                            <tr>
+                                <td>
+                                    <mat-form-field appearance="outline" class="dense">
+                                        <input matInput [(ngModel)]="exp.label_fr">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field appearance="outline" class="dense">
+                                        <input matInput [(ngModel)]="exp.label_en">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <button mat-icon-button color="warn" (click)="removeExpertise(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button mat-stroked-button color="primary" (click)="addExpertise()">
+                    <mat-icon>add</mat-icon> Ajouter une expertise
+                </button>
             </div>
         </mat-tab>
 
