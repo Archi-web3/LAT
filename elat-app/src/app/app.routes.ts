@@ -33,6 +33,12 @@ export const routes: Routes = [
                 canActivate: [roleGuard],
                 data: { roles: ['SUPER_ADMIN'] }
             },
+            {
+                path: 'admin/roadmap',
+                loadComponent: () => import('./features/admin/roadmap/roadmap.component').then(m => m.RoadmapComponent),
+                canActivate: [roleGuard],
+                data: { roles: ['SUPER_ADMIN'] }
+            },
 
             // Dynamic Section Route (Wildcard for text IDs)
             { path: ':sectionId', component: SectionViewComponent },

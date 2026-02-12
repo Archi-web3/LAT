@@ -168,6 +168,10 @@ import { LocalizePipe } from '../../../core/i18n/localize.pipe';
                       <mat-icon matListItemIcon>settings</mat-icon>
                       <span matListItemTitle>{{ 'MENU.CONFIG' | translate }}</span>
                   </a>
+                  <a mat-list-item routerLink="/assessment/admin/roadmap" routerLinkActive="active-link">
+                      <mat-icon matListItemIcon>map</mat-icon>
+                      <span matListItemTitle>Roadmap</span>
+                  </a>
                   <a mat-list-item routerLink="/admin/docs" routerLinkActive="active-link">
                       <mat-icon matListItemIcon>menu_book</mat-icon>
                       <span matListItemTitle>Admin Guide</span>
