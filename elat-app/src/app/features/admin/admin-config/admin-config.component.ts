@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -251,7 +251,6 @@ import { AdminService } from '../../../core/admin/admin.service';
                         <input matInput type="number" [(ngModel)]="config().priorityThresholds.high" min="0" max="100">
                     </mat-form-field>
                 </div>
-                </div>
             </div>
         </mat-tab>
 
@@ -364,6 +363,17 @@ export class AdminConfigComponent {
     selectedTabIndex = signal<number>(0);
 
     constructor() {
+        // Sync with AssessmentService initial load (fixes race condition where Admin loads before JSON is fetched)
+        effect(() => {
+            const serviceSections = this.assessmentService.sections();
+            // Only update if admin sections are empty and service has data
+            if (this.sections().length === 0 && serviceSections.length > 0) {
+                console.log('Admin: Syncing with AssessmentService initial data');
+                this.sections.set(JSON.parse(JSON.stringify(serviceSections)));
+                this.extractMetadata();
+            }
+        });
+
         this.extractMetadata();
         this.loadFromBackend();
     }
