@@ -1,8 +1,8 @@
 export const TOP_LEVEL_TRANSLATIONS = {
     EN: {
-        APP_NAME: 'ELAT',
+        APP_NAME: 'LAT',
         LOGIN: {
-            TITLE: 'Log in to ELAT',
+            TITLE: 'Log in to LAT',
             SUBTITLE: 'Enter your credentials to access your account',
             EMAIL_LABEL: 'Email Address',
             PASSWORD_LABEL: 'Password',
@@ -70,9 +70,9 @@ export const TOP_LEVEL_TRANSLATIONS = {
         }
     },
     FR: {
-        APP_NAME: 'ELAT',
+        APP_NAME: 'LAT',
         LOGIN: {
-            TITLE: 'Connexion à ELAT',
+            TITLE: 'Connexion à LAT',
             SUBTITLE: 'Entrez vos identifiants pour accéder à votre compte',
             EMAIL_LABEL: 'Adresse Email',
             PASSWORD_LABEL: 'Mot de passe',

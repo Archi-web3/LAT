@@ -1,5 +1,6 @@
-  "name": "ELAT - Emergency Logistics Assessment Tool",
-  "short_name": "ELAT",
+{
+  "name": "LAT - Logistics Assessment Tool",
+  "short_name": "LAT",
   "theme_color": "#1976d2",
   "background_color": "#ffffff",
   "display": "standalone",
