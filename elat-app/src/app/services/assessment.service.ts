@@ -134,10 +134,13 @@ export class AssessmentService {
     if (customSections) {
       try {
         const sections = JSON.parse(customSections);
-        this.sections.set(sections);
-        this.fetchDefaultTransversal();
-        console.log('Loaded custom assessment config from storage (Legacy)');
-        return;
+        if (Array.isArray(sections) && sections.length > 0) {
+          this.sections.set(sections);
+          this.fetchDefaultTransversal();
+          console.log('Loaded custom assessment config from storage (Legacy)');
+          return;
+        }
+        console.warn('Found custom config in storage but it was empty/invalid. Falling back to default.');
       } catch (e) {
         console.error('Failed to parse custom config', e);
       }
