@@ -23,8 +23,7 @@ import Chart from 'chart.js/auto';
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    MatTabsModule,
-    DatePipe
+    MatTabsModule
   ],
   template: `
     <div class="coord-container">
