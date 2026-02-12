@@ -66,10 +66,14 @@ import { AdminService } from '../../../core/admin/admin.service';
             </mat-radio-group>
         </div>
 
-        <!-- Evidence Section -->
-         <div class="evidence-section">
-            <h3>{{ 'QUESTION_CARD.EVIDENCE_TITLE' | translate }}</h3>
-            
+        <!-- PROOFS -->
+      <div class="evidence-section">
+        <div class="evidence-header">
+            <span class="evidence-title">{{ 'QUESTION_CARD.EVIDENCE_TITLE' | translate }}</span>
+            <span class="evidence-hint">{{ 'QUESTION_CARD.EVIDENCE_OPTIONAL' | translate }}</span>
+        </div>
+        
+        <div class="dual-input">
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>{{ 'QUESTION_CARD.LINK_LABEL' | translate }}</mat-label>
                 <input matInput [ngModel]="proofLink()" (ngModelChange)="updateLink($event)" placeholder="https://..." [disabled]="readonly">
@@ -137,6 +141,21 @@ import { AdminService } from '../../../core/admin/admin.service';
         margin-top: 20px;
         padding-top: 20px;
         border-top: 1px solid #eee;
+    }
+    .evidence-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .evidence-title {
+        font-weight: 600;
+        color: #555;
+    }
+    .evidence-hint {
+        font-size: 0.85rem;
+        color: #888;
+        font-style: italic;
     }
     .full-width { width: 100%; }
     

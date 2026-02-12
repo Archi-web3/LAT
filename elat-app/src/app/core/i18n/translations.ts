@@ -49,6 +49,7 @@ export const TOP_LEVEL_TRANSLATIONS = {
         },
         QUESTION_CARD: {
             EVIDENCE_TITLE: 'Proofs / Evidence',
+            EVIDENCE_OPTIONAL: '(optional / if needed)',
             LINK_LABEL: 'Link (URL)',
             ADD_PHOTO: 'Add Photo',
             CHANGE_PHOTO: 'Change Photo',
@@ -117,13 +118,14 @@ export const TOP_LEVEL_TRANSLATIONS = {
             NO_ASSESSMENTS: 'Aucune évaluation trouvée pour votre périmètre'
         },
         QUESTION_CARD: {
-            EVIDENCE_TITLE: 'Preuves / Evidence',
-            LINK_LABEL: 'Lien (URL)',
-            ADD_PHOTO: 'Ajouter Photo',
-            CHANGE_PHOTO: 'Changer Photo',
-            UPLOADING: 'Téléchargement en cours...',
-            COMMENTS_LABEL: 'Commentaires',
-            COMMENTS_PLACEHOLDER: 'Observation spécifique...'
+            EVIDENCE_TITLE: 'Proofs / Evidence',
+            EVIDENCE_OPTIONAL: '(optional / if needed)',
+            LINK_LABEL: 'Link (URL)',
+            ADD_PHOTO: 'Add Photo',
+            CHANGE_PHOTO: 'Change Photo',
+            UPLOADING: 'Uploading...',
+            COMMENTS_LABEL: 'Comments',
+            COMMENTS_PLACEHOLDER: 'Specific observation...'
         },
         TRANSVERSAL_TAGS: {
             'Audit': 'Audit',
