@@ -1,201 +1,135 @@
-import { Component, inject, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { AssessmentService } from '../../../services/assessment.service';
-import { Chart, registerables } from 'chart.js';
-
-Chart.register(...registerables);
 
 @Component({
   selector: 'app-history-view',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatListModule, RouterModule],
   template: `
     <div class="history-container">
-      <div class="header-actions">
-           <button mat-button routerLink="/assessment">
-              <mat-icon>arrow_back</mat-icon> Back to Assessment
-           </button>
-           <h2>Assessment History</h2>
-      </div>
-      
-      <div class="chart-container">
-        <canvas #chartCanvas></canvas>
+      <div class="header">
+        <button mat-icon-button routerLink="/assessment">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Historique des modifications</h2>
       </div>
 
-      <div class="list-container">
-        <h3>Past Assessments</h3>
-        <ul>
-          <li *ngFor="let item of history">
-            <span class="date">{{ item.date | date:'medium' }}</span>
-            <span class="name">{{ item.name }}</span>
-            <span class="score" [class.good]="item.score >= 80" [class.warn]="item.score < 50">
-                {{ item.score }}%
-            </span>
-          </li>
-        </ul>
-        <p *ngIf="history.length === 0">No history available yet.</p>
+      <div class="history-list" *ngIf="assessmentService.context(); else noContext">
+        <mat-card class="history-card">
+           <mat-list>
+             <ng-container *ngFor="let item of history(); let last = last">
+               <mat-list-item class="history-item">
+                 <mat-icon matListItemIcon [fontIcon]="getIcon(item.action)" [class]="getColorClass(item.action)"></mat-icon>
+                 <div matListItemTitle>
+                   <span class="action-title">{{ item.action }}</span>
+                   <span class="action-date">{{ item.date | date:'medium' }}</span>
+                 </div>
+                 <div matListItemLine>
+                   <span class="user-info">{{ item.user }}</span>
+                 </div>
+                 <div matListItemLine *ngIf="item.details" class="details">
+                   {{ item.details }}
+                 </div>
+               </mat-list-item>
+               <mat-divider *ngIf="!last"></mat-divider>
+             </ng-container>
+
+             <mat-list-item *ngIf="history().length === 0">
+               <p matListItemTitle>Aucun historique disponible.</p>
+             </mat-list-item>
+           </mat-list>
+        </mat-card>
       </div>
-      
-      <div class="actions">
-        <button (click)="saveCurrent()" class="save-btn">Save Current Assessment</button>
-        <button (click)="exportToCSV()" class="export-btn">Export for Power BI (CSV)</button>
-      </div>
+
+      <ng-template #noContext>
+        <p class="error-msg">Aucune évaluation active. Veuillez en sélectionner une.</p>
+        <button mat-raised-button color="primary" routerLink="/assessment/list">Aller à la liste</button>
+      </ng-template>
     </div>
   `,
   styles: [`
     .history-container {
-      padding: 24px;
+      padding: 20px;
       max-width: 800px;
       margin: 0 auto;
     }
-    .chart-container {
-      height: 300px;
-      margin-bottom: 32px;
-      background: white;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .list-container ul {
-      list-style: none;
-      padding: 0;
-    }
-    .list-container li {
+    .header {
       display: flex;
-      justify-content: space-between;
-      padding: 12px;
-      border-bottom: 1px solid #eee;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
     }
-    .score {
-      font-weight: bold;
+    .history-item {
+      height: auto !important;
+      padding-top: 12px;
+      padding-bottom: 12px;
     }
-    .score.good { color: green; }
-    .score.warn { color: red; }
-    .actions { margin-top: 24px; display: flex; gap: 16px; }
-    button {
-       padding: 10px 20px;
-       border: none;
-       border-radius: 4px;
-       cursor: pointer;
-       font-weight: 500;
+    .action-title {
+      font-weight: 600;
+      margin-right: 12px;
     }
-    .save-btn { background: #1976d2; color: white; }
-    .save-btn:hover { background: #1565c0; }
+    .action-date {
+      color: #757575;
+      font-size: 0.85em;
+    }
+    .user-info {
+      font-style: italic;
+      color: #555;
+    }
+    .details {
+      margin-top: 4px;
+      color: #333;
+    }
     
-    .export-btn { background: #2e7d32; color: white; }
-    .export-btn:hover { background: #1b5e20; }
+    /* Icons Colors */
+    .green-icon { color: #2e7d32; }
+    .blue-icon { color: #1565c0; }
+    .orange-icon { color: #ef6c00; }
+    .red-icon { color: #c62828; }
+    .grey-icon { color: #757575; }
+
+    .error-msg {
+      text-align: center;
+      color: #757575;
+      margin-top: 40px;
+    }
   `]
 })
-export class HistoryViewComponent implements OnInit, AfterViewInit {
+export class HistoryViewComponent {
   assessmentService = inject(AssessmentService);
-  history: any[] = [];
 
-  @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
-  chart: any;
+  // Signal to the history array
+  history = this.assessmentService.history;
 
-  ngOnInit() {
-    this.history = this.assessmentService.getHistory();
-  }
-
-  ngAfterViewInit() {
-    this.initChart();
-  }
-
-  initChart() {
-    if (!this.chartCanvas || this.history.length === 0) return;
-
-    const ctx = this.chartCanvas.nativeElement.getContext('2d');
-    if (!ctx) return;
-
-    // Sort by date
-    const sortedHistory = [...this.history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    this.chart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: sortedHistory.map(h => new Date(h.date).toLocaleDateString()),
-        datasets: [{
-          label: 'Global Compliance Score',
-          data: sortedHistory.map(h => h.score),
-          borderColor: '#3f51b5',
-          backgroundColor: 'rgba(63, 81, 181, 0.2)',
-          fill: true,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100
-          }
-        }
-      }
-    });
-  }
-
-  saveCurrent() {
-    this.assessmentService.saveAssessmentSnapshot('Manual Save');
-    this.history = this.assessmentService.getHistory();
-    if (this.chart) {
-      this.chart.destroy();
+  getIcon(action: string): string {
+    switch (action) {
+      case 'CREATED': return 'add_circle';
+      case 'SUBMITTED': return 'send';
+      case 'VALIDATED': return 'verified';
+      case 'RESET': return 'restart_alt';
+      case 'UNLOCKED': return 'lock_open';
+      case 'SYNC': return 'sync';
+      case 'CONFLICT': return 'warning';
+      default: return 'history';
     }
-    this.initChart();
   }
 
-  exportToCSV() {
-    if (this.history.length === 0) return;
-
-    // Normalized format for Power BI: One row per answer
-    // Columns: AssessmentID, Date, Section, QuestionID, QuestionText, Category, AnswerValue, AnswerLabel, Comment
-
-    const headers = ['AssessmentID', 'Date', 'Name', 'Score', 'Section', 'QuestionID', 'Question', 'Category', 'AnswerValue', 'Comment'];
-    let csvContent = headers.join(',') + '\n';
-
-    const sections = this.assessmentService.sections();
-
-    this.history.forEach(assessment => {
-      sections.forEach(section => {
-        section.questions.forEach(q => {
-          const answerVal = assessment.answers[q.id];
-          const comment = assessment.comments?.[q.id] || ''; // Comments needed in snapshot too actually
-
-          // Only include answered questions or all? Let's include all for completeness or just answered.
-          // Power BI prefers consistent datasets.
-
-          if (answerVal !== undefined) {
-            const row = [
-              assessment.id,
-              assessment.date,
-              `"${assessment.name}"`,
-              assessment.score,
-              `"${section.title}"`,
-              q.id,
-              `"${q.text.replace(/"/g, '""')}"`,
-              `"${q.category}"`,
-              answerVal,
-              `"${comment.replace(/"/g, '""')}"`
-            ];
-            csvContent += row.join(',') + '\n';
-          }
-        });
-      });
-    });
-
-    // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `elat_export_pbi_${new Date().toISOString().slice(0, 10)}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  getColorClass(action: string): string {
+    switch (action) {
+      case 'CREATED': return 'green-icon';
+      case 'SUBMITTED': return 'blue-icon';
+      case 'VALIDATED': return 'green-icon';
+      case 'RESET': return 'red-icon';
+      case 'UNLOCKED': return 'orange-icon';
+      case 'SYNC': return 'blue-icon';
+      case 'CONFLICT': return 'red-icon';
+      default: return 'grey-icon';
+    }
   }
 }

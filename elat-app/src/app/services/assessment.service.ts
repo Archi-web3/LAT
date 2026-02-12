@@ -37,6 +37,9 @@ export class AssessmentService {
   validatedBy = signal<string | undefined>(undefined);
   validatedAt = signal<string | undefined>(undefined);
 
+  // History Log
+  history = signal<import('../models/assessment.model').AssessmentHistoryItem[]>([]);
+
   constructor() {
     this.loadData();
     this.restoreLastContext();
@@ -76,6 +79,7 @@ export class AssessmentService {
     this.submittedAt.set(undefined);
     this.validatedBy.set(undefined);
     this.validatedAt.set(undefined);
+    this.history.set([]);
   }
 
   initializeAssessment(ctx: import('../models/assessment.model').AssessmentContext) {
@@ -102,8 +106,26 @@ export class AssessmentService {
 
     this.answers.set(reset);
     this.status.set('DRAFT'); // Reset status to draft
+    this.addToHistory('RESET', 'All answers reset to N/A');
     this.saveAssessmentSnapshot('Reset');
     this.saveState();
+  }
+
+  // --- History Helper ---
+  private addToHistory(action: string, details?: string) {
+    const user = this.authService.currentUser();
+    const userName = user ? `${user.name} (${user.role})` : 'System/Offline';
+
+    const entry: import('../models/assessment.model').AssessmentHistoryItem = {
+      date: new Date().toISOString(),
+      user: userName,
+      action: action,
+      details: details
+    };
+
+    this.history.update(h => [...h, entry]);
+    // Note: We don't saveState here automatically to avoid recursion if called from saveState-related logic,
+    // but in most cases consumption should follow with saveState() or be part of it.
   }
 
   private loadData() {
@@ -206,6 +228,7 @@ export class AssessmentService {
       this.submittedBy.set(`${name} (${role})`);
       this.submittedAt.set(new Date().toISOString());
 
+      this.addToHistory('SUBMITTED', 'Assessment submitted for validation');
       this.saveState();
       this.saveAssessmentSnapshot('Submission'); // Trigger sync
     }
@@ -222,6 +245,7 @@ export class AssessmentService {
       this.validatedBy.set(`${name} (${role})`);
       this.validatedAt.set(new Date().toISOString());
 
+      this.addToHistory('VALIDATED', 'Assessment validated and finalized');
       this.saveState();
       this.saveAssessmentSnapshot('Validation'); // Trigger sync
     }
@@ -237,6 +261,7 @@ export class AssessmentService {
       this.validatedBy.set(undefined);
       this.validatedAt.set(undefined);
 
+      this.addToHistory('UNLOCKED', 'Assessment unlocked (reverted to Draft)');
       this.saveState();
     }
   }
@@ -262,7 +287,10 @@ export class AssessmentService {
       submittedBy: this.submittedBy(),
       submittedAt: this.submittedAt(),
       validatedBy: this.validatedBy(),
-      validatedAt: this.validatedAt()
+      validatedAt: this.validatedAt(),
+
+      // History
+      history: this.history()
     };
 
     const key = this.getStorageKey(ctx);
@@ -289,6 +317,7 @@ export class AssessmentService {
         this.submittedAt.set(state.submittedAt);
         this.validatedBy.set(state.validatedBy);
         this.validatedAt.set(state.validatedAt);
+        this.history.set(state.history || []);
 
         console.log(`Loaded state for ${key}`, state);
       } catch (e) {
@@ -298,6 +327,8 @@ export class AssessmentService {
     } else {
       console.log(`No saved state for ${key}, starting fresh.`);
       this.resetToEmpty();
+      this.addToHistory('CREATED', 'New assessment started');
+      this.saveState();
     }
   }
 
@@ -313,6 +344,7 @@ export class AssessmentService {
     this.submittedAt.set(undefined);
     this.validatedBy.set(undefined);
     this.validatedAt.set(undefined);
+    this.history.set([]);
   }
 
   // --- List Management ---
@@ -665,12 +697,15 @@ export class AssessmentService {
           const conflictKey = key + '_CONFLICT_' + Date.now();
           localStorage.setItem(conflictKey, JSON.stringify(localDoc));
           console.log(`Saved local conflict to ${conflictKey}`);
+
+          this.addToHistory('CONFLICT', `Detected conflict with server. Local copy saved to ${conflictKey}`);
         }
       }
 
       // Overwrite Local with Server
       serverDoc.synced = true;
       localStorage.setItem(key, JSON.stringify(serverDoc));
+      this.addToHistory('SYNC', 'Assessment merged with server update');
     });
   }
 

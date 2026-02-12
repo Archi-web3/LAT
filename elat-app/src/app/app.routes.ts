@@ -20,6 +20,8 @@ export const routes: Routes = [
             { path: 'init', loadComponent: () => import('./features/assessment/assessment-init/assessment-init.component').then(m => m.AssessmentInitComponent) },
             { path: 'list', loadComponent: () => import('./features/assessment/assessment-list/assessment-list.component').then(m => m.AssessmentListComponent) },
 
+            { path: 'history', component: HistoryViewComponent },
+
             // Administrative Routes (Must be before :sectionId wildcard)
             {
                 path: 'admin/users',
@@ -46,7 +48,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'list', pathMatch: 'full' }
         ]
     },
-    { path: 'history', component: HistoryViewComponent, canActivate: [authGuard] },
+
     { path: 'matrix', component: MatrixViewComponent, canActivate: [authGuard] },
     // Removed the top-level admin/users route as it's now nested
     { path: 'admin/docs', component: AdminDocsComponent, canActivate: [authGuard] },

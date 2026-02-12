@@ -66,4 +66,14 @@ export interface AssessmentState {
     submittedAt?: string;
     validatedBy?: string;
     validatedAt?: string;
+
+    // Detailed History
+    history?: AssessmentHistoryItem[];
+}
+
+export interface AssessmentHistoryItem {
+    date: string;
+    user: string;
+    action: string;
+    details?: string;
 }

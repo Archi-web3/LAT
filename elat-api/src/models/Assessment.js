@@ -19,6 +19,14 @@ const AssessmentSchema = new mongoose.Schema({
     // Snapshot of scores calculated at submission
     score: { type: Number },
 
+    // History Log
+    history: [{
+        date: { type: Date, default: Date.now },
+        user: { type: String }, // Name + Role
+        action: { type: String }, // CREATED, UPDATED, SUBMITTED, VALIDATED, RESET, UNLOCKED
+        details: { type: String }
+    }],
+
     // Technical
     configVersion: { type: String }, // Which version of the questionnaire was used?
     createdAt: { type: Date, default: Date.now },
