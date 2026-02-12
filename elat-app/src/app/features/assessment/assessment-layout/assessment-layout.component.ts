@@ -193,7 +193,7 @@ import { LocalizePipe } from '../../../core/i18n/localize.pipe';
                </div>
              </a>
           }
-          }
+
           @if (sections().length === 0) {
               <div style="padding: 16px; color: red; font-size: 0.8rem;">
                   DEBUG: No sections loaded.
