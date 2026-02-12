@@ -26,9 +26,17 @@ import { TranslationService } from '../../../core/i18n/translation.service';
     <div class="login-container">
       <mat-card class="login-card">
         <mat-card-header class="centered-header">
-          <div class="logo-container">
-            <!-- New App Logo -->
-            <img src="assets/logo.jpeg" alt="LAT Logo" class="login-logo" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <div class="logo-scene">
+              <div class="logo-flipper" [class.flipped]="loading()">
+                  <!-- Front: ACF Logo -->
+                  <div class="logo-face logo-front">
+                      <img src="assets/acf-logo-mini.jpg" alt="ACF" class="login-logo">
+                  </div>
+                  <!-- Back: LAT Logo -->
+                  <div class="logo-face logo-back">
+                      <img src="assets/logo.jpeg" alt="LAT" class="login-logo">
+                  </div>
+              </div>
           </div>
           <h1>{{ 'APP_NAME' | translate }}</h1>
         </mat-card-header>
@@ -61,9 +69,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
                 </button>
             </div>
 
-            <div class="secondary-logo-container">
-               <img src="assets/acf-logo-mini.jpg" alt="ACF" class="secondary-logo">
-            </div>
+
           </form>
         </mat-card-content>
       </mat-card>
@@ -88,16 +94,58 @@ import { TranslationService } from '../../../core/i18n/translation.service';
         align-items: center;
         margin-bottom: 20px;
     }
-    .logo-container {
-        display: flex;
-        justify-content: center;
+    
+    /* --- 3D Logo Flip Styles --- */
+    .logo-scene {
+        width: 150px;
+        height: 150px;
+        perspective: 600px;
         margin-bottom: 10px;
     }
+
+    .logo-flipper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .logo-flipper.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .logo-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo-front {
+        z-index: 2;
+        transform: rotateY(0deg);
+    }
+
+    .logo-back {
+        transform: rotateY(180deg);
+    }
+
     .login-logo {
-        max-width: 150px;
-        height: auto;
+        max-width: 100%;
+        max-height: 100%;
         object-fit: contain;
     }
+    
+    .logo-back .login-logo {
+         border-radius: 12px; 
+         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    /* --------------------------- */
+
     h1 {
         margin: 0;
         font-size: 32px; /* Bigger */
@@ -135,17 +183,6 @@ import { TranslationService } from '../../../core/i18n/translation.service';
       color: #3f51b5;
     }
     .divider { margin: 0 4px; color: #ccc; }
-    
-    .secondary-logo-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 24px;
-        opacity: 0.8;
-    }
-    .secondary-logo {
-        height: 60px; /* Adjust size as needed */
-        width: auto;
-    }
   `]
 })
 export class LoginComponent {
