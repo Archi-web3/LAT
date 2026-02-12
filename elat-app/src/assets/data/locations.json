@@ -1,0 +1,194 @@
+[
+    {
+        "code": "CD",
+        "name": "R.D. Congo",
+        "bases": [
+            {
+                "code": "KIN",
+                "name": "Kinshasa",
+                "type": "Capital"
+            },
+            {
+                "code": "GOM",
+                "name": "Goma",
+                "type": "Base"
+            },
+            {
+                "code": "BUN",
+                "name": "Bunia",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CF",
+        "name": "RCA",
+        "bases": [
+            {
+                "code": "BGF",
+                "name": "Bangui",
+                "type": "Capital"
+            },
+            {
+                "code": "BOU",
+                "name": "Bouar",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "TD",
+        "name": "Tchad",
+        "bases": [
+            {
+                "code": "NDJ",
+                "name": "N'Djamena",
+                "type": "Capital"
+            },
+            {
+                "code": "ABE",
+                "name": "Abéché",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "CM",
+        "name": "Cameroun",
+        "bases": [
+            {
+                "code": "YAU",
+                "name": "Yaoundé",
+                "type": "Capital"
+            },
+            {
+                "code": "MAR",
+                "name": "Maroua",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "NG",
+        "name": "Nigeria",
+        "bases": [
+            {
+                "code": "ABU",
+                "name": "Abuja",
+                "type": "Capital"
+            },
+            {
+                "code": "MAI",
+                "name": "Maiduguri",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "BF",
+        "name": "Burkina Faso",
+        "bases": [
+            {
+                "code": "OUA",
+                "name": "Ouagadougou",
+                "type": "Capital"
+            },
+            {
+                "code": "FAD",
+                "name": "Fada",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "ML",
+        "name": "Mali",
+        "bases": [
+            {
+                "code": "BKO",
+                "name": "Bamako",
+                "type": "Capital"
+            },
+            {
+                "code": "GAO",
+                "name": "Gao",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "NE",
+        "name": "Niger",
+        "bases": [
+            {
+                "code": "NIA",
+                "name": "Niamey",
+                "type": "Capital"
+            },
+            {
+                "code": "MAR",
+                "name": "Maradi",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "UA",
+        "name": "Ukraine",
+        "bases": [
+            {
+                "code": "KYI",
+                "name": "Kiev",
+                "type": "Capital"
+            },
+            {
+                "code": "DNI",
+                "name": "Dnipro",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "YE",
+        "name": "Yemen",
+        "bases": [
+            {
+                "code": "ADE",
+                "name": "Aden",
+                "type": "Capital"
+            },
+            {
+                "code": "SAN",
+                "name": "Sana'a",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "AF",
+        "name": "Afghanistan",
+        "bases": [
+            {
+                "code": "KBU",
+                "name": "Kabul",
+                "type": "Capital"
+            },
+            {
+                "code": "HEL",
+                "name": "Helmand",
+                "type": "Base"
+            }
+        ]
+    },
+    {
+        "code": "FR",
+        "name": "France (Siège)",
+        "bases": [
+            {
+                "code": "PAR",
+                "name": "Paris",
+                "type": "HQ"
+            }
+        ]
+    }
+]

@@ -160,7 +160,8 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     'NE': [17.6078, 8.0817],  // Niger
     'FR': [46.603354, 1.888334], // France
     'UA': [48.3794, 31.1656], // Ukraine
-    'YE': [15.552727, 48.516388] // Yemen
+    'YE': [15.552727, 48.516388], // Yemen
+    'AF': [33.9391, 67.7100]  // Afghanistan
   };
 
   ngOnInit() {
