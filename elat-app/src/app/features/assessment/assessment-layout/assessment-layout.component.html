@@ -1,1 +1,171 @@
-<p>assessment-layout works!</p>
+<mat-toolbar color="primary" class="toolbar">
+    <button mat-icon-button (click)="drawer.toggle()" aria-label="Toggle menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <img src="/assets/logo-white-transparent.png" alt="Logo" class="toolbar-logo">
+    <span class="app-title">{{ 'APP_NAME' | translate }} <span class="desktop-only">- Assessment</span></span>
+
+    <!-- Context Badge (Always Left if active) -->
+    <span *ngIf="assessmentService.context()" class="context-badge desktop-only">
+        {{ assessmentService.context()?.base }} ({{ assessmentService.context()?.evaluationMonth }})
+    </span>
+
+    <!-- Spacer - Pushes everything else to the Right -->
+    <span class="spacer"></span>
+
+    <!-- Context-Aware Controls (Right Side) -->
+    <ng-container *ngIf="assessmentService.context()">
+
+        <!-- LOGGING INFO (Submit/Validate) -->
+        <div class="log-info desktop-only" *ngIf="assessmentService.status() !== 'DRAFT'">
+            <div *ngIf="assessmentService.submittedBy() as subBy" class="log-line">
+                <mat-icon>send</mat-icon> Submitted by {{ subBy }} on {{ assessmentService.submittedAt() | date:'short'
+                }}
+            </div>
+            <div *ngIf="assessmentService.validatedBy() as valBy" class="log-line validated">
+                <mat-icon>verified</mat-icon> Validated by {{ valBy }} on {{ assessmentService.validatedAt() |
+                date:'short' }}
+            </div>
+        </div>
+
+        <button mat-icon-button (click)="exportCSV()" matTooltip="Export to CSV (PowerBI)" color="accent"
+            class="desktop-only">
+            <mat-icon>file_download</mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="resetAssessment()" matTooltip="Reset All Answers" color="warn"
+            class="desktop-only">
+            <mat-icon>restart_alt</mat-icon>
+        </button>
+
+        <div class="metrics">
+            <div class="metric-item">
+                <span class="label">Progression</span>
+                <span class="value">{{ globalProgress() }}%</span>
+            </div>
+            <div class="metric-item">
+                <span class="label">{{ 'COMMON.SCORE' | translate }}</span>
+                <span class="value ignore-low-score">{{ globalScore() }}%</span>
+            </div>
+        </div>
+
+        <!-- Lifecycle Actions -->
+        <div class="lifecycle-actions">
+            <!-- SUBMIT (Visible to All if Draft) -->
+            <button mat-raised-button color="primary" *ngIf="assessmentService.status() === 'DRAFT'" (click)="submit()"
+                [matTooltip]="'COMMON.SUBMIT' | translate">
+                <mat-icon>send</mat-icon> <span class="desktop-only">{{ 'COMMON.SUBMIT' | translate }}</span>
+            </button>
+
+            <!-- VALIDATE (Coordinators only if Submitted) -->
+            <button mat-raised-button color="accent" *ngIf="assessmentService.status() === 'SUBMITTED' && canValidate()"
+                (click)="validate()">
+                <mat-icon>check_circle</mat-icon> <span class="desktop-only">{{ 'COMMON.VALIDATE' | translate }}</span>
+            </button>
+
+            <!-- UNLOCK (Coordinators only if Submitted/Validated) -->
+            <button mat-icon-button color="warn" *ngIf="assessmentService.status() !== 'DRAFT' && canValidate()"
+                (click)="unlock()" matTooltip="Unlock / Revert to Draft">
+                <mat-icon>lock_open</mat-icon>
+            </button>
+        </div>
+    </ng-container>
+
+    <span class="spacer-mini"></span>
+
+    <!-- Language Switcher (Toolbar) -->
+    <button mat-button class="lang-btn" [class.active]="translationService.currentLang() === 'EN'"
+        (click)="setLang('EN')">EN</button>
+    <span class="lang-divider">|</span>
+    <button mat-button class="lang-btn" [class.active]="translationService.currentLang() === 'FR'"
+        (click)="setLang('FR')">FR</button>
+
+    <span class="spacer-mini"></span>
+
+    <!-- User Info -->
+    <div class="user-info desktop-only" *ngIf="authService.currentUser() as user">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-role">{{ user.role }}</span>
+    </div>
+
+    <button mat-icon-button (click)="logout()" [matTooltip]="'MENU.LOGOUT' | translate">
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="side" opened class="sidenav">
+        <mat-nav-list>
+
+            <!-- Collapsible Header -->
+            <div mat-subheader class="sidebar-header" (click)="showDashboards.set(!showDashboards())">
+                <span>Dashboards & Vues</span>
+                <mat-icon class="toggle-icon">{{ showDashboards() ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </div>
+
+            <!-- Collapsible Content -->
+            @if (showDashboards()) {
+            <div class="collapsible-menu">
+                <a mat-list-item routerLink="/assessment/list" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>history</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.MY_ASSESSMENTS' | translate }}</span>
+                </a>
+                <a mat-list-item routerLink="/matrix" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>dashboard</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.MATRIX_DASHBOARD' | translate }}</span>
+                </a>
+                <a mat-list-item routerLink="/action-plan" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>event_note</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.ACTION_PLAN' | translate }}</span>
+                </a>
+
+                @if (['SUPER_ADMIN', 'POOL_COORDINATOR', 'COUNTRY_COORDINATOR'].includes(authService.currentUser()?.role
+                || '')) {
+                <a mat-list-item routerLink="/coordination" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>public</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.COORDINATION' | translate }}</span>
+                </a>
+                }
+
+                @if (authService.currentUser()?.role === 'SUPER_ADMIN') {
+                <a mat-list-item routerLink="/assessment/admin/users" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>people</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.USERS' | translate }}</span>
+                </a>
+                <a mat-list-item routerLink="/assessment/admin/config" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>settings</mat-icon>
+                    <span matListItemTitle>{{ 'MENU.CONFIG' | translate }}</span>
+                </a>
+                <a mat-list-item routerLink="/assessment/admin/roadmap" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>map</mat-icon>
+                    <span matListItemTitle>Roadmap</span>
+                </a>
+                <a mat-list-item routerLink="/admin/docs" routerLinkActive="active-link">
+                    <mat-icon matListItemIcon>menu_book</mat-icon>
+                    <span matListItemTitle>Admin Guide</span>
+                </a>
+                }
+            </div>
+            }
+
+            <h3 matSubheader>Sections ({{ sections().length }})</h3>
+            @for (section of sections(); track section.id) {
+            <a mat-list-item [routerLink]="['/assessment', section.id]" routerLinkActive="active-link"
+                class="section-item" [style.border-left-color]="getCategoryColor(section.title)">
+                <span matListItemTitle class="section-title">{{ section | localize:'title' }}</span>
+                <div matListItemLine class="section-meta">
+                    <span>{{ section.questions.length }} Q</span>
+                    <span class="section-progress" [class.complete]="getSectionProgress(section.id) === 100">
+                        {{ getSectionProgress(section.id) }}%
+                    </span>
+                </div>
+            </a>
+            }
+
+
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
