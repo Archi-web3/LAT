@@ -11,13 +11,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { getCategoryColor } from '../../../core/constants/category-colors';
-// Connection State
-isOnline = signal(navigator.onLine);
-
-constructor() {
-  window.addEventListener('online', () => this.isOnline.set(true));
-  window.addEventListener('offline', () => this.isOnline.set(false));
-}
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { TranslationService } from '../../../core/i18n/translation.service';
+import { LocalizePipe } from '../../../core/i18n/localize.pipe';
 
 @Component({
   selector: 'app-assessment-layout',
