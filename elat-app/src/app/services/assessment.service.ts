@@ -255,6 +255,9 @@ export class AssessmentService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
 
+      // Save Calculated Score
+      score: this.getGlobalScore(),
+
       // Save logs
       submittedBy: this.submittedBy(),
       submittedAt: this.submittedAt(),
