@@ -43,7 +43,7 @@ export const DEFAULT_CONFIG: AdminConfig = {
         { id: 'tech-docs', category: 'TECH', title: 'Documentation Technique', description: 'DONE: Onglet dédié avec Architecture, Dépannage et Infos Maintenance.', status: 'DONE' },
 
         { id: 'sync-bidir', category: 'TECH', title: 'Synchronisation Bidirectionnelle', description: 'DONE: Envoi/Réception des données (push/pull), Création de copies en cas de conflit.', status: 'DONE' },
-        { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'Mécanisme pour gérer les écrasements de données si plusieurs utilisateurs éditent.', status: 'TODO' },
+        { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'DONE: Détection automatique et UI de résolution dans l\'Historique.', status: 'DONE' },
 
         // Analyse & Reporting
         { id: 'dashboard-hq', category: 'FEATURE', title: 'Tableau de Bord Siège', description: 'Vue agrégée de toutes les bases/pays pour comparaison globale.', status: 'TODO' },

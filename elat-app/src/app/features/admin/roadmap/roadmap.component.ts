@@ -99,7 +99,15 @@ import { FormsModule } from '@angular/forms';
                         <p>Timeout de connexion configuré à <strong>5 secondes</strong> pour éviter que le serveur ne freeze indéfiniment si la DB est inaccessible.</p>
 
                         <h4>3. Interface Utilisateur</h4>
-                        <p>Les boutons d'export (PDF, CSV) doivent être visibles sur fond bleu (Toolbar). S'ils disparaissent, vérifier qu'ils n'ont pas l'attribut <code>color="primary"</code> qui les rendrait bleu-sur-bleu.</p>
+                        <p>Les boutons d'export (PDF, CSV) doivent être visibles sur fond bleu (Toolbar). S'ils disparaissent, vérifier qu'ils n'ont pas l'attribut <code>color="primary"</code>.</p>
+
+                        <h4>4. Synchronisation & Conflits</h4>
+                        <p>Le système gère automatiquement les conflits de données entre l'utilisateur et le serveur :</p>
+                        <ul>
+                            <li>Si une version serveur plus récente est détectée, elle écrase la version locale.</li>
+                            <li>La version locale écrasée est <strong>sauvegardée</strong> en tant que "Copie de Conflit".</li>
+                            <li>Ces copies sont accessibles via l'onglet <strong>Historique</strong> et peuvent être restaurées manuellement.</li>
+                        </ul>
                     </div>
 
                     <h3>Maintenance</h3>

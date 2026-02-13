@@ -161,7 +161,18 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     'FR': [46.603354, 1.888334], // France
     'UA': [48.3794, 31.1656], // Ukraine
     'YE': [15.552727, 48.516388], // Yemen
-    'AF': [33.9391, 67.7100]  // Afghanistan
+    'AF': [33.9391, 67.7100],  // Afghanistan
+    'SS': [6.8770, 31.3070],  // South Sudan
+    'IQ': [33.2232, 43.6793], // Iraq
+    'SY': [34.8021, 38.9968], // Syria
+    'LB': [33.8547, 35.8623], // Lebanon
+    'JO': [30.5852, 36.2384], // Jordan
+    'PS': [31.9522, 35.2332], // Palestine
+    'MM': [21.9162, 95.9560], // Myanmar
+    'BD': [23.6850, 90.3563], // Bangladesh
+    'VE': [6.4238, -66.5897], // Venezuela
+    'CO': [4.5709, -74.2973], // Colombia
+    'HT': [18.9712, -72.2852], // Haiti
   };
 
   ngOnInit() {
@@ -179,16 +190,20 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
   refreshData() {
     this.assessmentService.getRemoteHistory().subscribe({
       next: (res) => {
+        console.log('Dashboard Data:', res);
         this.data = res;
         this.metrics = this.dashboardService.computeMetrics(res);
 
-        // UI Update is async
+        // UI Update is async to allow DOM to render
         setTimeout(() => {
           this.initMap();
           this.initChart();
         }, 100);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error('Failed to load dashboard data', err);
+        // Optional: Show snackbar
+      }
     });
   }
 
