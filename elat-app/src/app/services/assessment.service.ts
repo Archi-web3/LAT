@@ -50,39 +50,7 @@ export class AssessmentService {
 
   // ... existing code ...
 
-  async sync() {
-    console.log('🔄 Attempting Bidirectional Sync...');
-    if (!navigator.onLine) {
-      console.log('❌ Offline: Skipping sync');
-      return;
-    }
 
-    this.isSyncing.set(true); // Start Spinner
-
-    const unsynced = this.getAllSavedAssessments().filter(a => !a.synced);
-
-    // 1. PUSH Local Changes
-    if (unsynced.length > 0) {
-      // ... (existing sync logic) ...
-      // Ensure to turn off spinner in subscribe callbacks
-      this.http.post(this.apiUrl + '/sync', unsynced).subscribe({
-        next: (res: any) => {
-          console.log('✅ Sync successful:', res);
-          this.markAsSynced(unsynced);
-          this.isSyncing.set(false); // Stop Spinner
-        },
-        error: (err) => {
-          console.error('❌ Sync failed:', err);
-          this.isSyncing.set(false); // Stop Spinner
-        }
-      });
-    } else {
-      console.log('✅ Nothing to push.');
-      this.isSyncing.set(false); // Stop Spinner if nothing to push
-    }
-
-    // Note: If you implement Pull logic, ensure it also manages isSyncing
-  }
 
   private restoreLastContext() {
     const last = localStorage.getItem('elat-last-context');
@@ -613,311 +581,277 @@ export class AssessmentService {
     this.isSyncing.set(true); // Start Spinner
 
     const unsynced = this.getAllSavedAssessments().filter(a => !a.synced);
+    console.log(`📤 Push: Found ${unsynced.length} items to sync`);
 
     // 1. PUSH Local Changes
     if (unsynced.length > 0) {
       this.http.post(this.apiUrl + '/sync', unsynced).subscribe({
         next: (res: any) => {
           console.log('✅ Sync successful:', res);
-          this.markAsSynced(unsynced);
+
+          // Mark as synced
+          if (res.applied && res.applied.length > 0) {
+            res.applied.forEach((id: string) => this.markAsSynced(id));
+          }
+
           // Pull updates after push
-          this.applyServerUpdates().add(() => this.isSyncing.set(false));
+          if (res.serverUpdates && res.serverUpdates.length > 0) {
+            this.applyServerUpdates(res.serverUpdates);
+          }
+
+          this.isSyncing.set(false); // Stop Spinner
         },
         error: (err) => {
           console.error('❌ Sync failed:', err);
-          this.isSyncing.set(false); // Stop on error
+          this.isSyncing.set(false); // Stop Spinner
         }
       });
     } else {
-      // Just Pull
-      this.applyServerUpdates().add(() => this.isSyncing.set(false));
-    }
-  }
-
-  // Retrieve updates from server
-  applyServerUpdates() {
-    // Return the subscription so caller can detect completion
-    return this.http.get<any[]>(this.apiUrl + '/history').subscribe({
-      next: (remoteAssessments) => {
-        // ... existing conflict logic ...
-      },
-      error: (err) => console.error('Failed to pull updates', err)
-    });
-  }
-
-    // We always sync, even if unsynced is empty, to PULL server updates
-    console.log(`📤 Push: Found ${unsynced.length} items to sync`);
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('⚠️ No token: Cannot sync');
-      return;
-    }
-
-    try {
-      const headers = { 'x-auth-token': token };
-      const lastSyncTimestamp = localStorage.getItem('elat-last-sync-timestamp');
-
-      // Prepare payload with calculated scores if missing
-      const changes = unsynced.map(a => {
-        let score = a.score;
-        if (score === undefined) {
-          console.log(`Calculating missing score for ${ a.id || 'unsynced item' }`);
-          score = this.calculateScore(a.answers, this.sections());
+      // Just Pull (if nothing to push)
+      this.http.get<any[]>(this.apiUrl + '/history').subscribe({
+        next: (remoteAssessments) => {
+          if (remoteAssessments && remoteAssessments.length > 0) {
+            this.applyServerUpdates(remoteAssessments);
+          }
+          this.isSyncing.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to pull updates', err);
+          this.isSyncing.set(false);
         }
-
-        return {
-          ...a,
-          id: a.id || crypto.randomUUID(), // Ensure ID
-          score: score, // Enforce score presence
-          userId: this.authService.currentUser()?.id
-        };
       });
-
-      const payload = {
-        changes: changes,
-        lastSyncTimestamp: lastSyncTimestamp || null
-      };
-
-      this.http.post<any>(`${ this.apiUrl }/sync`, payload, { headers })
-        .subscribe({
-    next: (res) => {
-      console.log('✅ Sync successful!', res);
-
-      // 1. Mark Applied as Synced
-      if (res.applied && res.applied.length > 0) {
-        res.applied.forEach((syncedId: string) => {
-          this.markAsSynced(syncedId);
-        });
-      }
-
-      // 2. Apply Server Updates (Pull)
-      if (res.serverUpdates && res.serverUpdates.length > 0) {
-        console.log(`📥 Pull: Received ${res.serverUpdates.length} updates from server`);
-        this.applyServerUpdates(res.serverUpdates);
-      }
-
-      // 3. Update Sync Timestamp
-      localStorage.setItem('elat-last-sync-timestamp', res.timestamp);
-
-      // 4. Force UI Refresh
-      // If the current context was updated, reload it
-      const currentCtx = this.context();
-      if (currentCtx) {
-        const key = this.getStorageKey(currentCtx);
-        const currentId = localStorage.getItem(key + '_id');
-        // We might need a better way to check if current doc was updated
-        // For now, re-load state if we suspect changes
-        this.loadStateForContext(currentCtx);
-      }
-    },
-    error: (err) => console.error('❌ Sync failed', err)
-  });
-    } catch (e) {
-  console.error('❌ Sync error', e);
-}
+    }
   }
 
   // Helper: Mark local item as synced
   private markAsSynced(idOrContextKey: string) {
-  // We store by Context Key in LocalStorage, but Server sends IDs
-  // We need to find the LocalStorage key for this ID
-  // Naive approach: Iterate all
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith('elat-assessment-')) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (raw) {
-          const state = JSON.parse(raw);
-          // Match by ID if present, or we can assume the server returned the ID we sent
-          if (state.id === idOrContextKey || !state.id) {
-            // If no ID locally, we assume it was the one we just sent. 
-            // In reality, we should store IDs locally.
-            // Let's blindly mark as synced if it was in the 'unsynced' list we sent.
-            state.synced = true;
-            state.id = idOrContextKey; // Update ID if server assigned one
-            localStorage.setItem(key, JSON.stringify(state));
+    // We store by Context Key in LocalStorage, but Server sends IDs
+    // We need to find the LocalStorage key for this ID
+    // Naive approach: Iterate all
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('elat-assessment-')) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const state = JSON.parse(raw);
+            // Match by ID if present, or we can assume the server returned the ID we sent
+            if (state.id === idOrContextKey || !state.id) {
+              // If no ID locally, we assume it was the one we just sent. 
+              // In reality, we should store IDs locally.
+              // Let's blindly mark as synced if it was in the 'unsynced' list we sent.
+              state.synced = true;
+              state.id = idOrContextKey; // Update ID if server assigned one
+              localStorage.setItem(key, JSON.stringify(state));
+            }
           }
-        }
-      } catch (e) { }
+        } catch (e) { }
+      }
     }
   }
-}
 
   // Helper: Apply Server Updates
   private applyServerUpdates(updates: any[]) {
-  updates.forEach(serverDoc => {
-    if (!serverDoc.context) return;
+    updates.forEach(serverDoc => {
+      if (!serverDoc.context) return;
 
-    const key = this.getStorageKey(serverDoc.context);
-    const localJson = localStorage.getItem(key);
+      const key = this.getStorageKey(serverDoc.context);
+      const localJson = localStorage.getItem(key);
 
-    if (localJson) {
-      const localDoc = JSON.parse(localJson);
+      if (localJson) {
+        const localDoc = JSON.parse(localJson);
 
-      // Conflict Detection
-      // If local is dirty (unsynced) and updated recently
-      if (!localDoc.synced) {
-        console.warn(`⚠️ Conflict detected for ${key}. Server has newer version.`);
-        // Strategy: Save Server version as Main, Move Local to "Conflict Copy"
-        const conflictKey = key + '_CONFLICT_' + Date.now();
-        localStorage.setItem(conflictKey, JSON.stringify(localDoc));
-        console.log(`Saved local conflict to ${conflictKey}`);
+        // Conflict Detection
+        // If local is dirty (unsynced) and updated recently
+        if (!localDoc.synced) {
+          console.warn(`⚠️ Conflict detected for ${key}. Server has newer version.`);
+          // Strategy: Save Server version as Main, Move Local to "Conflict Copy"
+          const conflictKey = key + '_CONFLICT_' + Date.now();
+          localStorage.setItem(conflictKey, JSON.stringify(localDoc));
+          console.log(`Saved local conflict to ${conflictKey}`);
 
-        this.addToHistory('CONFLICT', `Detected conflict with server. Local copy saved to ${conflictKey}`);
-        this.checkConflicts(); // Update signal
+          this.addToHistory('CONFLICT', `Detected conflict with server. Local copy saved to ${conflictKey}`);
+          this.checkConflicts(); // Update signal
+        }
+      }
+
+      // Overwrite Local with Server
+      serverDoc.synced = true;
+      localStorage.setItem(key, JSON.stringify(serverDoc));
+      this.addToHistory('SYNC', 'Assessment merged with server update');
+    });
+  }
+
+  // --- Conflict Management ---
+  conflicts = signal<{ key: string, date: Date, originalKey: string }[]>([]);
+
+  checkConflicts() {
+    const list: { key: string, date: Date, originalKey: string }[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.includes('_CONFLICT_')) {
+        // key format: elat-assessment-..._CONFLICT_123456789
+        const parts = key.split('_CONFLICT_');
+        const originalKey = parts[0];
+        const timestamp = parseInt(parts[1]);
+        list.push({ key, date: new Date(timestamp), originalKey });
       }
     }
+    this.conflicts.set(list.sort((a, b) => b.date.getTime() - a.date.getTime()));
+  }
 
-    // Overwrite Local with Server
-    serverDoc.synced = true;
-    localStorage.setItem(key, JSON.stringify(serverDoc));
-    this.addToHistory('SYNC', 'Assessment merged with server update');
-  });
-}
+  restoreConflict(conflict: { key: string, originalKey: string }) {
+    const raw = localStorage.getItem(conflict.key);
+    if (raw) {
+      // 1. Restore content to original key
+      const data = JSON.parse(raw);
+      data.synced = false; // Mark as unsynced so it pushes to server
+      localStorage.setItem(conflict.originalKey, JSON.stringify(data));
 
-// --- Conflict Management ---
-conflicts = signal<{ key: string, date: Date, originalKey: string }[]>([]);
+      // 2. Remove conflict file
+      localStorage.removeItem(conflict.key);
 
-checkConflicts() {
-  const list: { key: string, date: Date, originalKey: string }[] = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.includes('_CONFLICT_')) {
-      // key format: elat-assessment-..._CONFLICT_123456789
-      const parts = key.split('_CONFLICT_');
-      const originalKey = parts[0];
-      const timestamp = parseInt(parts[1]);
-      list.push({ key, date: new Date(timestamp), originalKey });
+      // 3. Update UI
+      this.checkConflicts();
+      this.addToHistory('RESOLVED', 'Restored local conflict version.');
+
+      // 4. Reload if current context
+      const currentCtx = this.context();
+      if (currentCtx && this.getStorageKey(currentCtx) === conflict.originalKey) {
+        this.loadStateForContext(currentCtx);
+        alert('Conflict version restored. Please Sync to push changes.');
+      }
     }
   }
-  this.conflicts.set(list.sort((a, b) => b.date.getTime() - a.date.getTime()));
-}
 
-restoreConflict(conflict: { key: string, originalKey: string }) {
-  const raw = localStorage.getItem(conflict.key);
-  if (raw) {
-    // 1. Restore content to original key
-    const data = JSON.parse(raw);
-    data.synced = false; // Mark as unsynced so it pushes to server
-    localStorage.setItem(conflict.originalKey, JSON.stringify(data));
-
-    // 2. Remove conflict file
-    localStorage.removeItem(conflict.key);
-
-    // 3. Update UI
+  discardConflict(key: string) {
+    localStorage.removeItem(key);
     this.checkConflicts();
-    this.addToHistory('RESOLVED', 'Restored local conflict version.');
-
-    // 4. Reload if current context
-    const currentCtx = this.context();
-    if (currentCtx && this.getStorageKey(currentCtx) === conflict.originalKey) {
-      this.loadStateForContext(currentCtx);
-      alert('Conflict version restored. Please Sync to push changes.');
-    }
   }
-}
 
-discardConflict(key: string) {
-  localStorage.removeItem(key);
-  this.checkConflicts();
-}
+  getRemoteHistory() {
+    const token = localStorage.getItem('token');
+    const headers = { 'x-auth-token': token || '' };
+    return this.http.get<any[]>(`${this.apiUrl}/history`, { headers });
+  }
 
-getRemoteHistory() {
-  const token = localStorage.getItem('token');
-  const headers = { 'x-auth-token': token || '' };
-  return this.http.get<any[]>(`${this.apiUrl}/history`, { headers });
-}
+  deleteRemoteAssessment(id: string) {
+    const token = localStorage.getItem('token');
+    const headers = { 'x-auth-token': token || '' };
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
 
-deleteRemoteAssessment(id: string) {
-  const token = localStorage.getItem('token');
-  const headers = { 'x-auth-token': token || '' };
-  return this.http.delete(`${this.apiUrl}/${id}`, { headers });
-}
+  // --- Export Logic ---
+  exportToCSV() {
+    const context = this.context();
+    const sections = this.sections();
+    const answers = this.answers();
 
-// --- Export Logic ---
-exportToCSV() {
+    if (!context || !sections) return;
+
+    // 1. Flatten Data
+    let csvContent = '\uFEFF'; // BOM
+    csvContent += 'Section,Category,Question,Weight,Score,Comment\n';
+
+    sections.forEach(section => {
+      section.questions.forEach(q => {
+        const score = answers[q.id] ?? 'N/A';
+        const comment = (this.comments()[q.id] || "").replace(/,/g, ' '); // Escape commas
+        const line = `"${section.title}","${q.category || ''}","${q.text.replace(/"/g, '""')}",${q.weight},${score},"${comment}"\n`;
+        csvContent += line;
+      });
+    });
+
+    // 2. Download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `LAT_${context.country}_${context.base}_${context.evaluationMonth}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   const context = this.context();
   const sections = this.sections();
   const answers = this.answers();
   const proofLinks = this.proofLinks();
   const proofPhotos = this.proofPhotos();
 
-  if (!context) {
+  if(!context) {
     alert('No assessment context found. Cannot export.');
     return;
   }
 
-  let user = 'Unknown';
-  try {
-    const userData = localStorage.getItem('user');
-    if (userData) user = JSON.parse(userData).name;
-  } catch (e) { }
+    let user = 'Unknown';
+try {
+  const userData = localStorage.getItem('user');
+  if (userData) user = JSON.parse(userData).name;
+} catch (e) { }
 
-  let csvContent = "Country,Base,EvaluationMonth,Date,User,Section,QuestionID,QuestionText,Weight,Answer,Score,MaxScore,Comment,ProofLink,ProofPhoto\n";
+let csvContent = "Country,Base,EvaluationMonth,Date,User,Section,QuestionID,QuestionText,Weight,Answer,Score,MaxScore,Comment,ProofLink,ProofPhoto\n";
 
-  sections.forEach((section: AssessmentSection) => {
-    section.questions.forEach((q: any) => {
-      const answerVal = answers[q.id];
-      let score = 0;
-      let maxScore = 0;
-      let answerText = "N/A";
+sections.forEach((section: AssessmentSection) => {
+  section.questions.forEach((q: any) => {
+    const answerVal = answers[q.id];
+    let score = 0;
+    let maxScore = 0;
+    let answerText = "N/A";
 
-      if (answerVal !== undefined && answerVal !== -1) {
-        score = answerVal * q.weight;
-        maxScore = 1 * q.weight;
-        answerText = answerVal.toString();
-      } else if (answerVal === -1) {
-        answerText = "N/A";
-      } else {
-        answerText = "";
-      }
+    if (answerVal !== undefined && answerVal !== -1) {
+      score = answerVal * q.weight;
+      maxScore = 1 * q.weight;
+      answerText = answerVal.toString();
+    } else if (answerVal === -1) {
+      answerText = "N/A";
+    } else {
+      answerText = "";
+    }
 
-      const comment = (this.comments()[q.id] || "").replace(/,/g, " ").replace(/\n/g, " ");
-      const link = (proofLinks[q.id] || "").replace(/,/g, " ");
+    const comment = (this.comments()[q.id] || "").replace(/,/g, " ").replace(/\n/g, " ");
+    const link = (proofLinks[q.id] || "").replace(/,/g, " ");
 
-      let photo = proofPhotos[q.id] || "";
-      if (photo.length > 200 && !photo.startsWith('http')) {
-        photo = "(Offline Photo)";
-      }
+    let photo = proofPhotos[q.id] || "";
+    if (photo.length > 200 && !photo.startsWith('http')) {
+      photo = "(Offline Photo)";
+    }
 
-      const qText = q.text.replace(/,/g, " ");
-      const sTitle = section.title.replace(/,/g, " ");
+    const qText = q.text.replace(/,/g, " ");
+    const sTitle = section.title.replace(/,/g, " ");
 
-      const row = [
-        context.country,
-        context.base,
-        context.evaluationMonth,
-        context.date,
-        user,
-        sTitle,
-        q.id,
-        qText,
-        q.weight,
-        answerText,
-        score,
-        maxScore,
-        comment,
-        link,
-        photo
-      ].join(",");
+    const row = [
+      context.country,
+      context.base,
+      context.evaluationMonth,
+      context.date,
+      user,
+      sTitle,
+      q.id,
+      qText,
+      q.weight,
+      answerText,
+      score,
+      maxScore,
+      comment,
+      link,
+      photo
+    ].join(",");
 
-      csvContent += row + "\n";
-    });
+    csvContent += row + "\n";
   });
+});
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(blob);
+const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+const link = document.createElement("a");
+const url = URL.createObjectURL(blob);
 
-  const filename = `ELAT_Export_${context.base}_${context.evaluationMonth}.csv`;
+const filename = `ELAT_Export_${context.base}_${context.evaluationMonth}.csv`;
 
-  link.setAttribute("href", url);
-  link.setAttribute("download", filename);
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+link.setAttribute("href", url);
+link.setAttribute("download", filename);
+link.style.visibility = 'hidden';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+  }
 }

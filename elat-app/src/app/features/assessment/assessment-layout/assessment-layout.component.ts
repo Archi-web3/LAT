@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { getCategoryColor } from '../../../core/constants/category-colors';
