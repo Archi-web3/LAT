@@ -40,14 +40,16 @@ export const DEFAULT_CONFIG: AdminConfig = {
         { id: 'pwa-offline', category: 'TECH', title: 'Mode Hors-Ligne Avancé (PWA)', description: 'DONE: Cache complet Assets/Data, Synchro auto au retour connexion, Indicateurs UI (Offline/Syncing).', status: 'DONE' },
         { id: 'branding', category: 'UX', title: 'Branding & Identité', description: 'DONE: Nouveau Logo LAT (Engrenage), Animation Flip Login (ACF->LAT), Renommage Application.', status: 'DONE' },
         { id: 'mobile-ux', category: 'UX', title: 'Expérience Mobile', description: 'DONE: Menu latéral responsive (Overlay), Adaptation Layout, Icones PWA corrigées.', status: 'DONE' },
+        { id: 'tech-docs', category: 'TECH', title: 'Documentation Technique', description: 'DONE: Onglet dédié avec Architecture, Dépannage et Infos Maintenance.', status: 'DONE' },
 
         { id: 'sync-bidir', category: 'TECH', title: 'Synchronisation Bidirectionnelle', description: 'DONE: Envoi/Réception des données (push/pull), Création de copies en cas de conflit.', status: 'DONE' },
         { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'Mécanisme pour gérer les écrasements de données si plusieurs utilisateurs éditent.', status: 'TODO' },
 
         // Analyse & Reporting
         { id: 'dashboard-hq', category: 'FEATURE', title: 'Tableau de Bord Siège', description: 'Vue agrégée de toutes les bases/pays pour comparaison globale.', status: 'TODO' },
-        { id: 'export-pdf', category: 'FEATURE', title: 'Export PDF Professionnel', description: 'Génération de rapports PDF propres pour partage externe.', status: 'TODO' },
-        { id: 'history-trends', category: 'FEATURE', title: 'Historique & Tendances', description: 'Graphiques visuels de l\'évolution des scores dans le temps.', status: 'TODO' },
+        { id: 'export-pdf', category: 'FEATURE', title: 'Export PDF Professionnel', description: 'DONE: Génération de rapports PDF propres pour partage externe.', status: 'DONE' },
+        { id: 'audit-log', category: 'FEATURE', title: 'Historique d\'Audit', description: 'DONE: Traçabilité complète des actions (Création, Soumission, Validation).', status: 'DONE' },
+        { id: 'history-trends', category: 'FEATURE', title: 'Tendances & Scores', description: 'Graphiques visuels de l\'évolution des scores dans le temps.', status: 'TODO' },
 
         // Expérience Utilisateur
         { id: 'interactive-plan', category: 'UX', title: 'Plan d\'Action Interactif', description: 'Assignation de tâches aux utilisateurs, notifications email.', status: 'TODO' },
