@@ -24,11 +24,19 @@ import { AssessmentService } from '../../../services/assessment.service';
       <div class="history-list" *ngIf="assessmentService.context(); else noContext">
         
         <!-- CHART SECTION -->
-        <mat-card class="chart-card" *ngIf="history().length > 1">
+        <mat-card class="chart-card">
             <h3>Évolution des Scores</h3>
-            <div class="chart-container">
+            
+            <div class="chart-container" *ngIf="history().length > 1; else noChartData">
                 <canvas id="historyChart"></canvas>
             </div>
+
+            <ng-template #noChartData>
+                <div class="no-data-msg">
+                    <mat-icon>insights</mat-icon>
+                    <p>Le graphique s'affichera après au moins 2 actions enregistrées.</p>
+                </div>
+            </ng-template>
         </mat-card>
 
         <!-- CONFLICTS SECTION -->
@@ -146,6 +154,16 @@ import { AssessmentService } from '../../../services/assessment.service';
       color: #757575;
       margin-top: 40px;
     }
+    .no-data-msg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: #999;
+        text-align: center;
+    }
+    .no-data-msg mat-icon { font-size: 48px; height: 48px; width: 48px; margin-bottom: 16px; opacity: 0.5; }
   `]
 })
 export class HistoryViewComponent {

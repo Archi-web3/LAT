@@ -120,7 +120,8 @@ export class AssessmentService {
       date: new Date().toISOString(),
       user: userName,
       action: action,
-      details: details
+      details: details,
+      score: this.getGlobalScore() // Snapshot of score
     };
 
     this.history.update(h => [...h, entry]);

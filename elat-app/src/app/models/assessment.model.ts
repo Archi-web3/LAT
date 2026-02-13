@@ -76,4 +76,5 @@ export interface AssessmentHistoryItem {
     user: string;
     action: string;
     details?: string;
+    score?: number; // Snapshot of score at this time
 }
