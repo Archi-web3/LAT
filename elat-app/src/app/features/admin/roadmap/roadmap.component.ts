@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import { AdminService } from '../../../core/admin/admin.service';
 import { RoadmapItem } from '../../../models/admin-config.model';
 import { FormsModule } from '@angular/forms';
@@ -113,60 +112,57 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
     styles: [`
-    styles: [`
-        .container { padding: 24px; max- width: 900px; margin: 0 auto;
-}
-    .header { margin- bottom: 16px; }
-    .header h2 { margin - bottom: 8px; color: #333; }
+    .container { padding: 24px; max-width: 900px; margin: 0 auto; }
+    .header { margin-bottom: 16px; }
+    .header h2 { margin-bottom: 8px; color: #333; }
     
-    .tab - content { padding - top: 24px; }
-    .tab - intro { color: #666; margin - bottom: 16px; }
+    .tab-content { padding-top: 24px; }
+    .tab-intro { color: #666; margin-bottom: 16px; }
 
     /* Doc Styles */
-    .doc - content h3 { color: #3f51b5; border - bottom: 1px solid #eee; padding - bottom: 8px; margin - top: 24px; }
-    .doc - content h4 { color: #333; margin - top: 16px; margin - bottom: 8px; font - weight: 600; }
-    .doc - card { background: #f5f5f5; padding: 16px; border - radius: 8px; border - left: 4px solid #3f51b5; }
-    .doc - row { display: flex; justify - content: space - between; margin - bottom: 8px; }
-    .doc - row.label { font - weight: 500; color: #555; }
-    .doc - row.value { font - family: monospace; color: #333; }
-    .doc - section ul { padding - left: 20px; line - height: 1.6; color: #444; }
-    
+    .doc-content h3 { color: #3f51b5; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 24px; }
+    .doc-content h4 { color: #333; margin-top: 16px; margin-bottom: 8px; font-weight: 600; }
+    .doc-card { background: #f5f5f5; padding: 16px; border-radius: 8px; border-left: 4px solid #3f51b5; }
+    .doc-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .doc-row .label { font-weight: 500; color: #555; }
+    .doc-row .value { font-family: monospace; color: #333; }
+    .doc-section ul { padding-left: 20px; line-height: 1.6; color: #444; }
 
-    .progress - bar { height: 8px; background: #eee; border - radius: 4px; overflow: hidden; margin - bottom: 8px; }
-    .progress - fill { height: 100 %; background: #4caf50; transition: width 0.3s ease; }
-    .progress - text { text - align: right; font - size: 0.9rem; color: #666; margin - bottom: 24px; font - weight: 500; }
+    .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+    .progress-fill { height: 100%; background: #4caf50; transition: width 0.3s ease; }
+    .progress-text { text-align: right; font-size: 0.9rem; color: #666; margin-bottom: 24px; font-weight: 500; }
 
-    .roadmap - list { display: flex; flex - direction: column; gap: 16px; margin - bottom: 32px; }
-    .roadmap - item {
-    background: white;
-    padding: 16px;
-    border - radius: 8px;
-    border: 1px solid #e0e0e0;
-    transition: all 0.2s;
-}
-    .roadmap - item.done {
-    background: #f9f9f9;
-    opacity: 0.8;
-}
-    .roadmap - item.done.item - title { text - decoration: line - through; color: #888; }
+    .roadmap-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .roadmap-item { 
+        background: white; 
+        padding: 16px; 
+        border-radius: 8px; 
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s;
+    }
+    .roadmap-item.done {
+        background: #f9f9f9;
+        opacity: 0.8;
+    }
+    .roadmap-item.done .item-title { text-decoration: line-through; color: #888; }
     
-    .item - header { display: flex; align - items: flex - start; gap: 12px; }
-    .item - content { flex: 1; }
+    .item-header { display: flex; align-items: flex-start; gap: 12px; }
+    .item-content { flex: 1; }
     
-    .title - row { display: flex; align - items: center; gap: 12px; margin - bottom: 4px; }
-    .item - title { font - weight: 600; font - size: 1.1rem; color: #333; }
+    .title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+    .item-title { font-weight: 600; font-size: 1.1rem; color: #333; }
     
-    .badge {
-    font - size: 0.7rem; padding: 2px 8px; border - radius: 12px; font - weight: bold; text - transform: uppercase;
-}
+    .badge { 
+        font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; 
+    }
     .badge.TECH { background: #e3f2fd; color: #1565c0; }
     .badge.FEATURE { background: #e8f5e9; color: #2e7d32; }
     .badge.UX { background: #fce4ec; color: #c2185b; }
 
-    .item - desc { color: #555; line - height: 1.4; font - size: 0.95rem; margin - top: 4px; }
+    .item-desc { color: #555; line-height: 1.4; font-size: 0.95rem; margin-top: 4px; }
 
-    .actions { display: flex; justify - content: flex - end; }
-`]
+    .actions { display: flex; justify-content: flex-end; }
+  `]
 })
 export class RoadmapComponent {
     adminService = inject(AdminService);
