@@ -30,6 +30,7 @@ import { PdfService } from '../../../services/pdf.service';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    MatMenuModule,
     TranslatePipe,
     LocalizePipe
   ],

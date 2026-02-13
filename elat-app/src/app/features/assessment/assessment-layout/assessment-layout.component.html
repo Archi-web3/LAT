@@ -1,115 +1,122 @@
 <mat-toolbar color="primary" class="toolbar">
-    <button mat-icon-button (click)="drawer.toggle()" aria-label="Toggle menu">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <img src="assets/logo.jpeg" alt="Logo" class="toolbar-logo">
-    <span class="app-title">{{ 'APP_NAME' | translate }} <span class="desktop-only">- Assessment</span></span>
+    <div class="toolbar-left">
+        <button mat-icon-button (click)="drawer.toggle()" aria-label="Toggle menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <!-- Logo & Title -->
+        <div class="branding">
+            <span class="app-title">LAT</span>
+            <span class="context-badge" *ngIf="assessmentService.context()">
+                {{ assessmentService.context()?.base }}
+                <span class="opacity-50">|</span>
+                {{ assessmentService.context()?.evaluationMonth }}
+            </span>
+        </div>
+    </div>
 
-    <!-- Context Badge (Always Left if active) -->
-    <span *ngIf="assessmentService.context()" class="context-badge desktop-only">
-        {{ assessmentService.context()?.base }} ({{ assessmentService.context()?.evaluationMonth }})
-    </span>
-
-    <!-- Spacer - Pushes everything else to the Right -->
     <span class="spacer"></span>
 
-    <!-- Offline Indicator -->
-    <div class="offline-badge" *ngIf="!isOnline()" matTooltip="You are offline. Changes are saved locally.">
-        <mat-icon>cloud_off</mat-icon>
-        <span class="desktop-only">Offline Mode</span>
+    <!-- CENTER METRICS -->
+    <div class="metrics-pill" *ngIf="assessmentService.context()">
+        <div class="metric">
+            <span class="label">Progress</span>
+            <span class="value">{{ globalProgress() }}%</span>
+        </div>
+        <div class="divider"></div>
+        <div class="metric">
+            <span class="label">Score</span>
+            <span class="value" [class.highlight]="globalScore() > 80">{{ globalScore() }}%</span>
+        </div>
     </div>
 
-    <!-- Sync Indicator & Manual Trigger -->
-    <button mat-icon-button *ngIf="isOnline()" (click)="manualSync()"
-        [matTooltip]="assessmentService.hasUnsyncedChanges() ? 'Unsynced changes. Click to Sync.' : 'Click to Sync with Server'"
-        [disabled]="!isOnline()">
-        <mat-icon [class.spin]="assessmentService.hasUnsyncedChanges()">sync</mat-icon>
-    </button>
+    <span class="spacer"></span>
 
-    <!-- Context-Aware Controls (Right Side) -->
-    <ng-container *ngIf="assessmentService.context()">
+    <div class="toolbar-right">
 
-        <!-- LOGGING INFO (Submit/Validate) -->
-        <div class="log-info desktop-only" *ngIf="assessmentService.status() !== 'DRAFT'">
-            <div *ngIf="assessmentService.submittedBy() as subBy" class="log-line">
-                <mat-icon>send</mat-icon> Submitted by {{ subBy }} on {{ assessmentService.submittedAt() | date:'short'
-                }}
-            </div>
-            <div *ngIf="assessmentService.validatedBy() as valBy" class="log-line validated">
-                <mat-icon>verified</mat-icon> Validated by {{ valBy }} on {{ assessmentService.validatedAt() |
-                date:'short' }}
-            </div>
+        <!-- Offline Status -->
+        <div class="status-indicator offline" *ngIf="!isOnline()" matTooltip="Offline Mode">
+            <mat-icon>cloud_off</mat-icon>
         </div>
 
-        <button mat-icon-button (click)="exportCSV()" matTooltip="Export to CSV (PowerBI)" class="desktop-only">
-            <mat-icon>file_download</mat-icon>
+        <!-- Sync Button -->
+        <button mat-icon-button *ngIf="isOnline()" (click)="manualSync()"
+            [matTooltip]="assessmentService.isSyncing() ? 'Syncing...' : 'Sync Now'"
+            [disabled]="assessmentService.isSyncing()">
+            <mat-icon [class.spin]="assessmentService.isSyncing()">sync</mat-icon>
         </button>
 
-        <button mat-icon-button (click)="exportPDF()" matTooltip="Export as PDF Report" class="desktop-only">
-            <mat-icon>picture_as_pdf</mat-icon>
-        </button>
+        <ng-container *ngIf="assessmentService.context()">
 
-        <button mat-icon-button (click)="resetAssessment()" matTooltip="Reset All Answers" class="desktop-only">
-            <mat-icon>restart_alt</mat-icon>
-        </button>
+            <!-- EXPORT MENU -->
+            <button mat-icon-button [matMenuTriggerFor]="exportMenu" matTooltip="Exports">
+                <mat-icon>download</mat-icon>
+            </button>
+            <mat-menu #exportMenu="matMenu">
+                <button mat-menu-item (click)="exportPDF()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    <span>Export PDF Report</span>
+                </button>
+                <button mat-menu-item (click)="exportCSV()">
+                    <mat-icon>table_view</mat-icon>
+                    <span>Export CSV Data</span>
+                </button>
+            </mat-menu>
 
-        <button mat-icon-button routerLink="/assessment/history" matTooltip="View History">
-            <mat-icon>history</mat-icon>
-        </button>
+            <!-- ACTIONS MENU -->
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu" matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item routerLink="/assessment/history">
+                    <mat-icon>history</mat-icon>
+                    <span>View History</span>
+                </button>
+                <mat-divider></mat-divider>
 
-        <div class="metrics">
-            <div class="metric-item">
-                <span class="label">Progression</span>
-                <span class="value">{{ globalProgress() }}%</span>
+                <button mat-menu-item (click)="submit()" *ngIf="assessmentService.status() === 'DRAFT'">
+                    <mat-icon>send</mat-icon>
+                    <span>Submit Assessment</span>
+                </button>
+
+                <button mat-menu-item (click)="validate()"
+                    *ngIf="assessmentService.status() === 'SUBMITTED' && canValidate()">
+                    <mat-icon class="green-text">check_circle</mat-icon>
+                    <span>Validate</span>
+                </button>
+
+                <button mat-menu-item (click)="unlock()"
+                    *ngIf="assessmentService.status() !== 'DRAFT' && canValidate()">
+                    <mat-icon color="warn">lock_open</mat-icon>
+                    <span>Unlock / Revert</span>
+                </button>
+
+                <button mat-menu-item (click)="resetAssessment()">
+                    <mat-icon>restart_alt</mat-icon>
+                    <span>Reset All Answers</span>
+                </button>
+            </mat-menu>
+
+        </ng-container>
+
+        <!-- User Profile -->
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+            <div class="user-menu-header" *ngIf="authService.currentUser() as user">
+                <div class="name">{{ user.name }}</div>
+                <div class="role">{{ user.role }}</div>
             </div>
-            <div class="metric-item">
-                <span class="label">{{ 'COMMON.SCORE' | translate }}</span>
-                <span class="value ignore-low-score">{{ globalScore() }}%</span>
-            </div>
-        </div>
-
-        <!-- Lifecycle Actions -->
-        <div class="lifecycle-actions">
-            <!-- SUBMIT (Visible to All if Draft) -->
-            <button mat-raised-button color="primary" *ngIf="assessmentService.status() === 'DRAFT'" (click)="submit()"
-                [matTooltip]="'COMMON.SUBMIT' | translate">
-                <mat-icon>send</mat-icon> <span class="desktop-only">{{ 'COMMON.SUBMIT' | translate }}</span>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="setLang('EN')">🇬🇧 English</button>
+            <button mat-menu-item (click)="setLang('FR')">🇫🇷 Français</button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
             </button>
-
-            <!-- VALIDATE (Coordinators only if Submitted) -->
-            <button mat-raised-button color="accent" *ngIf="assessmentService.status() === 'SUBMITTED' && canValidate()"
-                (click)="validate()">
-                <mat-icon>check_circle</mat-icon> <span class="desktop-only">{{ 'COMMON.VALIDATE' | translate }}</span>
-            </button>
-
-            <!-- UNLOCK (Coordinators only if Submitted/Validated) -->
-            <button mat-icon-button color="warn" *ngIf="assessmentService.status() !== 'DRAFT' && canValidate()"
-                (click)="unlock()" matTooltip="Unlock / Revert to Draft">
-                <mat-icon>lock_open</mat-icon>
-            </button>
-        </div>
-    </ng-container>
-
-    <span class="spacer-mini"></span>
-
-    <!-- Language Switcher (Toolbar) -->
-    <button mat-button class="lang-btn" [class.active]="translationService.currentLang() === 'EN'"
-        (click)="setLang('EN')">EN</button>
-    <span class="lang-divider">|</span>
-    <button mat-button class="lang-btn" [class.active]="translationService.currentLang() === 'FR'"
-        (click)="setLang('FR')">FR</button>
-
-    <span class="spacer-mini"></span>
-
-    <!-- User Info -->
-    <div class="user-info desktop-only" *ngIf="authService.currentUser() as user">
-        <span class="user-name">{{ user.name }}</span>
-        <span class="user-role">{{ user.role }}</span>
+        </mat-menu>
     </div>
-
-    <button mat-icon-button (click)="logout()" [matTooltip]="'MENU.LOGOUT' | translate">
-        <mat-icon>logout</mat-icon>
-    </button>
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
