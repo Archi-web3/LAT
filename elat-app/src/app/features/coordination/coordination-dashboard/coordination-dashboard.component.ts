@@ -1,29 +1,34 @@
 import { Component, inject, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-
-import { AssessmentService } from '../../../services/assessment.service';
-import { AuthService } from '../../../core/auth/auth.service';
-import { DashboardService, DashboardMetrics } from '../../../services/dashboard.service';
-
-import * as L from 'leaflet';
-import Chart from 'chart.js/auto';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-coordination-dashboard',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatTableModule,
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    MatTabsModule
+    MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   template: `
     <div class="coord-container">
@@ -31,6 +36,30 @@ import Chart from 'chart.js/auto';
         <h1>Coordination Dashboard</h1>
         <p class="subtitle">Global Overview & Performance</p>
       </div>
+
+        <!-- Filter Bar -->
+        <mat-card class="filter-bar" [formGroup]="filterForm">
+            <div class="filter-row">
+                <mat-form-field appearance="outline" class="dense-field">
+                    <mat-label>Date Range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="dense-field" style="width: 250px;">
+                    <mat-label>Countries</mat-label>
+                    <mat-select formControlName="countries" multiple>
+                        <mat-option *ngFor="let c of availableCountries" [value]="c">{{c}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-button color="warn" (click)="filterForm.reset()">Reset</button>
+            </div>
+        </mat-card>
 
       <!-- KPIs -->
       <div class="kpi-grid" *ngIf="metrics">
@@ -59,6 +88,11 @@ import Chart from 'chart.js/auto';
              </mat-card>
 
              <mat-card class="chart-card">
+                 <h3>Score Evolution</h3>
+                 <canvas id="evolutionChart"></canvas>
+             </mat-card>
+
+             <mat-card class="chart-card">
                  <h3>Score by Country</h3>
                  <canvas id="countryChart"></canvas>
              </mat-card>
@@ -67,7 +101,7 @@ import Chart from 'chart.js/auto';
           <!-- Right: List -->
           <div class="list-view">
              <mat-card>
-                <h3>Recent Assessments</h3>
+                <h3>Assessments</h3>
                 <table mat-table [dataSource]="data" class="mat-elevation-z0">
                   <!-- Country Column -->
                   <ng-container matColumnDef="country">
@@ -110,9 +144,13 @@ import Chart from 'chart.js/auto';
     </div>
   `,
   styles: [`
-    .coord-container { padding: 20px; }
+    .coord-container { padding: 20px; background-color: #f7f9fc; min-height: 100vh; }
     .header { margin-bottom: 20px; }
     .subtitle { color: #666; font-size: 0.9rem; }
+    
+    .filter-bar { margin-bottom: 20px; padding: 15px 20px; }
+    .filter-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    .dense-field .mat-mdc-form-field-wrapper { padding-bottom: 0; }
     
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
     .kpi-card { padding: 20px; text-align: center; }
@@ -124,8 +162,10 @@ import Chart from 'chart.js/auto';
     .dashboard-content { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 960px) { .dashboard-content { grid-template-columns: 1fr; } }
 
-    .map-container { height: 300px; width: 100%; z-index: 1; }
-    .map-card { padding: 10px; }
+    .map-container { height: 350px; width: 100%; z-index: 1; border-radius: 4px; overflow: hidden; }
+    .map-card { padding: 0; overflow: hidden; }
+    .map-card h3 { padding: 15px; margin: 0; background: #fff; border-bottom: 1px solid #eee; }
+    
     .chart-card { padding: 20px; margin-top: 20px; }
 
     table { width: 100%; }
@@ -140,15 +180,26 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
   dashboardService = inject(DashboardService);
   authService = inject(AuthService);
   router = inject(Router);
+  fb = inject(FormBuilder);
 
   displayedColumns: string[] = ['country', 'base', 'score', 'actions'];
+
+  // Raw data from server
+  rawData: any[] = [];
+  // Filtered data for display
   data: any[] = [];
+
   metrics: DashboardMetrics | null = null;
+  filterForm: FormGroup;
+
+  // Lists for Filter Dropdowns
+  availableCountries: string[] = [];
 
   private map: L.Map | undefined;
   private chart: Chart | undefined;
+  private evolutionChart: Chart | undefined;
 
-  // Mock Coordinates for Demo (In real app, we need a DB of coordinates per Base/Country)
+  // Mock Coordinates
   private coordinates: Record<string, [number, number]> = {
     'CD': [-4.0383, 21.7587], // DRC
     'CF': [6.6111, 20.9394],  // CAR
@@ -175,53 +226,80 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     'HT': [18.9712, -72.2852], // Haiti
   };
 
+  constructor() {
+    this.filterForm = this.fb.group({
+      start: [null],
+      end: [null],
+      countries: [[]]
+    });
+
+    // React to form changes
+    this.filterForm.valueChanges.subscribe(() => {
+      this.applyFilters();
+    });
+  }
+
   ngOnInit() {
     this.refreshData();
   }
 
-  ngAfterViewInit() {
-    // Wait for data to be loaded before initializing map
-  }
+  ngAfterViewInit() { }
 
   ngOnDestroy() {
     if (this.chart) this.chart.destroy();
+    if (this.evolutionChart) this.evolutionChart.destroy();
   }
 
   refreshData() {
     this.assessmentService.getRemoteHistory().subscribe({
       next: (res) => {
-        console.log('Dashboard Data:', res);
-        this.data = res;
-        this.metrics = this.dashboardService.computeMetrics(res);
+        this.rawData = res;
 
-        // UI Update is async to allow DOM to render
-        setTimeout(() => {
-          this.initMap();
-          this.initChart();
-        }, 100);
+        // Extract available countries for filter
+        this.availableCountries = [...new Set(res.map((i: any) => i.country))].sort();
+
+        this.applyFilters();
       },
       error: (err) => {
         console.error('Failed to load dashboard data', err);
-        // Optional: Show snackbar
       }
     });
   }
 
+  applyFilters() {
+    const filters = this.filterForm.value;
+
+    this.data = this.dashboardService.filterData(this.rawData, {
+      start: filters.start,
+      end: filters.end,
+      countries: filters.countries
+    });
+
+    this.metrics = this.dashboardService.computeMetrics(this.data);
+
+    setTimeout(() => {
+      this.initMap();
+      this.initChart();
+      this.initEvolutionChart();
+    }, 100);
+  }
+
   initMap() {
     if (this.map) {
-      this.map.remove(); // Reset map
+      this.map.remove();
+      this.map = undefined; // Clear ref
     }
 
+    // Ensure container exists
     const container = document.getElementById('map');
     if (!container) return;
 
-    this.map = L.map('map').setView([10.0, 15.0], 3); // Centered on Africa
+    this.map = L.map('map').setView([10.0, 15.0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
 
-    // Add Markers from Metrics
     if (this.metrics && this.metrics.byCountry) {
       this.metrics.byCountry.forEach(c => {
         const coords = this.coordinates[c.name] || this.coordinates[c.name.substring(0, 2).toUpperCase()];
@@ -230,7 +308,7 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
             color: this.getColor(c.score),
             fillColor: this.getColor(c.score),
             fillOpacity: 0.8,
-            radius: 10 + (c.count * 2) // Size based on volume
+            radius: 8 + (c.count * 1.5)
           }).addTo(this.map!);
 
           marker.bindPopup(`<b>${c.name}</b><br>Score: ${c.score}%<br>Assessments: ${c.count}`);
@@ -254,6 +332,39 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
           data: this.metrics.byCountry.map(c => c.score),
           backgroundColor: this.metrics.byCountry.map(c => this.getColor(c.score)),
           borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } }, // Hide legend for single dataset
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  }
+
+  initEvolutionChart() {
+    const ctx = document.getElementById('evolutionChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics) return;
+
+    if (this.evolutionChart) this.evolutionChart.destroy();
+
+    // Simple implementation: Global Evolution
+    // If we want multiple lines per country, we need more complex data prep. 
+    // For now, let's show the Global Trend of filtered selection.
+
+    this.evolutionChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: this.metrics.evolution.map(e => e.name),
+        datasets: [{
+          label: 'Global Score Trend',
+          data: this.metrics.evolution.map(e => e.value),
+          borderColor: '#3f51b5',
+          backgroundColor: 'rgba(63, 81, 181, 0.2)',
+          fill: true,
+          tension: 0.3
         }]
       },
       options: {

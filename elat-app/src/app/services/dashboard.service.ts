@@ -17,6 +17,32 @@ export interface DashboardMetrics {
 export class DashboardService {
     private assessmentService = inject(AssessmentService);
 
+    // Filter data based on criteria
+    filterData(data: any[], criteria: { start?: Date, end?: Date, countries?: string[], bases?: string[] }): any[] {
+        return data.filter(item => {
+            let matches = true;
+
+            // Date Range
+            if (criteria.start || criteria.end) {
+                const itemDate = new Date(item.date || item.createdAt); // Fallback to createdAt if date missing
+                if (criteria.start && itemDate < criteria.start) matches = false;
+                if (criteria.end && itemDate > criteria.end) matches = false;
+            }
+
+            // Country
+            if (criteria.countries && criteria.countries.length > 0) {
+                if (!criteria.countries.includes(item.country)) matches = false;
+            }
+
+            // Base
+            if (criteria.bases && criteria.bases.length > 0) {
+                if (!criteria.bases.includes(item.base)) matches = false;
+            }
+
+            return matches;
+        });
+    }
+
     // Computes metrics from a list of assessments
     computeMetrics(assessments: any[]): DashboardMetrics {
         if (!assessments || assessments.length === 0) {
@@ -68,10 +94,11 @@ export class DashboardService {
             score: Math.round(val.sum / val.count)
         }));
 
-        // Evolution (by Month)
+        // Evolution (by Month) - Fixed to use standard Date objects for sorting if needed, 
+        // but sticking to string YYYY-MM is fine for basic sorting.
         const monthMap = new Map<string, { count: number; sum: number }>();
         assessments.forEach(a => {
-            // expected format YYYY-MM
+            // Ensure valid month format or data
             const m = a.evaluationMonth || 'Unknown';
             const current = monthMap.get(m) || { count: 0, sum: 0 };
             current.count++;
@@ -79,7 +106,7 @@ export class DashboardService {
             monthMap.set(m, current);
         });
 
-        // Sort by Date
+        // Sort by Date (YYYY-MM string compare works for ISO format)
         const evolution = Array.from(monthMap.entries())
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([name, val]) => ({
