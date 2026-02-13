@@ -63,6 +63,13 @@ import Chart from 'chart.js/auto';
                     </mat-select>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline" class="dense-field" style="width: 250px;">
+                    <mat-label>Bases</mat-label>
+                    <mat-select formControlName="bases" multiple>
+                        <mat-option *ngFor="let b of availableBases" [value]="b">{{b}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
                 <button mat-button color="warn" (click)="filterForm.reset()">Reset</button>
             </div>
         </mat-card>
@@ -200,6 +207,8 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
 
   // Lists for Filter Dropdowns
   availableCountries: string[] = [];
+  availableBases: string[] = [];
+  allBasesData: { country: string, base: string }[] = [];
 
   private map: L.Map | undefined;
   private chart: Chart | undefined;
@@ -236,13 +245,32 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     this.filterForm = this.fb.group({
       start: [null],
       end: [null],
-      countries: [[]]
+      countries: [[]],
+      bases: [[]]
     });
 
     // React to form changes
     this.filterForm.valueChanges.subscribe(() => {
       this.applyFilters();
     });
+
+    // React to Country changes to filter Bases
+    this.filterForm.get('countries')?.valueChanges.subscribe((countries: string[]) => {
+      this.updateAvailableBases(countries);
+    });
+  }
+
+  updateAvailableBases(selectedCountries: string[]) {
+    if (!selectedCountries || selectedCountries.length === 0) {
+      // Show all bases if no country selected (or unique list)
+      this.availableBases = [...new Set(this.allBasesData.map(b => b.base))].sort();
+    } else {
+      // Filter bases dependent on selected countries
+      const filtered = this.allBasesData
+        .filter(item => selectedCountries.includes(item.country))
+        .map(item => item.base);
+      this.availableBases = [...new Set(filtered)].sort();
+    }
   }
 
   ngOnInit() {
@@ -255,7 +283,7 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     if (this.chart) this.chart.destroy();
     if (this.evolutionChart) this.evolutionChart.destroy();
   }
-
+  // ...
   refreshData() {
     this.assessmentService.getRemoteHistory().subscribe({
       next: (res) => {
@@ -263,6 +291,10 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
 
         // Extract available countries for filter
         this.availableCountries = [...new Set(res.map((i: any) => i.country))].sort();
+
+        // Extract all base/country pairs
+        this.allBasesData = res.map((i: any) => ({ country: i.country, base: i.base })).filter((i: any) => i.base);
+        this.updateAvailableBases([]); // Init with all
 
         this.applyFilters();
       },
@@ -278,7 +310,8 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
     this.data = this.dashboardService.filterData(this.rawData, {
       start: filters.start,
       end: filters.end,
-      countries: filters.countries
+      countries: filters.countries,
+      bases: filters.bases
     });
 
     this.metrics = this.dashboardService.computeMetrics(this.data);
