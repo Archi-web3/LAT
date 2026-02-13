@@ -772,4 +772,6 @@ export class AssessmentService {
     link.click();
     document.body.removeChild(link);
   }
+}
+
 
