@@ -21,6 +21,27 @@ import { AssessmentService } from '../../../services/assessment.service';
       </div>
 
       <div class="history-list" *ngIf="assessmentService.context(); else noContext">
+        
+        <!-- CONFLICTS SECTION -->
+        <div class="conflicts-section" *ngIf="conflicts().length > 0">
+            <mat-card class="conflict-card warning">
+                <h3>⚠️ Conflits de synchronisation détectés</h3>
+                <p>Des versions locales ont été écrasées par le serveur. Vous pouvez les restaurer ici.</p>
+                
+                <mat-list>
+                    <mat-list-item *ngFor="let c of conflicts()">
+                        <mat-icon matListItemIcon class="orange-icon">warning</mat-icon>
+                        <div matListItemTitle>Sauvegarde du {{ c.date | date:'medium' }}</div>
+                        <div matListItemLine>{{ c.originalKey }}</div>
+                        <div matListItemMeta>
+                            <button mat-button color="primary" (click)="assessmentService.restoreConflict(c)">Restaurer</button>
+                            <button mat-button color="warn" (click)="assessmentService.discardConflict(c.key)">Supprimer</button>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </mat-card>
+        </div>
+
         <mat-card class="history-card">
            <mat-list>
              <ng-container *ngFor="let item of history(); let last = last">
@@ -59,6 +80,19 @@ import { AssessmentService } from '../../../services/assessment.service';
       max-width: 800px;
       margin: 0 auto;
     }
+    .conflicts-section { margin-bottom: 24px; }
+    .conflict-card.warning { 
+        border-left: 4px solid #ef6c00; 
+        background: #fff3e0;
+    }
+    .conflict-card h3 { 
+        margin: 16px; 
+        color: #ef6c00; 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+    }
+    .conflict-card p { margin: 0 16px 16px; color: #555; }
     .header {
       display: flex;
       align-items: center;
@@ -105,7 +139,13 @@ export class HistoryViewComponent {
   assessmentService = inject(AssessmentService);
 
   // Signal to the history array
+  // Signal to the history array
   history = this.assessmentService.history;
+  conflicts = this.assessmentService.conflicts;
+
+  constructor() {
+    this.assessmentService.checkConflicts();
+  }
 
   getIcon(action: string): string {
     switch (action) {
@@ -116,6 +156,7 @@ export class HistoryViewComponent {
       case 'UNLOCKED': return 'lock_open';
       case 'SYNC': return 'sync';
       case 'CONFLICT': return 'warning';
+      case 'RESOLVED': return 'check_circle';
       default: return 'history';
     }
   }
@@ -129,6 +170,7 @@ export class HistoryViewComponent {
       case 'UNLOCKED': return 'orange-icon';
       case 'SYNC': return 'blue-icon';
       case 'CONFLICT': return 'red-icon';
+      case 'RESOLVED': return 'green-icon';
       default: return 'grey-icon';
     }
   }

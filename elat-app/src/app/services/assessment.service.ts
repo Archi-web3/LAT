@@ -699,6 +699,7 @@ export class AssessmentService {
           console.log(`Saved local conflict to ${conflictKey}`);
 
           this.addToHistory('CONFLICT', `Detected conflict with server. Local copy saved to ${conflictKey}`);
+          this.checkConflicts(); // Update signal
         }
       }
 
@@ -707,6 +708,53 @@ export class AssessmentService {
       localStorage.setItem(key, JSON.stringify(serverDoc));
       this.addToHistory('SYNC', 'Assessment merged with server update');
     });
+  }
+
+  // --- Conflict Management ---
+  conflicts = signal<{ key: string, date: Date, originalKey: string }[]>([]);
+
+  checkConflicts() {
+    const list: { key: string, date: Date, originalKey: string }[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.includes('_CONFLICT_')) {
+        // key format: elat-assessment-..._CONFLICT_123456789
+        const parts = key.split('_CONFLICT_');
+        const originalKey = parts[0];
+        const timestamp = parseInt(parts[1]);
+        list.push({ key, date: new Date(timestamp), originalKey });
+      }
+    }
+    this.conflicts.set(list.sort((a, b) => b.date.getTime() - a.date.getTime()));
+  }
+
+  restoreConflict(conflict: { key: string, originalKey: string }) {
+    const raw = localStorage.getItem(conflict.key);
+    if (raw) {
+      // 1. Restore content to original key
+      const data = JSON.parse(raw);
+      data.synced = false; // Mark as unsynced so it pushes to server
+      localStorage.setItem(conflict.originalKey, JSON.stringify(data));
+
+      // 2. Remove conflict file
+      localStorage.removeItem(conflict.key);
+
+      // 3. Update UI
+      this.checkConflicts();
+      this.addToHistory('RESOLVED', 'Restored local conflict version.');
+
+      // 4. Reload if current context
+      const currentCtx = this.context();
+      if (currentCtx && this.getStorageKey(currentCtx) === conflict.originalKey) {
+        this.loadStateForContext(currentCtx);
+        alert('Conflict version restored. Please Sync to push changes.');
+      }
+    }
+  }
+
+  discardConflict(key: string) {
+    localStorage.removeItem(key);
+    this.checkConflicts();
   }
 
   getRemoteHistory() {
