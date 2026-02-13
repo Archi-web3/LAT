@@ -152,13 +152,8 @@ export class HistoryViewComponent {
   assessmentService = inject(AssessmentService);
 
   // Signal to the history array
-  // Signal to the history array
   history = this.assessmentService.history;
   conflicts = this.assessmentService.conflicts;
-
-  constructor() {
-    this.assessmentService.checkConflicts();
-  }
 
   // Chart
   chart: any;
