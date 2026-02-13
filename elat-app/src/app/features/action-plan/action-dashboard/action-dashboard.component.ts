@@ -239,7 +239,7 @@ import { getCategoryColor } from '../../../core/constants/category-colors';
                                         <!-- Label -->
                                         <div class="gantt-row-label" 
                                              style="grid-column: 1;"
-                                             [style.border-left-color]="getCategoryColor(action.section || action.category)"
+                                             [style.border-left-color]="getCategoryColor(action.section || action.category || '')"
                                              [class.priority-critical]="action.priority === 'CRITICAL'">
                                             
                                             <div class="row-handle" cdkDragHandle *ngIf="!hasActiveFilters()">
@@ -247,7 +247,7 @@ import { getCategoryColor } from '../../../core/constants/category-colors';
                                             </div>
 
                                             <div class="row-content-wrapper">
-                                                <div class="row-category" [style.color]="getCategoryColor(action.section || action.category)">
+                                                <div class="row-category" [style.color]="getCategoryColor(action.section || action.category || '')">
                                                     {{ action.section || action.category }}
                                                 </div>
                                                 <div class="row-title" matTooltip="{{ action.questionText }}">{{ action.questionText }}</div>
@@ -537,7 +537,7 @@ export class ActionDashboardComponent implements OnInit {
         // Apply Category Filter
         const categories = this.filterCategory();
         if (categories.length > 0) {
-            filtered = filtered.filter(a => categories.includes(a.section || a.category));
+            filtered = filtered.filter(a => categories.includes(a.section || a.category || ''));
         }
 
         // Apply Owner Filter
@@ -733,8 +733,8 @@ export class ActionDashboardComponent implements OnInit {
 
         // Debug first action to spam less
         // Log specific action to debug movement
-        if (action.questionText.includes('matrice')) {
-            console.log(`[DEBUG] Grid Action: ${action.questionText.substring(0, 15)} | Status: ${action.status} | Start: ${action.startDate} | Grid: ${colStart}`);
+        if (action.questionText && action.questionText.includes('matrice')) {
+            console.log(`[DEBUG] Grid Action: ${action.questionText?.substring(0, 15)} | Status: ${action.status} | Start: ${action.startDate} | Grid: ${colStart}`);
         }
 
         return `${colStart} / span ${span}`;

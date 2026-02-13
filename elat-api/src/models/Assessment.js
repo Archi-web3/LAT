@@ -27,6 +27,16 @@ const AssessmentSchema = new mongoose.Schema({
         details: { type: String }
     }],
 
+    // Action Plan
+    actionPlan: [{
+        id: { type: String }, // UUID
+        questionId: { type: String },
+        description: { type: String },
+        owner: { type: String },
+        dueDate: { type: Date },
+        status: { type: String, enum: ['OPEN', 'IN_PROGRESS', 'DONE'], default: 'OPEN' }
+    }],
+
     // Technical
     configVersion: { type: String }, // Which version of the questionnaire was used?
     createdAt: { type: Date, default: Date.now },

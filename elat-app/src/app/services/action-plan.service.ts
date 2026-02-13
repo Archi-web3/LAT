@@ -1,11 +1,15 @@
-import { Injectable, signal, inject } from '@angular/core';
-import { ActionPlan, ActionItem, PriorityLevel } from '../models/action-plan.model';
-import { AdminConfig, DEFAULT_CONFIG } from '../models/admin-config.model';
-import { AssessmentState } from '../models/assessment.model';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { AssessmentService } from './assessment.service';
-
 import { AdminService } from '../core/admin/admin.service';
+import { AdminConfig, DEFAULT_CONFIG } from '../models/admin-config.model';
+import { ActionItem, PriorityLevel, AssessmentState } from '../models/assessment.model';
 
+export interface ActionPlan {
+    id: string;
+    context: any;
+    actions: ActionItem[];
+    updatedAt: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -14,21 +18,32 @@ export class ActionPlanService {
     private assessmentService = inject(AssessmentService);
     private adminService = inject(AdminService);
 
-    // Current Plan State
-    currentPlan = signal<ActionPlan | null>(null);
+    // Derived State from AssessmentService
+    currentPlan = computed(() => {
+        const ctx = this.assessmentService.context();
+        const actions = this.assessmentService.actionPlan();
+
+        if (!ctx) return null;
+
+        return {
+            id: `plan-${ctx.country}-${ctx.base}-${ctx.evaluationMonth}`,
+            context: ctx,
+            actions: actions,
+            updatedAt: new Date().toISOString()
+        } as ActionPlan;
+    });
 
     // --- Generation Logic ---
-    generatePlan(assessment: AssessmentState): ActionPlan {
-        // 1. Load Config (Prefer Backend/Signal, fallback to LocalStorage, then Default)
+    generatePlan(assessment: any): ActionItem[] {
+        // 1. Load Config
         let config: AdminConfig = this.adminService.config();
-
         if (!config) {
             const configRaw = localStorage.getItem('elat-admin-config');
             config = configRaw ? JSON.parse(configRaw) : DEFAULT_CONFIG;
         }
 
         const actions: ActionItem[] = [];
-        const now = new Date(); // Start Date = Today
+        const now = new Date();
 
         // 2. Iterate Sections
         const sections = this.assessmentService.sections();
@@ -37,13 +52,12 @@ export class ActionPlanService {
             section.questions.forEach(q => {
                 const score = assessment.answers[q.id];
 
-                // If answer exists and is valid (not N/A -1)
+                // If score exists and likely bad? Logic depends on thresholds.
                 if (score !== undefined && score !== -1) {
                     const percentage = score * 100;
                     let priority: PriorityLevel | null = null;
                     let monthsToAdd = 0;
 
-                    // Priority Rules from Config
                     if (percentage < config.priorityThresholds.critical) {
                         priority = 'CRITICAL';
                         monthsToAdd = 1;
@@ -51,11 +65,8 @@ export class ActionPlanService {
                         priority = 'HIGH';
                         monthsToAdd = 3;
                     }
-                    // Optional: Medium priority if < 100? For now keep it simple based on user request.
-                    // User said: <50 Critical, 50-80 High. >80 OK.
 
                     if (priority) {
-                        // Due Date Calculation
                         const due = new Date(now);
                         due.setMonth(due.getMonth() + monthsToAdd);
 
@@ -64,114 +75,50 @@ export class ActionPlanService {
                             questionId: q.id,
                             questionText: q.text,
                             category: q.category || section.title,
-                            section: section.title, // Populate Section Title
+                            section: section.title,
                             priority: priority,
                             status: 'TODO',
                             startDate: now.toISOString(),
                             dueDate: due.toISOString(),
                             proofLink: assessment.proofLinks?.[q.id],
-                            proofPhoto: assessment.proofPhotos?.[q.id]
+                            proofPhoto: assessment.proofPhotos?.[q.id],
+                            owner: '',
+                            comments: ''
                         });
                     }
                 }
             });
         });
 
-        const context = assessment.context!;
-
-        const plan: ActionPlan = {
-            id: `plan-${context.country}-${context.base}-${context.evaluationMonth}`,
-            context: context,
-            actions: actions,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-
-        return plan;
+        return actions;
     }
 
-    // --- Persistence ---
+    // --- Actions ---
 
-    private getStorageKey(context: any): string {
-        return `elat-plan-${context.country}-${context.base}-${context.evaluationMonth}`.replace(/\s+/g, '_');
-    }
-
-    loadPlan(context: any) {
-        const key = this.getStorageKey(context);
-        const saved = localStorage.getItem(key);
-        if (saved) {
-            this.currentPlan.set(JSON.parse(saved));
-        } else {
-            this.currentPlan.set(null);
-        }
-    }
-
-    saveCurrentPlan() {
-        const plan = this.currentPlan();
-        if (!plan) return;
-
-        plan.updatedAt = new Date().toISOString();
-        const key = this.getStorageKey(plan.context);
-        localStorage.setItem(key, JSON.stringify(plan));
-    }
-
-    // Called when user clicks "Generate Action Plan" button
     initializePlanFromAssessment() {
-        const assessmentState = {
+        // Construct a partial state to pass to generate
+        const state = {
             answers: this.assessmentService.answers(),
-            context: this.assessmentService.context(),
             proofLinks: this.assessmentService.proofLinks(),
             proofPhotos: this.assessmentService.proofPhotos()
-        } as any; // Partial mock of AssessmentState
+        } as any;
+        // Context is required but not used in generatePlan loop (only for return obj)
+        // We just needed the answers.
 
-        if (!assessmentState.context) return;
-
-        // Check if plan already exists?
-        // For now, we overwrite or maybe warn? 
-        // User request implies "Generating". Let's generate a FRESH one but merge if possible? 
-        // Simplest: Generate new -> if existing, maybe keep manual edits? Too complex.
-        // Strategy: Generate NEW.
-
-        const newPlan = this.generatePlan(assessmentState);
-        this.currentPlan.set(newPlan);
-        this.saveCurrentPlan();
+        const newActions = this.generatePlan(state);
+        this.assessmentService.setActionPlan(newActions);
     }
+
     updateAction(updatedAction: ActionItem) {
-        const plan = this.currentPlan();
-        if (!plan) return;
-
-        const index = plan.actions.findIndex(a => a.id === updatedAction.id);
-        if (index !== -1) {
-            // Immutable Update: Create new array
-            const newActions = [...plan.actions];
-            newActions[index] = updatedAction;
-
-            console.log('[DEBUG] Service Updating Action:', JSON.stringify(updatedAction, null, 2));
-
-            // Trigger signal update with new object and new actions array
-            this.currentPlan.set({
-                ...plan,
-                actions: newActions,
-                updatedAt: new Date().toISOString()
-            });
-
-            this.saveCurrentPlan();
-        } else {
-            console.error('[DEBUG] Update Failed: Action ID not found in current plan.', updatedAction.id, 'Available IDs:', plan.actions.map(a => a.id));
-        }
+        this.assessmentService.updateAction(updatedAction.id, updatedAction);
     }
 
     reorderActions(newOrder: ActionItem[]) {
-        const plan = this.currentPlan();
-        if (!plan) return;
-
-        // Immutable update of the action list order
-        this.currentPlan.set({
-            ...plan,
-            actions: newOrder,
-            updatedAt: new Date().toISOString()
-        });
-
-        this.saveCurrentPlan();
+        this.assessmentService.setActionPlan(newOrder);
     }
+
+    // save() method removed as explicit save is handled by AssessmentService methods
+
+    // Legacy support methods (removed logic, just proxies or empty)
+    loadPlan(ctx: any) { /* No-op, managed by AssessmentService */ }
 }

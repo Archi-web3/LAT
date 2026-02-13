@@ -40,6 +40,11 @@ export class AssessmentService {
   // History Log
   history = signal<import('../models/assessment.model').AssessmentHistoryItem[]>([]);
 
+  // Action Plan
+  actionPlan = signal<import('../models/assessment.model').ActionItem[]>([]);
+
+  // UX State
+
   // UX State
   isSyncing = signal<boolean>(false);
 
@@ -217,6 +222,40 @@ export class AssessmentService {
     this.saveState();
   }
 
+  // --- Action Plan Management ---
+
+  addAction(item: Omit<import('../models/assessment.model').ActionItem, 'id'>) {
+    if (this.status() === 'SUBMITTED' || this.status() === 'VALIDATED') return;
+
+    const newAction: import('../models/assessment.model').ActionItem = {
+      ...item,
+      id: crypto.randomUUID()
+    };
+
+    this.actionPlan.update(plan => [...plan, newAction]);
+    this.saveState();
+  }
+
+  updateAction(id: string, updates: Partial<import('../models/assessment.model').ActionItem>) {
+    if (this.status() === 'SUBMITTED' || this.status() === 'VALIDATED') return;
+
+    this.actionPlan.update(plan => plan.map(a => a.id === id ? { ...a, ...updates } : a));
+    this.saveState();
+  }
+
+  deleteAction(id: string) {
+    if (this.status() === 'SUBMITTED' || this.status() === 'VALIDATED') return;
+
+    this.actionPlan.update(plan => plan.filter(a => a.id !== id));
+    this.saveState();
+  }
+
+  setActionPlan(actions: import('../models/assessment.model').ActionItem[]) {
+    if (this.status() === 'SUBMITTED' || this.status() === 'VALIDATED') return;
+    this.actionPlan.set(actions);
+    this.saveState();
+  }
+
   // --- Lifecycle Actions ---
 
   submitAssessment() {
@@ -292,7 +331,8 @@ export class AssessmentService {
       validatedAt: this.validatedAt(),
 
       // History
-      history: this.history()
+      history: this.history(),
+      actionPlan: this.actionPlan()
     };
 
     const key = this.getStorageKey(ctx);
@@ -320,6 +360,7 @@ export class AssessmentService {
         this.validatedBy.set(state.validatedBy);
         this.validatedAt.set(state.validatedAt);
         this.history.set(state.history || []);
+        this.actionPlan.set(state.actionPlan || []);
 
         console.log(`Loaded state for ${key}`, state);
       } catch (e) {
@@ -347,6 +388,7 @@ export class AssessmentService {
     this.validatedBy.set(undefined);
     this.validatedAt.set(undefined);
     this.history.set([]);
+    this.actionPlan.set([]);
   }
 
   // --- List Management ---
@@ -434,7 +476,8 @@ export class AssessmentService {
       synced: false,
       country: this.context()?.country || 'Unknown',
       base: this.context()?.base || 'Unknown',
-      evaluationMonth: this.context()?.evaluationMonth || ''
+      evaluationMonth: this.context()?.evaluationMonth || '',
+      actionPlan: this.actionPlan()
     };
     history.push(snapshot);
     localStorage.setItem('elat-history', JSON.stringify(history));

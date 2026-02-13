@@ -69,6 +69,34 @@ export interface AssessmentState {
 
     // Detailed History
     history?: AssessmentHistoryItem[];
+
+    // Action Plan
+    actionPlan?: ActionItem[];
+}
+
+export type PriorityLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+export type ActionStatus = 'TODO' | 'DOING' | 'DONE';
+
+export interface ActionItem {
+    id: string; // UUID
+    questionId: string;
+    questionText?: string; // Snapshot text
+
+    category?: string;
+    section?: string;
+
+    priority: PriorityLevel;
+    status: ActionStatus;
+
+    owner?: string;
+    description?: string; // Renamed from comments in service? No, model has description, service has comments. Let's align.
+    comments?: string;
+
+    startDate: string; // ISO
+    dueDate: string; // ISO
+
+    proofLink?: string;
+    proofPhoto?: string;
 }
 
 export interface AssessmentHistoryItem {
