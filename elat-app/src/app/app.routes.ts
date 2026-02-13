@@ -58,5 +58,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/action-plan/action-dashboard/action-dashboard.component').then(m => m.ActionDashboardComponent),
         canActivate: [authGuard]
     },
+    {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/user-profile.component').then(m => m.UserProfileComponent),
+        canActivate: [authGuard]
+    },
     { path: '', redirectTo: '/assessment', pathMatch: 'full' }
 ];

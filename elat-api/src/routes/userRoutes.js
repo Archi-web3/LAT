@@ -14,6 +14,11 @@ router.get('/', [auth, role(['SUPER_ADMIN'])], userController.getUsers);
 // @access  Private (Admin)
 router.post('/', [auth, role(['SUPER_ADMIN'])], userController.createUser);
 
+// @route   POST api/users/import
+// @desc    Import users from CSV/JSON
+// @access  Private (Admin)
+router.post('/import', [auth, role(['SUPER_ADMIN'])], userController.importUsers);
+
 // @route   PUT api/users/:id
 // @desc    Update a user
 // @access  Private (Admin)

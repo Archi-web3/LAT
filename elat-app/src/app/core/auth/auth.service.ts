@@ -65,6 +65,14 @@ export class AuthService {
     );
   }
 
+  // Change Password
+  changePassword(data: any) {
+    const token = localStorage.getItem('token');
+    return this.http.put<{ msg: string }>(`${this.apiUrl}/profile`, data, {
+      headers: { 'x-auth-token': token || '' }
+    });
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

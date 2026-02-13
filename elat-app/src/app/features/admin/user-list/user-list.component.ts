@@ -31,9 +31,16 @@ import { LocationService } from '../../../services/location.service';
     <div class="admin-container">
       <div class="header">
         <h1>User Management</h1>
-        <button mat-raised-button color="primary" (click)="startCreate()">
-          <mat-icon>add</mat-icon> Add User
-        </button>
+        <div class="actions">
+            <button mat-stroked-button color="primary" (click)="triggerFileInput()">
+                <mat-icon>upload_file</mat-icon> Import CSV
+            </button>
+            <input type="file" id="csvInput" (change)="onFileSelected($event)" accept=".csv" style="display: none;">
+            
+            <button mat-raised-button color="primary" (click)="startCreate()">
+              <mat-icon>add</mat-icon> Add User
+            </button>
+        </div>
       </div>
 
       <!-- Simple Inline Form for Creation/Edit -->
@@ -239,6 +246,66 @@ export class UserListComponent implements OnInit {
         this.resetForm();
       });
     }
+  }
+
+  // --- CSV Import ---
+  triggerFileInput() {
+    const fileInput = document.getElementById('csvInput') as HTMLInputElement;
+    if (fileInput) fileInput.click();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.parseCSV(file);
+    }
+    // Reset input
+    event.target.value = '';
+  }
+
+  parseCSV(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const text = e.target.result;
+      const data = this.csvToJSON(text);
+      if (data && data.length > 0) {
+        if (confirm(`Ready to import ${data.length} users?`)) {
+          this.adminService.importUsers(data).subscribe({
+            next: (res) => {
+              alert(`Import successful!\nCreated: ${res.created}\nSkipped: ${res.skipped}\nErrors: ${res.errors.length}`);
+            },
+            error: (err) => alert('Import failed: ' + err.message)
+          });
+        }
+      } else {
+        alert('No valid data found in CSV.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  csvToJSON(csv: string): any[] {
+    const lines = csv.split('\n');
+    const result = [];
+    // Remove headers
+    const headers = lines[0].split(',').map(h => h.trim());
+
+    for (let i = 1; i < lines.length; i++) {
+      const obj: any = {};
+      const currentline = lines[i].split(',');
+
+      if (currentline.length < headers.length) continue; // Skip empty lines
+
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j] ? currentline[j].trim() : '';
+      }
+
+      // Basic filter for empty rows
+      if (obj.email && obj.name) {
+        result.push(obj);
+      }
+    }
+    return result;
   }
 
   deleteUser(id: string) {

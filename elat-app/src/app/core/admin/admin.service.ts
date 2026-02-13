@@ -59,6 +59,13 @@ export class AdminService {
     return this.http.post<any>(this.configUrl, config, this.getHeaders());
   }
 
+  // Import Users (CSV Data as JSON)
+  importUsers(users: any[]) {
+    return this.http.post<any>(`${this.apiUrl}/import`, users, this.getHeaders()).pipe(
+      tap(() => this.getUsers().subscribe()) // Refresh list
+    );
+  }
+
 
   getUsers() {
     return this.http.get<User[]>(this.apiUrl, this.getHeaders()).pipe(

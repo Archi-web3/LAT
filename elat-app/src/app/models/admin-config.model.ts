@@ -52,7 +52,7 @@ export const DEFAULT_CONFIG: AdminConfig = {
         { id: 'history-trends', category: 'FEATURE', title: 'Tendances & Scores', description: 'DONE: Graphique d\'évolution des scores dans l\'onglet Historique.', status: 'DONE' },
 
         // Expérience Utilisateur
-        { id: 'interactive-plan', category: 'UX', title: 'Plan d\'Action Interactif', description: 'Assignation de tâches aux utilisateurs, notifications email.', status: 'TODO' },
+        { id: 'interactive-plan', category: 'UX', title: 'Plan d\'Action Interactif', description: 'DONE: Assignation, dates, statut, tableaux de bord.', status: 'DONE' },
         { id: 'bulk-import', category: 'UX', title: 'Import/Export en Masse', description: 'Import CSV des utilisateurs et configurations.', status: 'TODO' },
         { id: 'photo-gallery', category: 'UX', title: 'Galerie Photo Avancée', description: 'Meilleure gestion des preuves photos (galerie, zoom, compression).', status: 'TODO' }
     ]

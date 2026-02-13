@@ -79,3 +79,63 @@ exports.deleteUser = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// Import Users (Admin) - Bulk Create
+exports.importUsers = async (req, res) => {
+    try {
+        const users = req.body; // Expecting array of { email, password, name, role... }
+
+        if (!Array.isArray(users)) {
+            return res.status(400).json({ msg: 'Data must be an array of users' });
+        }
+
+        let createdCount = 0;
+        let skippedCount = 0;
+        const errors = [];
+
+        for (const userData of users) {
+            const { email, password, name, role, assignedCountry, assignedBase, assignedCountries } = userData;
+
+            // Basic Validation
+            if (!email || !password || !name) {
+                errors.push(`Skipped ${email || 'unknown'}: Missing required fields`);
+                continue;
+            }
+
+            // Check duplicate
+            let user = await User.findOne({ email });
+            if (user) {
+                skippedCount++;
+                continue;
+            }
+
+            // Create User
+            const salt = await bcrypt.genSalt(10);
+            const passwordHash = await bcrypt.hash(password, salt);
+
+            user = new User({
+                email,
+                password: passwordHash,
+                name,
+                role: role || 'USER', // Default role
+                assignedCountry,
+                assignedBase,
+                assignedCountries
+            });
+
+            await user.save();
+            createdCount++;
+        }
+
+        res.json({
+            msg: 'Import completed',
+            created: createdCount,
+            skipped: skippedCount,
+            errors
+        });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
