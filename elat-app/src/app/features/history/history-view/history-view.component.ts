@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
+import Chart from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +23,14 @@ import { AssessmentService } from '../../../services/assessment.service';
 
       <div class="history-list" *ngIf="assessmentService.context(); else noContext">
         
+        <!-- CHART SECTION -->
+        <mat-card class="chart-card" *ngIf="history().length > 1">
+            <h3>Évolution des Scores</h3>
+            <div class="chart-container">
+                <canvas id="historyChart"></canvas>
+            </div>
+        </mat-card>
+
         <!-- CONFLICTS SECTION -->
         <div class="conflicts-section" *ngIf="conflicts().length > 0">
             <mat-card class="conflict-card warning">
@@ -80,6 +89,10 @@ import { AssessmentService } from '../../../services/assessment.service';
       max-width: 800px;
       margin: 0 auto;
     }
+    .chart-card { margin-bottom: 24px; padding: 16px; }
+    .chart-card h3 { margin-bottom: 16px; color: #3f51b5; }
+    .chart-container { position: relative; height: 250px; width: 100%; }
+
     .conflicts-section { margin-bottom: 24px; }
     .conflict-card.warning { 
         border-left: 4px solid #ef6c00; 
@@ -145,6 +158,69 @@ export class HistoryViewComponent {
 
   constructor() {
     this.assessmentService.checkConflicts();
+  }
+
+  // Chart
+  chart: any;
+
+  constructor() {
+    this.assessmentService.checkConflicts();
+
+    // Update chart when history changes
+    effect(() => {
+      const data = this.history();
+      if (data && data.length > 0) {
+        // Give time for DOM to render canvas if switching views
+        setTimeout(() => this.initChart(data), 100);
+      }
+    });
+  }
+
+  initChart(historyData: any[]) {
+    const ctx = document.getElementById('historyChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+    if (this.chart) this.chart.destroy();
+
+    // Filter: Only keep items with a score and date
+    // Sort by Date Ascending
+    const validItems = historyData
+      .filter(h => h.score !== undefined && h.date)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    if (validItems.length < 2) return; // Need at least 2 points for a trend
+
+    const labels = validItems.map(h => new Date(h.date).toLocaleDateString());
+    const scores = validItems.map(h => h.score);
+
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Score Évolution (%)',
+          data: scores,
+          borderColor: '#3f51b5',
+          backgroundColor: 'rgba(63, 81, 181, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: 'Score' }
+          }
+        }
+      }
+    });
   }
 
   getIcon(action: string): string {

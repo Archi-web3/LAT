@@ -46,10 +46,10 @@ export const DEFAULT_CONFIG: AdminConfig = {
         { id: 'conflict-mgmt', category: 'TECH', title: 'Gestion des Conflits', description: 'DONE: Détection automatique et UI de résolution dans l\'Historique.', status: 'DONE' },
 
         // Analyse & Reporting
-        { id: 'dashboard-hq', category: 'FEATURE', title: 'Tableau de Bord Siège', description: 'Vue agrégée de toutes les bases/pays pour comparaison globale.', status: 'TODO' },
+        { id: 'dashboard-hq', category: 'FEATURE', title: 'Tableau de Bord Siège', description: 'DONE: Vue agrégée de toutes les bases/pays pour comparaison globale.', status: 'DONE' },
         { id: 'export-pdf', category: 'FEATURE', title: 'Export PDF Professionnel', description: 'DONE: Génération de rapports PDF propres pour partage externe.', status: 'DONE' },
         { id: 'audit-log', category: 'FEATURE', title: 'Historique d\'Audit', description: 'DONE: Traçabilité complète des actions (Création, Soumission, Validation).', status: 'DONE' },
-        { id: 'history-trends', category: 'FEATURE', title: 'Tendances & Scores', description: 'Graphiques visuels de l\'évolution des scores dans le temps.', status: 'TODO' },
+        { id: 'history-trends', category: 'FEATURE', title: 'Tendances & Scores', description: 'DONE: Graphique d\'évolution des scores dans l\'onglet Historique.', status: 'DONE' },
 
         // Expérience Utilisateur
         { id: 'interactive-plan', category: 'UX', title: 'Plan d\'Action Interactif', description: 'Assignation de tâches aux utilisateurs, notifications email.', status: 'TODO' },
