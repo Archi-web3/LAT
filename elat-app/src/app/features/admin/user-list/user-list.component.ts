@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { LocationService } from '../../../services/location.service';
 
 @Component({
@@ -20,6 +21,7 @@ import { LocationService } from '../../../services/location.service';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     MatDialogModule,
     MatCardModule,
     FormsModule,
@@ -32,7 +34,8 @@ import { LocationService } from '../../../services/location.service';
       <div class="header">
         <h1>User Management</h1>
         <div class="actions">
-            <button mat-stroked-button color="primary" (click)="triggerFileInput()">
+            <button mat-stroked-button color="primary" (click)="triggerFileInput()" 
+                    matTooltip="Unique Identifier: Email. Existing accounts are skipped.">
                 <mat-icon>upload_file</mat-icon> Import CSV
             </button>
             <input type="file" id="csvInput" (change)="onFileSelected($event)" accept=".csv" style="display: none;">
