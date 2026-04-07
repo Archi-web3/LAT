@@ -138,6 +138,22 @@ import Chart from 'chart.js/auto';
                     </td>
                   </ng-container>
 
+                  <!-- Date Column -->
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Update </th>
+                    <td mat-cell *matCellDef="let element"> {{(element.updatedAt || element.date) | date:'dd/MM/yy HH:mm:ss'}} </td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let element"> 
+                        <span class="status-badge" [class]="'status-' + (element.status || 'DRAFT').toLowerCase()">
+                            {{element.status || 'DRAFT'}}
+                        </span>
+                    </td>
+                  </ng-container>
+
                   <!-- Actions Column -->
                   <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> </th>
@@ -186,6 +202,11 @@ import Chart from 'chart.js/auto';
     .score-high { background: #E8F5E9; color: #2E7D32; }
     .score-med { background: #FFF3E0; color: #EF6C00; }
     .score-low { background: #FFEBEE; color: #C62828; }
+
+    .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+    .status-draft { background: #E0E0E0; color: #424242; }
+    .status-submitted { background: #FFF3E0; color: #E65100; }
+    .status-validated { background: #E8F5E9; color: #1B5E20; }
   `]
 })
 export class CoordinationDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -195,7 +216,7 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
   router = inject(Router);
   fb = inject(FormBuilder);
 
-  displayedColumns: string[] = ['country', 'base', 'score', 'actions'];
+  displayedColumns: string[] = ['country', 'base', 'date', 'status', 'score', 'actions'];
 
   // Raw data from server
   rawData: any[] = [];
