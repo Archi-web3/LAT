@@ -24,7 +24,7 @@ import { AssessmentState } from '../../../models/assessment.model';
 
       <div class="table-container mat-elevation-z2">
         <div class="scroll-container">
-          <table mat-table [dataSource]="assessments">
+          <table mat-table [dataSource]="assessmentService.allAssessments()">
   
             <!-- Country Column -->
             <ng-container matColumnDef="country">
@@ -139,7 +139,7 @@ export class AssessmentListComponent implements OnInit {
   ngOnInit() {
     // Clear active context when entering list view
     this.assessmentService.clearActiveContext();
-    this.assessments = this.assessmentService.getAllSavedAssessments();
+    this.assessmentService.sync(); // Auto-pull latest updates from server
   }
 
   resume(assessment: AssessmentState) {

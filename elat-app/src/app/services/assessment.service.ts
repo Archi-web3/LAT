@@ -44,14 +44,17 @@ export class AssessmentService {
   actionPlan = signal<import('../models/assessment.model').ActionItem[]>([]);
 
   // UX State
-
-  // UX State
   isSyncing = signal<boolean>(false);
   lastSaved = signal<Date | null>(null);
+  allAssessments = signal<import('../models/assessment.model').AssessmentState[]>([]);
 
   constructor() {
     this.loadData();
-    // ... existing code ...
+    this.refreshAllAssessments();
+  }
+
+  refreshAllAssessments() {
+    this.allAssessments.set(this.getAllSavedAssessments());
   }
 
   // ... existing code ...
@@ -644,6 +647,7 @@ export class AssessmentService {
             this.applyServerUpdates(res.serverUpdates);
           }
 
+          this.refreshAllAssessments();
           this.isSyncing.set(false); // Stop Spinner
         },
         error: (err) => {
@@ -658,6 +662,7 @@ export class AssessmentService {
           if (remoteAssessments && remoteAssessments.length > 0) {
             this.applyServerUpdates(remoteAssessments);
           }
+          this.refreshAllAssessments();
           this.isSyncing.set(false);
         },
         error: (err) => {
