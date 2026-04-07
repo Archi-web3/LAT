@@ -315,15 +315,29 @@ export class AssessmentService {
     const ctx = this.context();
     if (!ctx) return;
 
+    const existingRaw = localStorage.getItem(this.getStorageKey(ctx));
+    let existingId: string | undefined;
+    let existingCreatedAt: string | undefined;
+
+    if (existingRaw) {
+        try {
+            const parsed = JSON.parse(existingRaw);
+            existingId = parsed.id;
+            existingCreatedAt = parsed.createdAt;
+        } catch (e) {}
+    }
+
     const state: import('../models/assessment.model').AssessmentState = {
+      id: existingId, // Preserve existing ID or let it be assigned by server
       status: this.status(),
       answers: this.answers(),
       comments: this.comments(),
       proofLinks: this.proofLinks(),
       proofPhotos: this.proofPhotos(),
       context: ctx,
-      createdAt: new Date().toISOString(),
+      createdAt: existingCreatedAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      synced: false, // Mark as dirty
 
       // Save Calculated Score
       score: this.getGlobalScore(),
@@ -468,6 +482,25 @@ export class AssessmentService {
 
     return assessments;
   }
+
+  deleteAssessment(assessment: import('../models/assessment.model').AssessmentState) {
+    if (!assessment.context) return;
+    const key = this.getStorageKey(assessment.context);
+    
+    // Attempt local removal
+    localStorage.removeItem(key);
+    
+    // If it has an ID, request server deletion (ignoring any online/offline check for simplicity, or we can use navigator.onLine)
+    if (navigator.onLine && assessment.id) {
+       this.http.delete(`${this.apiUrl}/${assessment.id}`).subscribe({
+           next: () => console.log('Successfully deleted draft on server'),
+           error: (err) => console.error('Failed to delete on server', err)
+       });
+    }
+
+    this.refreshAllAssessments();
+  }
+
 
   // History management
   saveAssessmentSnapshot(name: string = 'Auto-save') {

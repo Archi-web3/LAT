@@ -73,7 +73,7 @@ import { AssessmentState } from '../../../models/assessment.model';
             <!-- Updated At Column -->
             <ng-container matColumnDef="updatedAt" class="desktop-only">
               <th mat-header-cell *matHeaderCellDef> Last Active </th>
-              <td mat-cell *matCellDef="let element"> {{element.updatedAt | date:'shortDate'}} </td>
+              <td mat-cell *matCellDef="let element"> {{element.updatedAt | date:'dd/MM/yy HH:mm:ss'}} </td>
             </ng-container>
   
             <!-- Actions Column -->
@@ -82,6 +82,9 @@ import { AssessmentState } from '../../../models/assessment.model';
               <td mat-cell *matCellDef="let element">
                   <button mat-icon-button color="accent" (click)="resume(element)" [matTooltip]="element.status === 'DRAFT' ? 'Continue' : 'View'">
                       <mat-icon>{{ element.status === 'DRAFT' ? 'edit' : 'visibility' }}</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" *ngIf="element.status === 'DRAFT'" (click)="deleteDraft(element)" matTooltip="Delete Draft">
+                      <mat-icon>delete</mat-icon>
                   </button>
               </td>
             </ng-container>
@@ -149,6 +152,13 @@ export class AssessmentListComponent implements OnInit {
       if (firstSection) {
         this.router.navigate(['/assessment', firstSection.id]);
       }
+    }
+  }
+
+  deleteDraft(assessment: AssessmentState) {
+    if (confirm('Are you sure you want to permanently delete this draft?')) {
+      this.assessmentService.deleteAssessment(assessment);
+      this.assessments = this.assessmentService.getAllSavedAssessments();
     }
   }
 

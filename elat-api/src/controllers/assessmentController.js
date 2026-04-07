@@ -9,35 +9,56 @@ exports.sync = async (req, res) => {
             return res.status(400).json({ msg: 'Expected an array of assessments' });
         }
 
-        const results = [];
+        const results = { applied: [], skipped: [], serverUpdates: [], errors: [] };
 
         for (const item of assessments) {
-            // Upsert logic: Update if exists, Insert if new
-            // matches on a unique ID from the PWA (we need to ensure PWA sends a UUID)
-            // For now, we'll try to match on date + userId + base, OR assumes PWA sends an _id if it was already synced.
-            // Better strategy: PWA generates a UUID 'clientSideId'.
+            try {
+                // Find existing by ID or unique context (country/base/month) if it's the same period
+                // For simplicity: match by item._id if present, or by context
+                let query = {};
+                if (item._id) {
+                    query = { _id: item._id };
+                } else if (item.context) {
+                    query = { 
+                        country: item.context.country, 
+                        base: item.context.base, 
+                        evaluationMonth: item.context.evaluationMonth 
+                    };
+                }
 
-            // Simplified for this iteration: Just saving new ones or updating by ID if provided
-            // We will assume the PWA sends the full object.
+                const existing = await Assessment.findOne(query);
 
-            // Sanitize: ensure userId matches the authenticated user (unless Admin?)
-            // For now, trust the token's user ID for ownership enforcement
+                const assessmentData = {
+                    ...item,
+                    userId: req.user.id,
+                    updatedAt: new Date(item.updatedAt || Date.now())
+                };
 
-            const assessmentData = {
-                ...item,
-                userId: req.user.id // Enforce ownership
-            };
+                if (existing) {
+                    // Conflict Resolution: Only update if the incoming data is NEWER than the server
+                    const serverTime = new Date(existing.updatedAt).getTime();
+                    const clientTime = new Date(assessmentData.updatedAt).getTime();
 
-            // If it has a MongoDB _id, update it. If not, create it.
-            if (item._id) {
-                await Assessment.findByIdAndUpdate(item._id, assessmentData, { upsert: true });
-            } else {
-                const newAssessment = new Assessment(assessmentData);
-                await newAssessment.save();
+                    if (clientTime > serverTime) {
+                        Object.assign(existing, assessmentData);
+                        await existing.save();
+                        results.applied.push(item._id || existing._id);
+                    } else {
+                        results.skipped.push(item._id || existing._id);
+                        results.serverUpdates.push(existing); // Send back server version
+                    }
+                } else {
+                    const newAssessment = new Assessment(assessmentData);
+                    await newAssessment.save();
+                    results.applied.push(newAssessment._id);
+                }
+            } catch (err) {
+                console.error(`Sync error for item:`, err);
+                results.errors.push({ id: item._id, msg: err.message });
             }
         }
 
-        res.json({ msg: 'Sync successful', count: assessments.length });
+        res.json({ msg: 'Sync completed', ...results });
 
     } catch (err) {
         console.error(err.message);
