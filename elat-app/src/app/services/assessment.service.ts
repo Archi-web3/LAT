@@ -661,12 +661,15 @@ export class AssessmentService {
 
     this.isSyncing.set(true); // Start Spinner
 
+    const token = localStorage.getItem('token');
+    const headers = { 'x-auth-token': token || '' };
+
     const unsynced = this.getAllSavedAssessments().filter(a => !a.synced);
     console.log(`📤 Push: Found ${unsynced.length} items to sync`);
 
     // 1. PUSH Local Changes
     if (unsynced.length > 0) {
-      this.http.post(this.apiUrl + '/sync', unsynced).subscribe({
+      this.http.post(this.apiUrl + '/sync', unsynced, { headers }).subscribe({
         next: (res: any) => {
           console.log('✅ Sync successful:', res);
 
@@ -690,7 +693,7 @@ export class AssessmentService {
       });
     } else {
       // Just Pull (if nothing to push)
-      this.http.get<any[]>(this.apiUrl + '/history').subscribe({
+      this.http.get<any[]>(this.apiUrl + '/history', { headers }).subscribe({
         next: (remoteAssessments) => {
           if (remoteAssessments && remoteAssessments.length > 0) {
             this.applyServerUpdates(remoteAssessments);
