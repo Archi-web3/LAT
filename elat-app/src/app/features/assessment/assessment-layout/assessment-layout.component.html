@@ -38,9 +38,15 @@
             <mat-icon>cloud_off</mat-icon>
         </div>
 
+        <!-- Saving Status -->
+        <div class="save-status" *ngIf="assessmentService.lastSaved() as last">
+            <mat-icon class="status-icon">check</mat-icon>
+            <span class="status-text">{{ 'Enregistré à ' }}{{ last | date:'HH:mm:ss' }}</span>
+        </div>
+
         <!-- Sync Button -->
         <button mat-icon-button *ngIf="isOnline()" (click)="manualSync()"
-            [matTooltip]="assessmentService.isSyncing() ? 'Syncing...' : 'Sync Now'"
+            [matTooltip]="assessmentService.isSyncing() ? 'Synchronisation...' : 'Sync Now'"
             [disabled]="assessmentService.isSyncing()">
             <mat-icon [class.spin]="assessmentService.isSyncing()">sync</mat-icon>
         </button>

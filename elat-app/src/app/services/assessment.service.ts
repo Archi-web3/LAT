@@ -47,6 +47,7 @@ export class AssessmentService {
 
   // UX State
   isSyncing = signal<boolean>(false);
+  lastSaved = signal<Date | null>(null);
 
   constructor() {
     this.loadData();
@@ -339,6 +340,7 @@ export class AssessmentService {
     localStorage.setItem(key, JSON.stringify(state));
 
     localStorage.setItem('elat-last-context', JSON.stringify(ctx));
+    this.lastSaved.set(new Date());
   }
 
   private loadStateForContext(ctx: import('../models/assessment.model').AssessmentContext) {

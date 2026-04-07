@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActionItem } from '../../../models/action-plan.model';
+import { AdminService } from '../../../core/admin/admin.service';
 
 @Component({
     selector: 'app-action-edit-dialog',
@@ -80,10 +81,23 @@ import { ActionItem } from '../../../models/action-plan.model';
             </mat-form-field>
         </div>
 
+        <!-- Assign To User -->
         <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Responsable</mat-label>
+            <mat-label>Assigner à (Utilisateur)</mat-label>
+            <mat-select formControlName="assignedUser" (selectionChange)="onUserChange($event)">
+                <mat-option [value]="null">-- Aucun --</mat-option>
+                <mat-option *ngFor="let user of users()" [value]="user">
+                    {{ user.name }} ({{ user.email }})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Fallback / Manual Owner Name -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Responsable (Nom)</mat-label>
             <input matInput formControlName="owner" placeholder="Nom du responsable (ex: Log Base)">
             <mat-icon matSuffix>person</mat-icon>
+            <mat-hint>Rempli automatiquement si un utilisateur est sélectionné</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -118,12 +132,14 @@ import { ActionItem } from '../../../models/action-plan.model';
     .full-width { width: 100%; }
   `]
 })
-export class ActionEditDialogComponent {
+export class ActionEditDialogComponent implements OnInit {
     private fb = inject(FormBuilder);
+    private adminService = inject(AdminService);
 
-    // Use inject() to ensure they are available for field initialization
-    public data = inject<ActionItem>(MAT_DIALOG_DATA);
+    public data = inject<any>(MAT_DIALOG_DATA); // Usage 'any' temporarily to handle extra fields safely
     public dialogRef = inject(MatDialogRef<ActionEditDialogComponent>);
+
+    users = this.adminService.users;
 
     form = this.fb.group({
         priority: [this.data.priority, Validators.required],
@@ -131,36 +147,52 @@ export class ActionEditDialogComponent {
         startDate: [new Date(this.data.startDate), Validators.required],
         dueDate: [new Date(this.data.dueDate), Validators.required],
         owner: [this.data.owner || ''],
-        comments: [this.data.comments || '']
+        comments: [this.data.comments || ''],
+        assignedUser: [null as any] // Temporary holder for selection
     });
 
-    save() {
-        console.log('[DEBUG] Save Clicked. Form Valid:', this.form.valid, 'Value:', this.form.value);
-        if (this.form.valid) {
-            try {
-                const formVal = this.form.value;
+    ngOnInit() {
+        // Load users if empty
+        if (this.users().length === 0) {
+            this.adminService.getUsers().subscribe();
+        }
 
-                // Safe Date Parsing
-                const sDate = new Date(formVal.startDate as any);
-                const dDate = new Date(formVal.dueDate as any);
-
-                const updatedAction: ActionItem = {
-                    ...this.data,
-                    priority: formVal.priority as any,
-                    status: formVal.status as any,
-                    startDate: sDate.toISOString(),
-                    dueDate: dDate.toISOString(),
-                    owner: formVal.owner || undefined,
-                    comments: formVal.comments || undefined
-                };
-
-                console.log('[DEBUG] Dialog Save Payload Prepared:', updatedAction);
-                this.dialogRef.close(updatedAction);
-            } catch (e) {
-                console.error('[DEBUG] Error inside save():', e);
+        // Try to pre-select user if we have an ID
+        if (this.data.assignedToUserId) {
+            // We need to wait for users to load or check if loaded
+            // For now simple match if present
+            const found = this.users().find(u => u.id === this.data.assignedToUserId);
+            if (found) {
+                this.form.patchValue({ assignedUser: found });
             }
-        } else {
-            console.warn('[DEBUG] Form Invalid:', this.form.errors);
+        }
+    }
+
+    onUserChange(event: any) {
+        const user = event.value;
+        if (user) {
+            this.form.patchValue({ owner: user.name });
+        }
+    }
+
+    save() {
+        if (this.form.valid) {
+            const formVal = this.form.value;
+            const selectedUser = formVal.assignedUser;
+
+            const updatedAction = {
+                ...this.data,
+                priority: formVal.priority,
+                status: formVal.status,
+                startDate: new Date(formVal.startDate as any).toISOString(),
+                dueDate: new Date(formVal.dueDate as any).toISOString(),
+                owner: formVal.owner,
+                comments: formVal.comments,
+                assignedToUserId: selectedUser ? selectedUser.id : undefined,
+                assignedToEmail: selectedUser ? selectedUser.email : undefined
+            };
+
+            this.dialogRef.close(updatedAction);
         }
     }
 }

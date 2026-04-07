@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 export interface User {
   id: string;
   name: string;
+  email: string;
   role: string;
   assignedCountry?: string;
   assignedBase?: string;

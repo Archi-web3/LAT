@@ -1,4 +1,5 @@
 const Assessment = require('../models/Assessment');
+const emailService = require('../services/emailService');
 
 /**
  * Handle bidirectional sync
@@ -25,6 +26,9 @@ exports.syncAssessments = async (req, res) => {
                         // Simple "Last Write Wins" for now, or "Client Wins" if we trust the offline work
                         // Ideally we check timestamps. If serverDoc.updatedAt > change.baseVersion?.updatedAt -> Conflict
                         // For V1: We overwrite server with client change, BUT we update the 'updatedAt'
+                        // Check for new action assignments
+                        await checkAndNotifyActionCreate(serverDoc, change, req.user.name);
+
                         Object.assign(serverDoc, change);
                         serverDoc.updatedAt = new Date(); // Force update timestamp
                         await serverDoc.save();
@@ -34,6 +38,10 @@ exports.syncAssessments = async (req, res) => {
                         const newDoc = new Assessment(change);
                         // Ensure ownership is correct if not present
                         if (!newDoc.userId) newDoc.userId = userId;
+
+                        // Check for new action assignments in new doc
+                        await checkAndNotifyActionCreate(null, change, req.user.name);
+
                         await newDoc.save();
                         applied.push(change.id);
                     }
@@ -90,3 +98,41 @@ exports.syncAssessments = async (req, res) => {
         res.status(500).json({ message: 'Sync failed', error: error.message });
     }
 };
+
+/**
+ * Helper to detect if an action was added or assigned to a new user
+ */
+async function checkAndNotifyActionCreate(oldDoc, newDocData, assignerName) {
+    try {
+        if (!newDocData.actionPlan || !Array.isArray(newDocData.actionPlan)) return;
+
+        const newActions = newDocData.actionPlan;
+        const oldActions = oldDoc ? (oldDoc.actionPlan || []) : [];
+
+        for (const action of newActions) {
+            // Check if action has an email target
+            if (action.assignedToEmail) {
+                // Is this a new action?
+                const existingAction = oldActions.find(a => a.id === action.id);
+
+                let shouldNotify = false;
+
+                if (!existingAction) {
+                    // It's a brand new action
+                    shouldNotify = true;
+                } else if (existingAction.assignedToEmail !== action.assignedToEmail) {
+                    // It's re-assigned to someone else
+                    shouldNotify = true;
+                }
+
+                if (shouldNotify) {
+                    console.log(`[SYNC] Triggering email notification for action ${action.id} to ${action.assignedToEmail}`);
+                    // Fire and forget (don't await strictly if not critical)
+                    await emailService.sendActionAssignment(action.assignedToEmail, action, assignerName);
+                }
+            }
+        }
+    } catch (err) {
+        console.error('[SYNC] Failed to process email notifications', err);
+    }
+}

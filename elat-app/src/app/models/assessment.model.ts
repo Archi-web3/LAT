@@ -97,6 +97,9 @@ export interface ActionItem {
 
     proofLink?: string;
     proofPhoto?: string;
+
+    assignedToUserId?: string;
+    assignedToEmail?: string;
 }
 
 export interface AssessmentHistoryItem {

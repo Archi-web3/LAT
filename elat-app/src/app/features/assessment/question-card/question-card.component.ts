@@ -74,19 +74,18 @@ import { AdminService } from '../../../core/admin/admin.service';
         </div>
         
         <div class="dual-input">
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="link-field">
                 <mat-label>{{ 'QUESTION_CARD.LINK_LABEL' | translate }}</mat-label>
                 <input matInput [ngModel]="proofLink()" (ngModelChange)="updateLink($event)" placeholder="https://..." [disabled]="readonly">
                 <mat-icon matSuffix>link</mat-icon>
             </mat-form-field>
 
             <div class="photo-upload">
-                <button mat-stroked-button color="primary" (click)="fileInput.click()" [disabled]="readonly || isUploading()">
+                <button mat-stroked-button color="primary" (click)="fileInput.click()" [disabled]="readonly || isUploading()" class="photo-btn">
                     <mat-icon>camera_alt</mat-icon> 
                     {{ (proofPhoto() ? 'QUESTION_CARD.CHANGE_PHOTO' : 'QUESTION_CARD.ADD_PHOTO') | translate }}
                 </button>
                 <input #fileInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display: none;">
-                
                 <span *ngIf="isUploading()" class="uploading-text">{{ 'QUESTION_CARD.UPLOADING' | translate }}</span>
             </div>
             
@@ -120,6 +119,8 @@ import { AdminService } from '../../../core/admin/admin.service';
     .question-card.status-low { border-left-color: #f44336; }
     .question-card.status-na { border-left-color: #9e9e9e; }
 
+    mat-card-title { font-size: 1.1rem; line-height: 1.3; }
+
     .verification-text {
       font-style: italic;
       color: #555;
@@ -128,15 +129,18 @@ import { AdminService } from '../../../core/admin/admin.service';
       padding: 12px;
       border-radius: 4px;
       border-left: 4px solid #2196f3;
+      font-size: 0.9rem;
     }
     .tags { margin-bottom: 16px; }
+    .tag-chip { font-size: 0.75rem; min-height: 24px; }
+
     .answer-section {
       margin-top: 16px;
-      padding: 16px;
+      padding: 12px;
       background: #fafafa;
       border-radius: 8px;
     }
-    .radio-group { display: flex; flex-direction: column; gap: 12px; }
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
     
     .evidence-section {
         margin-top: 20px;
@@ -149,18 +153,14 @@ import { AdminService } from '../../../core/admin/admin.service';
         gap: 8px;
         margin-bottom: 12px;
     }
-    .evidence-title {
-        font-weight: 600;
-        color: #555;
-    }
-    .evidence-hint {
-        font-size: 0.85rem;
-        color: #888;
-        font-style: italic;
-    }
-    .full-width { width: 100%; }
-    
-    .photo-upload { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .evidence-title { font-weight: 600; color: #555; }
+    .evidence-hint { font-size: 0.85rem; color: #888; font-style: italic; }
+
+    .dual-input { display: flex; align-items: flex-start; gap: 16px; width: 100%; flex-wrap: wrap; }
+    .link-field { flex: 2; min-width: 200px; }
+    .photo-upload { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+    .photo-btn { width: 100%; }
+
     .photo-preview { 
         position: relative; 
         display: inline-block; 
@@ -168,16 +168,21 @@ import { AdminService } from '../../../core/admin/admin.service';
         border: 1px solid #ccc;
         border-radius: 4px;
         overflow: hidden;
+        max-width: 100%;
     }
-    .photo-preview img { max-height: 150px; display: block; }
-    .remove-btn { 
-        position: absolute; 
-        top: 0; 
-        right: 0; 
-        background: rgba(255,255,255,0.8); 
-    }
+    .photo-preview img { max-height: 250px; width: auto; max-width: 100%; display: block; object-fit: contain; }
+    .remove-btn { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.8); }
 
     .comment-field { width: 100%; margin-top: 16px; }
+
+    @media (max-width: 600px) {
+        .dual-input { flex-direction: column; gap: 0; }
+        .link-field, .photo-upload { width: 100%; }
+        .photo-upload { margin-bottom: 16px; }
+        .question-card { border-left-width: 4px; }
+        mat-card-header { padding: 12px 16px 0; }
+        mat-card-content { padding: 16px; }
+    }
   `]
 })
 export class QuestionCardComponent {
