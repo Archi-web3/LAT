@@ -669,7 +669,14 @@ export class AssessmentService {
 
     // 1. PUSH Local Changes
     if (unsynced.length > 0) {
-      this.http.post(this.apiUrl + '/sync', unsynced, { headers }).subscribe({
+      // Flatten context for server compatibility
+      const payload = unsynced.map(a => ({
+        ...a,
+        country: a.context?.country,
+        base: a.context?.base,
+        evaluationMonth: a.context?.evaluationMonth,
+      }));
+      this.http.post(this.apiUrl + '/sync', payload, { headers }).subscribe({
         next: (res: any) => {
           console.log('✅ Sync successful:', res);
 
@@ -739,6 +746,14 @@ export class AssessmentService {
   // Helper: Apply Server Updates
   private applyServerUpdates(updates: any[]) {
     updates.forEach(serverDoc => {
+      // Reconstruct context from flat server fields if missing
+      if (!serverDoc.context && serverDoc.country) {
+        serverDoc.context = {
+          country: serverDoc.country,
+          base: serverDoc.base,
+          evaluationMonth: serverDoc.evaluationMonth
+        };
+      }
       if (!serverDoc.context) return;
 
       const key = this.getStorageKey(serverDoc.context);
@@ -747,24 +762,32 @@ export class AssessmentService {
       if (localJson) {
         const localDoc = JSON.parse(localJson);
 
-        // Conflict Detection
-        // If local is dirty (unsynced) and updated recently
-        if (!localDoc.synced) {
-          console.warn(`⚠️ Conflict detected for ${key}. Server has newer version.`);
-          // Strategy: Save Server version as Main, Move Local to "Conflict Copy"
+        // Conflict: local is dirty and server is newer
+        const serverTime = new Date(serverDoc.updatedAt || 0).getTime();
+        const localTime = new Date(localDoc.updatedAt || 0).getTime();
+
+        if (!localDoc.synced && localTime > serverTime) {
+          // Local is newer and dirty - keep local, skip server update
+          console.log(`⏭️ Local version is newer for ${key}, keeping local.`);
+          return;
+        }
+
+        if (!localDoc.synced && serverTime >= localTime) {
+          console.warn(`⚠️ Conflict detected for ${key}. Server is newer.`);
           const conflictKey = key + '_CONFLICT_' + Date.now();
           localStorage.setItem(conflictKey, JSON.stringify(localDoc));
-          console.log(`Saved local conflict to ${conflictKey}`);
-
-          this.addToHistory('CONFLICT', `Detected conflict with server. Local copy saved to ${conflictKey}`);
-          this.checkConflicts(); // Update signal
+          this.checkConflicts();
         }
       }
 
-      // Overwrite Local with Server
+      // Save server version locally
       serverDoc.synced = true;
+      // Ensure updatedAt is preserved
+      if (!serverDoc.updatedAt) {
+        serverDoc.updatedAt = new Date().toISOString();
+      }
       localStorage.setItem(key, JSON.stringify(serverDoc));
-      this.addToHistory('SYNC', 'Assessment merged with server update');
+      console.log(`✅ Applied server update for ${key}`);
     });
   }
 
