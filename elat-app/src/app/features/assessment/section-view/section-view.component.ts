@@ -6,16 +6,24 @@ import { map } from 'rxjs/operators';
 import { AssessmentService } from '../../../services/assessment.service';
 import { QuestionCardComponent } from '../question-card/question-card.component';
 import { LocalizePipe } from '../../../core/i18n/localize.pipe';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-section-view',
   standalone: true,
-  imports: [CommonModule, QuestionCardComponent, LocalizePipe, MatButtonModule, MatIconModule, RouterModule],
+  imports: [CommonModule, QuestionCardComponent, LocalizePipe, TranslatePipe, MatButtonModule, MatIconModule, RouterModule],
   template: `
     <div class="section-container" *ngIf="currentSection(); let section">
-      <h2>{{ section | localize:'title' }}</h2>
+      
+      <div class="section-header">
+        <h2>{{ section | localize:'title' }}</h2>
+        <button mat-stroked-button color="primary" class="exit-btn-top" routerLink="/assessment/list" (click)="saveAndExit()">
+          <mat-icon>exit_to_app</mat-icon>
+          {{ 'COMMON.VALIDATE_AND_EXIT' | translate }}
+        </button>
+      </div>
       
       <div class="questions-list">
         @for (question of section.questions; track question.id) {
@@ -30,13 +38,20 @@ import { MatIconModule } from '@angular/material/icon';
           <mat-icon>chevron_left</mat-icon>
           Previous Section
         </button>
+        
+        <button mat-raised-button color="accent" class="exit-btn-bottom" routerLink="/assessment/list" (click)="saveAndExit()">
+            <mat-icon>check_circle</mat-icon>
+            {{ 'COMMON.VALIDATE_AND_EXIT' | translate }}
+        </button>
+
         <span class="spacer"></span>
+
         <button mat-raised-button color="primary" (click)="goToNext()" *ngIf="hasNext(); else finishBtn">
           Next Section
           <mat-icon>chevron_right</mat-icon>
         </button>
         <ng-template #finishBtn>
-          <button mat-raised-button color="accent" routerLink="/assessment/list">
+          <button mat-raised-button color="accent" routerLink="/assessment/list" (click)="saveAndExit()">
             <mat-icon>check_circle</mat-icon>
             Finish & Return to Menu
           </button>
@@ -54,12 +69,26 @@ import { MatIconModule } from '@angular/material/icon';
       margin: 0 auto;
       padding-bottom: 40px;
     }
-    h2 {
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 24px;
-      color: #333;
       border-bottom: 2px solid #eee;
       padding-bottom: 12px;
+      gap: 16px;
+    }
+    h2 {
+      margin: 0;
+      color: #333;
       font-size: 1.4rem;
+      flex: 1;
+    }
+    .exit-btn-top {
+      flex-shrink: 0;
+    }
+    .questions-list {
+      margin-bottom: 24px;
     }
     .navigation-actions {
       display: flex;
@@ -73,8 +102,15 @@ import { MatIconModule } from '@angular/material/icon';
     .spacer { flex: 1; }
 
     @media (max-width: 600px) {
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .exit-btn-top {
+        width: 100%;
+      }
       .section-container { padding: 12px; }
-      h2 { font-size: 1.2rem; margin-bottom: 16px; }
+      h2 { font-size: 1.2rem; margin-bottom: 8px; }
       .navigation-actions {
         flex-direction: column-reverse;
         align-items: stretch;
@@ -126,5 +162,11 @@ export class SectionViewComponent {
       this.router.navigate(['/assessment', next.id]);
       window.scrollTo(0, 0);
     }
+  }
+
+  saveAndExit() {
+    // AssessmentService auto-saves on changes, but we call saveAssessmentSnapshot 
+    // to ensure a sync is triggered and the state is fresh in the list view.
+    this.assessmentService.saveAssessmentSnapshot('Manual Exit');
   }
 }
