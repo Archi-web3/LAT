@@ -25,7 +25,15 @@ import { AssessmentState } from '../../../models/assessment.model';
       <div class="table-container mat-elevation-z2">
         <div class="scroll-container">
           <table mat-table [dataSource]="assessmentService.allAssessments()">
-  
+            
+            <!-- Sync Status Column -->
+            <ng-container matColumnDef="sync">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <mat-icon *ngIf="element.synced" class="sync-icon synced" matTooltip="Synced with Cloud">cloud_done</mat-icon>
+                <mat-icon *ngIf="!element.synced" class="sync-icon local" matTooltip="Local Draft Only">phonelink_setup</mat-icon>
+              </td>
+            </ng-container>
             <!-- Country Column -->
             <ng-container matColumnDef="country">
               <th mat-header-cell *matHeaderCellDef> Country </th>
@@ -94,7 +102,7 @@ import { AssessmentState } from '../../../models/assessment.model';
           </table>
         </div>
 
-        <div *ngIf="assessments.length === 0" class="empty-state">
+        <div *ngIf="assessmentService.allAssessments().length === 0" class="empty-state">
             <p>No assessments found. Start a new one!</p>
         </div>
       </div>
@@ -126,6 +134,10 @@ import { AssessmentState } from '../../../models/assessment.model';
     .metric-value { font-weight: bold; color: #555; font-size: 0.9rem; }
     .metric-value.score { color: #3f51b5; }
 
+    .sync-icon { font-size: 18px; width: 18px; height: 18px; vertical-align: middle; }
+    .sync-icon.synced { color: #4caf50; }
+    .sync-icon.local { color: #ff9800; }
+
     @media (max-width: 600px) {
       .header { flex-direction: column; gap: 12px; align-items: flex-start; }
       .container { padding: 8px; }
@@ -137,7 +149,7 @@ export class AssessmentListComponent implements OnInit {
   router = inject(Router);
 
   assessments: AssessmentState[] = [];
-  displayedColumns: string[] = ['country', 'base', 'month', 'status', 'progress', 'score', 'updatedAt', 'actions'];
+  displayedColumns: string[] = ['sync', 'country', 'base', 'month', 'status', 'progress', 'score', 'updatedAt', 'actions'];
 
   ngOnInit() {
     // Clear active context when entering list view

@@ -53,8 +53,51 @@ export class AssessmentService {
     this.refreshAllAssessments();
   }
 
-  refreshAllAssessments() {
-    this.allAssessments.set(this.getAllSavedAssessments());
+  refreshAllAssessments(remoteData?: import('../models/assessment.model').AssessmentState[]) {
+    const local = this.getAllSavedAssessments();
+    
+    if (!remoteData) {
+      this.allAssessments.set(local);
+      return;
+    }
+
+    // MERGE LOGIC:
+    // 1. Start with remote data as base
+    // 2. Identify local versions by context key
+    // 3. If local is newer OR unsynced, keep local. Otherwise use remote.
+    
+    const mergedMap = new Map<string, import('../models/assessment.model').AssessmentState>();
+    
+    // Add remote first
+    remoteData.forEach(rem => {
+      const anyRem = rem as any;
+      // Server doesn't use 'context' object sometimes? Reconstruct for keying
+      const ctx: import('../models/assessment.model').AssessmentContext = rem.context || { 
+        country: anyRem.country, 
+        base: anyRem.base, 
+        evaluationMonth: anyRem.evaluationMonth,
+        date: anyRem.updatedAt || anyRem.date || new Date().toISOString()
+      };
+      const key = this.getStorageKey(ctx);
+      mergedMap.set(key, { ...rem, context: ctx, synced: true });
+    });
+
+    // Merge local
+    local.forEach(loc => {
+      if (!loc.context) return;
+      const key = this.getStorageKey(loc.context);
+      const existing = mergedMap.get(key);
+
+      if (!existing || !loc.synced || new Date(loc.updatedAt).getTime() > new Date(existing.updatedAt).getTime()) {
+        mergedMap.set(key, loc);
+      }
+    });
+
+    const final = Array.from(mergedMap.values()).sort((a, b) => 
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+
+    this.allAssessments.set(final);
   }
 
   // ... existing code ...
@@ -688,9 +731,10 @@ export class AssessmentService {
           // Pull updates after push
           if (res.serverUpdates && res.serverUpdates.length > 0) {
             this.applyServerUpdates(res.serverUpdates);
+            this.refreshAllAssessments(res.serverUpdates);
+          } else {
+            this.refreshAllAssessments();
           }
-
-          this.refreshAllAssessments();
           this.isSyncing.set(false); // Stop Spinner
         },
         error: (err) => {
@@ -705,7 +749,7 @@ export class AssessmentService {
           if (remoteAssessments && remoteAssessments.length > 0) {
             this.applyServerUpdates(remoteAssessments);
           }
-          this.refreshAllAssessments();
+          this.refreshAllAssessments(remoteAssessments);
           this.isSyncing.set(false);
         },
         error: (err) => {
