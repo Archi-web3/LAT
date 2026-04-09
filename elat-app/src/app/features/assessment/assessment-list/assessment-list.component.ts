@@ -29,9 +29,14 @@ import { computed } from '@angular/core';
     <div class="container">
       <div class="header">
         <h1>Assessments Dashboard</h1>
-        <button mat-raised-button color="primary" routerLink="/assessment/init">
-            <mat-icon>add</mat-icon> New Assessment
-        </button>
+        <div class="header-actions">
+            <button mat-icon-button class="sync-btn" [class.syncing]="assessmentService.isSyncing()" (click)="assessmentService.sync()" matTooltip="Sync data now">
+                <mat-icon>sync</mat-icon>
+            </button>
+            <button mat-raised-button color="primary" routerLink="/assessment/init">
+                <mat-icon>add</mat-icon> New Assessment
+            </button>
+        </div>
       </div>
 
       <mat-tab-group class="tab-group" animationDuration="0ms">
@@ -69,8 +74,8 @@ import { computed } from '@angular/core';
             </ng-template>
         </mat-tab>
 
-        <!-- Tab 4: POOL / ADMIN (Role protected) -->
-        <mat-tab *ngIf="['SUPER_ADMIN', 'POOL_COORDINATOR'].includes(user()?.role || '')">
+        <!-- Tab 4: POOL / GLOBAL (Role protected Catch-all) -->
+        <mat-tab *ngIf="user()?.role !== 'USER'">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">public</mat-icon>
                 <span>Pool / Global ({{ poolAssessments().length }})</span>
@@ -179,8 +184,13 @@ import { computed } from '@angular/core';
   styles: [`
     .container { padding: 12px; max-width: 1400px; margin: 0 auto; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
     h1 { font-size: 1.6rem; font-weight: 600; margin: 0; color: #333; }
     
+    .sync-btn { color: #666; transition: all 0.3s ease; }
+    .sync-btn.syncing { animation: rotate 1.5s linear infinite; color: #3f51b5; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
     .tab-group { background: transparent; }
     .tab-icon { margin-right: 8px; font-size: 20px; vertical-align: middle; }
 
@@ -216,8 +226,10 @@ import { computed } from '@angular/core';
     .sync-icon.local { color: #ff9800; }
 
     @media (max-width: 600px) {
-      .header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .header { flex-direction: column; gap: 16px; align-items: stretch; }
+      .header-actions { justify-content: space-between; }
       .container { padding: 8px; }
+      h1 { text-align: center; }
     }
   `]
 })
@@ -259,25 +271,20 @@ export class AssessmentListComponent implements OnInit {
   poolAssessments = computed(() => {
     const userId = this.user()?.id;
     const country = this.user()?.assignedCountry;
+    const base = this.user()?.assignedBase;
     const role = this.user()?.role;
 
-    if (role === 'SUPER_ADMIN') {
-        // Super Admin sees ALL assessments they didn't create that are NOT in their assigned country (if any)
-        return this.assessmentService.allAssessments().filter(a => {
-            const isMine = a.userId === userId;
-            const isInMyCountry = country ? a.context?.country === country : false;
-            return !isMine && !isInMyCountry;
-        });
-    }
+    // Only non-USERs see the Global tab
+    if (!role || role === 'USER') return [];
 
-    if (role === 'POOL_COORDINATOR') {
-        const assigned = this.user()?.assignedCountries || [];
-        return this.assessmentService.allAssessments().filter(a => 
-            assigned.includes(a.context?.country || '') && a.context?.country !== country && a.userId !== userId
-        );
-    }
-
-    return [];
+    // Catch-all: everything that is NOT mine, NOT in my base, and NOT in my country (if assigned)
+    return this.assessmentService.allAssessments().filter(a => {
+        const isMine = a.userId === userId;
+        const isInMyBase = base ? a.context?.base === base : false;
+        const isInMyCountry = country ? a.context?.country === country : false;
+        
+        return !isMine && !isInMyBase && !isInMyCountry;
+    });
   });
 
   ngOnInit() {
