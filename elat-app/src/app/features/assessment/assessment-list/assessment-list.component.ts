@@ -48,7 +48,7 @@ import { computed } from '@angular/core';
         </mat-tab>
 
         <!-- Tab 2: BASE -->
-        <mat-tab>
+        <mat-tab *ngIf="user()?.assignedBase">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">location_on</mat-icon>
                 <span>Ma Base ({{ baseAssessments().length }})</span>
@@ -59,7 +59,7 @@ import { computed } from '@angular/core';
         </mat-tab>
 
         <!-- Tab 3: COUNTRY (Role protected) -->
-        <mat-tab *ngIf="user()?.role !== 'USER'">
+        <mat-tab *ngIf="user()?.role !== 'USER' && user()?.assignedCountry">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">flag</mat-icon>
                 <span>Mon Pays ({{ countryAssessments().length }})</span>
@@ -70,7 +70,7 @@ import { computed } from '@angular/core';
         </mat-tab>
 
         <!-- Tab 4: POOL / ADMIN (Role protected) -->
-        <mat-tab *ngIf="user()?.role === 'ADMIN' || user()?.role === 'POOL_COORD'">
+        <mat-tab *ngIf="['SUPER_ADMIN', 'POOL_COORDINATOR'].includes(user()?.role || '')">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">public</mat-icon>
                 <span>Pool / Global ({{ poolAssessments().length }})</span>
@@ -247,6 +247,8 @@ export class AssessmentListComponent implements OnInit {
     const userId = this.user()?.id;
     const base = this.user()?.assignedBase;
     const country = this.user()?.assignedCountry;
+    if (!country) return [];
+
     return this.assessmentService.allAssessments().filter(a => 
       (a.context?.country === country) && 
       (a.context?.base !== base) && 
@@ -259,13 +261,16 @@ export class AssessmentListComponent implements OnInit {
     const country = this.user()?.assignedCountry;
     const role = this.user()?.role;
 
-    if (role === 'ADMIN') {
-        return this.assessmentService.allAssessments().filter(a => 
-            a.context?.country !== country && a.userId !== userId
-        );
+    if (role === 'SUPER_ADMIN') {
+        // Super Admin sees ALL assessments they didn't create that are NOT in their assigned country (if any)
+        return this.assessmentService.allAssessments().filter(a => {
+            const isMine = a.userId === userId;
+            const isInMyCountry = country ? a.context?.country === country : false;
+            return !isMine && !isInMyCountry;
+        });
     }
 
-    if (role === 'POOL_COORD') {
+    if (role === 'POOL_COORDINATOR') {
         const assigned = this.user()?.assignedCountries || [];
         return this.assessmentService.allAssessments().filter(a => 
             assigned.includes(a.context?.country || '') && a.context?.country !== country && a.userId !== userId
