@@ -6,6 +6,7 @@ import { AuthService } from '../core/auth/auth.service';
 import { environment } from '../../environments/environment';
 
 import { AdminService } from '../core/admin/admin.service';
+import { ConnectivityService } from '../core/services/connectivity.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,12 @@ export class AssessmentService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private adminService = inject(AdminService);
+  private connectivityService = inject(ConnectivityService);
 
   // Signals for state
   sections = signal<AssessmentSection[]>([]);
   transversalComponents = signal<string[]>([]);
+  lastSyncedAt = signal<Date | null>(null);
 
   // Current state
   status = signal<import('../models/assessment.model').AssessmentStatus>('DRAFT');
@@ -697,7 +700,7 @@ export class AssessmentService {
 
   async sync() {
     console.log('🔄 Attempting Bidirectional Sync...');
-    if (!navigator.onLine) {
+    if (!this.connectivityService.isOnline()) {
       console.log('❌ Offline: Skipping sync');
       return;
     }
@@ -735,6 +738,7 @@ export class AssessmentService {
           } else {
             this.refreshAllAssessments();
           }
+          this.lastSyncedAt.set(new Date());
           this.isSyncing.set(false); // Stop Spinner
         },
         error: (err) => {
@@ -750,6 +754,7 @@ export class AssessmentService {
             this.applyServerUpdates(remoteAssessments);
           }
           this.refreshAllAssessments(remoteAssessments);
+          this.lastSyncedAt.set(new Date());
           this.isSyncing.set(false);
         },
         error: (err) => {
@@ -805,22 +810,21 @@ export class AssessmentService {
 
       if (localJson) {
         const localDoc = JSON.parse(localJson);
-
-        // Conflict: local is dirty and server is newer
         const serverTime = new Date(serverDoc.updatedAt || 0).getTime();
         const localTime = new Date(localDoc.updatedAt || 0).getTime();
 
+        // If local is dirty and server is actually older than what we have locally
+        // (Should be rare since backend is supposed to return the latest merged version)
         if (!localDoc.synced && localTime > serverTime) {
-          // Local is newer and dirty - keep local, skip server update
           console.log(`⏭️ Local version is newer for ${key}, keeping local.`);
           return;
         }
 
-        if (!localDoc.synced && serverTime >= localTime) {
-          console.warn(`⚠️ Conflict detected for ${key}. Server is newer.`);
-          const conflictKey = key + '_CONFLICT_' + Date.now();
-          localStorage.setItem(conflictKey, JSON.stringify(localDoc));
-          this.checkConflicts();
+        // If there was a conflict (both dirty), the backend merged them.
+        // We'll trust the server version as the 'Merged Truth' but we can log it.
+        if (!localDoc.synced) {
+          console.log(`🤝 Merged conflict for ${key} resolved by server.`);
+          // Optional: we could still save a backup of localDoc if we are paranoid
         }
       }
 

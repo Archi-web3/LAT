@@ -49,6 +49,7 @@ export interface AssessmentState {
     proofLinks?: Record<string, string>; // questionId -> URL
     proofPhotos?: Record<string, string>; // questionId -> URL (Cloudinary) or Base64
     context?: AssessmentContext;
+    userId?: string;
 
     // Lifecycle Metadata
     createdAt: string;

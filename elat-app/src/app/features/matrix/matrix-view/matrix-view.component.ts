@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AssessmentService } from '../../../services/assessment.service';
+import { DashboardService } from '../../../services/dashboard.service';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -62,6 +63,38 @@ import { ChartExpansionDialogComponent } from '../chart-expansion-dialog/chart-e
                 <canvas #radarChartCanvas></canvas>
             </div>
         </div>
+
+        <!-- NEW: Evolution Chart -->
+        <div class="chart-container">
+            <h3>Base Score Evolution</h3>
+            <div class="canvas-wrapper">
+                <canvas #evolutionChartCanvas></canvas>
+            </div>
+        </div>
+      </div>
+
+      <!-- Action Plan Summary -->
+      <div class="action-plan-summary" *ngIf="actionPlanStats() as stats">
+          <h3>Action Plan Status</h3>
+          <div class="stats-row">
+              <div class="stat-box">
+                  <span class="val">{{ stats.total }}</span>
+                  <span class="lab">Total</span>
+              </div>
+              <div class="stat-box in-progress">
+                  <span class="val">{{ stats.inProgress }}</span>
+                  <span class="lab">In Progress</span>
+              </div>
+              <div class="stat-box done">
+                  <span class="val">{{ stats.done }}</span>
+                  <span class="lab">Done</span>
+              </div>
+              <div class="stat-box overdue" *ngIf="stats.overdue > 0">
+                  <mat-icon>warning</mat-icon>
+                  <span class="val">{{ stats.overdue }}</span>
+                  <span class="lab">Overdue</span>
+              </div>
+          </div>
       </div>
 
       <div class="breakdown">
@@ -172,6 +205,33 @@ import { ChartExpansionDialogComponent } from '../chart-expansion-dialog/chart-e
     .score-value { font-size: 2.5rem; font-weight: bold; line-height: 1; margin-bottom: 4px; }
     .score-label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
     .progress-info { font-weight: bold; color: #555; }
+
+    /* Action Plan Summary Styles */
+    .action-plan-summary {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 32px;
+    }
+    .action-plan-summary h3 { text-align: left; margin-bottom: 16px; font-weight: 600; }
+    .stats-row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .stat-box { 
+        padding: 16px 24px; 
+        background: #f8f9fa; 
+        border-radius: 8px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        min-width: 120px;
+    }
+    .stat-box .val { font-size: 1.8rem; font-weight: bold; color: #3f51b5; }
+    .stat-box .lab { font-size: 0.75rem; text-transform: uppercase; color: #666; font-weight: 500; }
+    .stat-box.in-progress .val { color: #ff9800; }
+    .stat-box.done .val { color: #4caf50; }
+    .stat-box.overdue { background: #feebeb; border: 1px solid #f44336; }
+    .stat-box.overdue .val { color: #f44336; }
+    .stat-box.overdue mat-icon { color: #f44336; font-size: 20px; height: 20px; width: 20px; }
   `]
 })
 export class MatrixViewComponent implements OnInit {
@@ -180,9 +240,13 @@ export class MatrixViewComponent implements OnInit {
 
   @ViewChild('barChartCanvas') barChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('radarChartCanvas') radarChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('evolutionChartCanvas') evolutionChartCanvas!: ElementRef<HTMLCanvasElement>;
+
+  dashboardService = inject(DashboardService);
 
   barChart: any;
   radarChart: any;
+  evolutionChart: any;
 
   globalScore = computed(() => this.assessmentService.getGlobalScore());
   globalProgress = computed(() => this.assessmentService.getGlobalProgress());
@@ -240,6 +304,21 @@ export class MatrixViewComponent implements OnInit {
     });
   });
 
+  // Action Plan Stats
+  actionPlanStats = computed(() => {
+    return this.dashboardService.computeActionPlanStats(this.assessmentService.actionPlan());
+  });
+
+  // Historical Data for this Base
+  baseHistory = computed(() => {
+    const ctx = this.assessmentService.context();
+    if (!ctx) return [];
+    
+    return this.assessmentService.allAssessments()
+      .filter(a => a.context?.country === ctx.country && a.context?.base === ctx.base)
+      .sort((a, b) => (a.context?.evaluationMonth || "").localeCompare(b.context?.evaluationMonth || ""));
+  });
+
   ngOnInit() {
     setTimeout(() => this.initCharts(), 100);
   }
@@ -247,6 +326,7 @@ export class MatrixViewComponent implements OnInit {
   initCharts() {
     this.initBarChart();
     this.initRadarChart();
+    this.initEvolutionChart();
   }
 
   globalNARate = computed(() => this.assessmentService.getGlobalNArate());
@@ -257,25 +337,87 @@ export class MatrixViewComponent implements OnInit {
     if (!ctx) return;
 
     const data = this.transversalData();
+    const benchmarks = this.dashboardService.getBenchmarks(this.assessmentService.context(), this.assessmentService.allAssessments());
 
     this.barChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: data.map(d => d.name),
+        datasets: [
+          {
+            label: 'Compliance %',
+            data: data.map(d => d.score),
+            backgroundColor: data.map(d => d.score < 50 ? 'rgba(244,67,54,0.6)' : d.score < 80 ? 'rgba(255,152,0,0.6)' : 'rgba(76,175,80,0.6)'),
+            borderColor: data.map(d => d.score < 50 ? '#f44336' : d.score < 80 ? '#ff9800' : '#4caf50'),
+            borderWidth: 1,
+            order: 2
+          },
+          {
+            label: 'Country Average',
+            data: data.map(() => benchmarks.countryAvg),
+            type: 'line',
+            borderColor: 'rgba(63, 81, 181, 0.4)',
+            borderDash: [5, 5],
+            pointRadius: 0,
+            fill: false,
+            order: 1
+          },
+          {
+            label: 'Global Average',
+            data: data.map(() => benchmarks.globalAvg),
+            type: 'line',
+            borderColor: 'rgba(0, 0, 0, 0.2)',
+            borderDash: [2, 2],
+            pointRadius: 0,
+            fill: false,
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+            legend: { 
+                display: true,
+                position: 'bottom',
+                labels: { boxWidth: 12, font: { size: 10 } }
+            } 
+        },
+        scales: { y: { beginAtZero: true, max: 100 } },
+        onClick: (e) => this.expandBarChart() // Allow clicking on chart elements too
+      }
+    });
+  }
+
+  initEvolutionChart() {
+    if (!this.evolutionChartCanvas) return;
+    const ctx = this.evolutionChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const history = this.baseHistory();
+    if (history.length < 1) return;
+
+    this.evolutionChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: history.map(h => h.context?.evaluationMonth),
         datasets: [{
-          label: 'Compliance %',
-          data: data.map(d => d.score),
-          backgroundColor: data.map(d => d.score < 50 ? 'rgba(244,67,54,0.6)' : d.score < 80 ? 'rgba(255,152,0,0.6)' : 'rgba(76,175,80,0.6)'),
-          borderColor: data.map(d => d.score < 50 ? '#f44336' : d.score < 80 ? '#ff9800' : '#4caf50'),
-          borderWidth: 1
+          label: 'Score Evolution',
+          data: history.map(h => h.score),
+          borderColor: '#3f51b5',
+          backgroundColor: 'rgba(63, 81, 181, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: '#3f51b5'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, max: 100 } },
-        onClick: (e) => this.expandBarChart() // Allow clicking on chart elements too
+        scales: { y: { beginAtZero: true, max: 100 } }
       }
     });
   }

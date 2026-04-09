@@ -389,46 +389,107 @@
         }
     }
 
-    /* Offline/Sync Badges */
-    .offline-badge {
-        background: #f44336;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 16px;
+    /* New Connectivity & Status Styles */
+    .connectivity-wrapper {
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        margin-right: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #4caf50; // Green for online
+
+        &.offline {
+            color: #ff5252; // Red for offline
+            background: rgba(255, 82, 82, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .status-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-right: 16px;
+    }
+
+    .status-item {
         display: flex;
         align-items: center;
         gap: 6px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        margin-right: 15px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        &.save {
+            color: #ffeb3b; // Yellowish for local save
+        }
+
+        &.sync {
+            color: #69f0ae; // Greenish for sync
+            padding: 0 8px 0 0; // Adjust for button
+            
+            button {
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                color: inherit;
+                
+                mat-icon {
+                    font-size: 18px;
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+        }
+
+        .status-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            opacity: 0.9;
+        }
+
+        .status-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+
+            .label {
+                font-size: 0.6rem;
+                text-transform: uppercase;
+                opacity: 0.7;
+                letter-spacing: 0.3px;
+            }
+
+            .value {
+                font-size: 0.75rem;
+                font-weight: 500;
+                font-family: monospace;
+            }
+        }
     }
 
-    .sync-badge {
-        background: #ff9800;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        margin-right: 15px;
-    }
-
-    .spin {
-        animation: spin 1s linear infinite;
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
     }
 
     @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-        100% {
-            transform: rotate(360deg);
-        }
+    .spin {
+        animation: spin 2s linear infinite;
     }
 
     @media (max-width: 600px) {

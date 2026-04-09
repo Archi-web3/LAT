@@ -33,23 +33,37 @@
 
     <div class="toolbar-right">
 
-        <!-- Offline Status -->
-        <div class="status-indicator offline" *ngIf="!isOnline()" matTooltip="Offline Mode">
-            <mat-icon>cloud_off</mat-icon>
+        <!-- Connectivity Status -->
+        <div class="connectivity-wrapper" [class.offline]="!isOnline()">
+            <mat-icon [matTooltip]="isOnline() ? 'En ligne' : 'Hors-ligne'">
+                {{ isOnline() ? 'cloud_done' : 'cloud_off' }}
+            </mat-icon>
         </div>
 
-        <!-- Saving Status -->
-        <div class="save-status" *ngIf="assessmentService.lastSaved() as last">
-            <mat-icon class="status-icon">check</mat-icon>
-            <span class="status-text">{{ 'Enregistré à ' }}{{ last | date:'HH:mm:ss' }}</span>
-        </div>
+        <!-- Sync & Saved Status -->
+        <div class="status-group">
+            <!-- Last Saved (Local) -->
+            <div class="status-item save" *ngIf="assessmentService.lastSaved() as last">
+                <mat-icon class="status-icon">save</mat-icon>
+                <div class="status-details">
+                    <span class="label">Local</span>
+                    <span class="value">{{ last | date:'HH:mm:ss' }}</span>
+                </div>
+            </div>
 
-        <!-- Sync Button -->
-        <button mat-icon-button *ngIf="isOnline()" (click)="manualSync()"
-            [matTooltip]="assessmentService.isSyncing() ? 'Synchronisation...' : 'Sync Now'"
-            [disabled]="assessmentService.isSyncing()">
-            <mat-icon [class.spin]="assessmentService.isSyncing()">sync</mat-icon>
-        </button>
+            <!-- Last Synced (Server) -->
+            <div class="status-item sync" *ngIf="isOnline()">
+                <button mat-icon-button (click)="manualSync()" 
+                    [matTooltip]="assessmentService.isSyncing() ? 'Synchronisation...' : 'Sync Now'"
+                    [disabled]="assessmentService.isSyncing()">
+                    <mat-icon [class.spin]="assessmentService.isSyncing()">sync</mat-icon>
+                </button>
+                <div class="status-details" *ngIf="assessmentService.lastSyncedAt() as lastSync">
+                    <span class="label">Sync</span>
+                    <span class="value">{{ lastSync | date:'HH:mm:ss' }}</span>
+                </div>
+            </div>
+        </div>
 
         <ng-container *ngIf="assessmentService.context()">
 

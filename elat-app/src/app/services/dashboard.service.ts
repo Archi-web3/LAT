@@ -9,6 +9,13 @@ export interface DashboardMetrics {
     byCountry: { name: string; count: number; score: number }[];
     byBase: { name: string; count: number; score: number }[];
     evolution: { name: string; value: number }[]; // Month -> Avg Score
+    actionPlan?: {
+        total: number;
+        open: number;
+        inProgress: number;
+        done: number;
+        overdue: number;
+    }
 }
 
 @Injectable({
@@ -117,10 +124,43 @@ export class DashboardService {
         return {
             totalAssessments: total,
             averageScore: avgScore,
-            activeCountries: byCountry.length,
+            activeCountries: countryMap.size,
             byCountry,
             byBase,
             evolution
         };
+    }
+
+    /**
+     * Compute action plan statistics
+     */
+    computeActionPlanStats(actions: any[]): any {
+        if (!actions) return { total: 0, open: 0, inProgress: 0, done: 0, overdue: 0 };
+        
+        const now = new Date();
+        return {
+            total: actions.length,
+            open: actions.filter(a => a.status === 'OPEN').length,
+            inProgress: actions.filter(a => a.status === 'IN_PROGRESS').length,
+            done: actions.filter(a => a.status === 'DONE').length,
+            overdue: actions.filter(a => a.status !== 'DONE' && a.dueDate && new Date(a.dueDate) < now).length
+        };
+    }
+
+    /**
+     * Get benchmarks for a specific assessment context
+     */
+    getBenchmarks(current: any, all: any[]) {
+        if (!all || all.length === 0) return { countryAvg: 0, globalAvg: 0 };
+
+        const globalSum = all.reduce((acc, curr) => acc + (curr.score || 0), 0);
+        const globalAvg = Math.round(globalSum / all.length);
+
+        const countryData = all.filter(a => a.context?.country === current.country || a.country === current.country);
+        const countryAvg = countryData.length > 0 
+            ? Math.round(countryData.reduce((acc, curr) => acc + (curr.score || 0), 0) / countryData.length)
+            : globalAvg;
+
+        return { countryAvg, globalAvg };
     }
 }

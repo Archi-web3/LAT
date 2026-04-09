@@ -28,29 +28,81 @@ exports.sync = async (req, res) => {
 
                 const existing = await Assessment.findOne(query);
 
-                const assessmentData = {
-                    ...item,
-                    userId: req.user.id,
-                    updatedAt: new Date(item.updatedAt || Date.now())
-                };
+                const clientTime = new Date(item.updatedAt || Date.now()).getTime();
 
                 if (existing) {
-                    // Conflict Resolution: Only update if the incoming data is NEWER than the server
                     const serverTime = new Date(existing.updatedAt).getTime();
-                    const clientTime = new Date(assessmentData.updatedAt).getTime();
 
-                    if (clientTime > serverTime) {
-                        Object.assign(existing, assessmentData);
-                        await existing.save();
-                        results.applied.push(item._id || existing._id);
-                    } else {
-                        results.skipped.push(item._id || existing._id);
-                        results.serverUpdates.push(existing); // Send back server version
+                    // MERGING LOGIC
+                    // 1. Merge Maps (Answers, Comments, etc.)
+                    // Rule: If key exists in both, newer document (global updatedAt) wins
+                    const mergeMap = (existingMap, incomingMap) => {
+                        if (!incomingMap) return;
+                        Object.keys(incomingMap).forEach(key => {
+                            if (clientTime >= serverTime || !existingMap.has(key)) {
+                                existingMap.set(key, incomingMap[key]);
+                            }
+                        });
+                    };
+
+                    mergeMap(existing.answers, item.answers);
+                    mergeMap(existing.comments, item.comments);
+                    mergeMap(existing.proofLinks, item.proofLinks);
+                    mergeMap(existing.proofPhotos, item.proofPhotos);
+
+                    // 2. Merge Action Plan (by ID)
+                    if (Array.isArray(item.actionPlan)) {
+                        item.actionPlan.forEach(incomingAction => {
+                            const idx = existing.actionPlan.findIndex(a => a.id === incomingAction.id);
+                            if (idx > -1) {
+                                // Update existing action if newer or if it's the same
+                                if (clientTime >= serverTime) {
+                                    existing.actionPlan[idx] = { ...existing.actionPlan[idx].toObject(), ...incomingAction };
+                                }
+                            } else {
+                                // Add new action
+                                existing.actionPlan.push(incomingAction);
+                            }
+                        });
                     }
+
+                    // 3. Merge History (Append)
+                    if (Array.isArray(item.history)) {
+                        // Avoid duplicates by checking date/action? 
+                        // For simplicity, just append new entries that aren't already there
+                        item.history.forEach(entry => {
+                            const exists = existing.history.some(h => 
+                                new Date(h.date).getTime() === new Date(entry.date).getTime() && 
+                                h.action === entry.action
+                            );
+                            if (!exists) existing.history.push(entry);
+                        });
+                    }
+
+                    // 4. Update status if client is newer
+                    if (clientTime >= serverTime) {
+                        existing.status = item.status || existing.status;
+                        existing.score = item.score !== undefined ? item.score : existing.score;
+                        existing.submittedBy = item.submittedBy || existing.submittedBy;
+                        existing.submittedAt = item.submittedAt || existing.submittedAt;
+                        existing.validatedBy = item.validatedBy || existing.validatedBy;
+                        existing.validatedAt = item.validatedAt || existing.validatedAt;
+                    }
+
+                    existing.updatedAt = new Date(Math.max(serverTime, clientTime));
+                    await existing.save();
+                    
+                    results.applied.push(existing._id);
+                    results.serverUpdates.push(existing); // Return merged version
                 } else {
-                    const newAssessment = new Assessment(assessmentData);
+                    const newAssessment = new Assessment({
+                        ...item,
+                        userId: req.user.id,
+                        updatedAt: new Date(clientTime)
+                    });
                     await newAssessment.save();
                     results.applied.push(newAssessment._id);
+                    results.serverUpdates.push(newAssessment);
                 }
             } catch (err) {
                 console.error(`Sync error for item:`, err);

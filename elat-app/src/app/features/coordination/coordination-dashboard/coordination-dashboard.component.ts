@@ -410,25 +410,64 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
 
     if (this.evolutionChart) this.evolutionChart.destroy();
 
-    // Simple implementation: Global Evolution
-    // If we want multiple lines per country, we need more complex data prep. 
-    // For now, let's show the Global Trend of filtered selection.
+    const selectedCountries = this.filterForm.get('countries')?.value || [];
+    let datasets = [];
+
+    if (selectedCountries.length > 0 && selectedCountries.length <= 5) {
+      // Create one line per country
+      const colors = ['#3f51b5', '#4caf50', '#ff9800', '#f44336', '#9c27b0'];
+      
+      datasets = selectedCountries.map((country: string, idx: number) => {
+        const countryData = this.rawData.filter(a => a.country === country);
+        const monthlyScores = new Map<string, { sum: number, count: number }>();
+        
+        countryData.forEach(a => {
+          const m = a.evaluationMonth || 'Unknown';
+          const curr = monthlyScores.get(m) || { sum: 0, count: 0 };
+          curr.sum += (a.score || 0);
+          curr.count++;
+          monthlyScores.set(m, curr);
+        });
+
+        const sortedMonths = this.metrics!.evolution.map(e => e.name);
+        const data = sortedMonths.map(m => {
+          const val = monthlyScores.get(m);
+          return val ? Math.round(val.sum / val.count) : null;
+        });
+
+        return {
+          label: country,
+          data: data,
+          borderColor: colors[idx % colors.length],
+          tension: 0.3,
+          fill: false,
+          spanGaps: true
+        };
+      });
+    } else {
+      // Global Trend
+      datasets = [{
+        label: 'Global Score Trend',
+        data: this.metrics.evolution.map(e => e.value),
+        borderColor: '#3f51b5',
+        backgroundColor: 'rgba(63, 81, 181, 0.1)',
+        fill: true,
+        tension: 0.3
+      }];
+    }
 
     this.evolutionChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: this.metrics.evolution.map(e => e.name),
-        datasets: [{
-          label: 'Global Score Trend',
-          data: this.metrics.evolution.map(e => e.value),
-          borderColor: '#3f51b5',
-          backgroundColor: 'rgba(63, 81, 181, 0.2)',
-          fill: true,
-          tension: 0.3
-        }]
+        datasets: datasets
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: datasets.length > 1, position: 'bottom' }
+        },
         scales: {
           y: { beginAtZero: true, max: 100 }
         }

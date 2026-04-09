@@ -16,6 +16,9 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { LocalizePipe } from '../../../core/i18n/localize.pipe';
 import { PdfService } from '../../../services/pdf.service';
+import { ConnectivityService } from '../../../core/services/connectivity.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-assessment-layout',
@@ -33,7 +36,9 @@ import { PdfService } from '../../../services/pdf.service';
     MatTooltipModule,
     MatMenuModule,
     TranslatePipe,
-    LocalizePipe
+    LocalizePipe,
+    MatSnackBarModule,
+    MatDividerModule
   ],
   templateUrl: './assessment-layout.component.html',
   styleUrl: './assessment-layout.component.scss'
@@ -50,7 +55,9 @@ export class AssessmentLayoutComponent {
   isMobile = signal(false);
 
   // Connection State
-  isOnline = signal(navigator.onLine);
+  private connectivityService = inject(ConnectivityService);
+  isOnline = this.connectivityService.isOnline;
+  private snackBar = inject(MatSnackBar);
 
   // UI State
   showDashboards = signal(false);
@@ -60,10 +67,6 @@ export class AssessmentLayoutComponent {
       .subscribe(result => {
         this.isMobile.set(result.matches);
       });
-
-    // Connection Listeners
-    window.addEventListener('online', () => this.isOnline.set(true));
-    window.addEventListener('offline', () => this.isOnline.set(false));
   }
 
   setLang(lang: 'EN' | 'FR') {
@@ -133,6 +136,12 @@ export class AssessmentLayoutComponent {
 
   manualSync() {
     this.assessmentService.sync();
+    // Watch for sync completion to show snackbar
+    const sub = this.assessmentService.isSyncing();
+    // We can't easily wait for the signal to change back to false in a simple way here without effect or subscriber,
+    // but we can check the result in the service or just show a generic message.
+    // Let's assume we want a quick feedback.
+    this.snackBar.open('Synchronisation en cours...', '', { duration: 2000 });
   }
 
   // --- Lifecycle Methods ---
