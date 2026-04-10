@@ -10,7 +10,11 @@ export const TOP_LEVEL_TRANSLATIONS = {
             ERROR: 'Login failed'
         },
         MENU: {
-            MY_ASSESSMENTS: 'My Assessments',
+            MY_ASSESSMENTS: 'Ongoing Assessments',
+            ONGOING_ASSESSMENTS: 'Ongoing Assessments',
+            BASE_ASSESSMENTS: 'My Base',
+            COUNTRY_ASSESSMENTS: 'My Country',
+            GLOBAL_POOL: 'Pool / Global',
             MATRIX_DASHBOARD: 'Matrix Dashboard',
             ACTION_PLAN: 'Action Plan (Gantt)',
             COORDINATION: 'Coordination',
@@ -81,7 +85,11 @@ export const TOP_LEVEL_TRANSLATIONS = {
             ERROR: 'Échec de connexion'
         },
         MENU: {
-            MY_ASSESSMENTS: 'Mes Évaluations',
+            MY_ASSESSMENTS: 'Évaluations en cours',
+            ONGOING_ASSESSMENTS: 'Évaluations en cours',
+            BASE_ASSESSMENTS: 'Ma Base',
+            COUNTRY_ASSESSMENTS: 'Mon Pays',
+            GLOBAL_POOL: 'Pool / Global',
             MATRIX_DASHBOARD: 'Tableau de bord Matrice',
             ACTION_PLAN: 'Plan d\'Action (Gantt)',
             COORDINATION: 'Coordination',

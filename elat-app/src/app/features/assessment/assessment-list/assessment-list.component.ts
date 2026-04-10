@@ -11,6 +11,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { AssessmentState } from '../../../models/assessment.model';
 import { computed } from '@angular/core';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-assessment-list',
@@ -23,7 +24,8 @@ import { computed } from '@angular/core';
     MatChipsModule, 
     MatTooltipModule, 
     MatTabsModule,
-    RouterModule
+    RouterModule,
+    TranslatePipe
   ],
   template: `
     <div class="container">
@@ -45,7 +47,7 @@ import { computed } from '@angular/core';
         <mat-tab>
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">person</mat-icon>
-                <span>Évaluations en cours / Ongoing assessments ({{ myAssessments().length }})</span>
+                <span>{{ 'MENU.ONGOING_ASSESSMENTS' | translate }} ({{ myAssessments().length }})</span>
             </ng-template>
             <ng-template matTabContent>
                 <ng-container *ngTemplateOutlet="assessmentTable; context: { $implicit: myAssessments(), isOwner: true }"></ng-container>
@@ -56,7 +58,7 @@ import { computed } from '@angular/core';
         <mat-tab *ngIf="user()?.assignedBase">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">location_on</mat-icon>
-                <span>Ma Base ({{ baseAssessments().length }})</span>
+                <span>{{ 'MENU.BASE_ASSESSMENTS' | translate }} ({{ baseAssessments().length }})</span>
             </ng-template>
             <ng-template matTabContent>
                 <ng-container *ngTemplateOutlet="assessmentTable; context: { $implicit: baseAssessments(), isOwner: false }"></ng-container>
@@ -67,7 +69,7 @@ import { computed } from '@angular/core';
         <mat-tab *ngIf="user()?.role !== 'USER' && user()?.assignedCountry">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">flag</mat-icon>
-                <span>Mon Pays ({{ countryAssessments().length }})</span>
+                <span>{{ 'MENU.COUNTRY_ASSESSMENTS' | translate }} ({{ countryAssessments().length }})</span>
             </ng-template>
             <ng-template matTabContent>
                 <ng-container *ngTemplateOutlet="assessmentTable; context: { $implicit: countryAssessments(), isOwner: false }"></ng-container>
@@ -78,7 +80,7 @@ import { computed } from '@angular/core';
         <mat-tab *ngIf="user()?.role !== 'USER'">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">public</mat-icon>
-                <span>Pool / Global ({{ poolAssessments().length }})</span>
+                <span>{{ 'MENU.GLOBAL_POOL' | translate }} ({{ poolAssessments().length }})</span>
             </ng-template>
             <ng-template matTabContent>
                 <ng-container *ngTemplateOutlet="assessmentTable; context: { $implicit: poolAssessments(), isOwner: false }"></ng-container>
