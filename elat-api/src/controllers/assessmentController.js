@@ -198,3 +198,25 @@ exports.deleteAssessment = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// Purge ALL Assessments (SUPER_ADMIN ONLY)
+exports.purgeAllAssessments = async (req, res) => {
+    try {
+        // Double check role even if middleware is present
+        if (req.user.role !== 'SUPER_ADMIN') {
+            return res.status(401).json({ msg: 'Unauthorized: Super Admin access required' });
+        }
+
+        const result = await Assessment.deleteMany({});
+        console.log(`[ADMIN] Global Purge executed by ${req.user.id}. Deleted ${result.deletedCount} items.`);
+        
+        res.json({ 
+            msg: 'Global purge completed successfully', 
+            deletedCount: result.deletedCount 
+        });
+
+    } catch (err) {
+        console.error('Purge Error:', err.message);
+        res.status(500).send('Server Error during purge');
+    }
+};

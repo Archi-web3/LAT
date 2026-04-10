@@ -14,6 +14,11 @@ router.post('/sync', auth, assessmentController.sync);
 // Optimized: Uses lean() in controller for performance
 router.get('/history', auth, assessmentController.getHistory);
 
+// @route   DELETE api/assessments/admin/purge-all
+// @desc    Purge ALL assessments from database (SUPER_ADMIN ONLY)
+// @access  Private Admin
+router.delete('/admin/purge-all', auth, assessmentController.purgeAllAssessments);
+
 // @route   DELETE api/assessments/:id
 // @desc    Delete an assessment
 // @access  Private

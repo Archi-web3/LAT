@@ -92,4 +92,14 @@ export class AdminService {
       })
     );
   }
+
+  // Purge ALL Assessments (SUPER_ADMIN ONLY)
+  purgeAllAssessments() {
+    return this.http.delete<any>(`${environment.apiUrl}/api/assessments/admin/purge-all`, this.getHeaders()).pipe(
+        tap(() => {
+            // Success logic handled in component (clearing local storage)
+            console.log('AdminService: Global purge signal sent successfully');
+        })
+    );
+  }
 }

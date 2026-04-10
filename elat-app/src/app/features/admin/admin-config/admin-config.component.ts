@@ -295,6 +295,38 @@ import { AdminService } from '../../../core/admin/admin.service';
             </div>
         </mat-tab>
 
+        <!-- TAB 6: DANGER ZONE -->
+        <mat-tab label="System & Danger Zone">
+            <div class="tab-content danger-zone">
+                <div class="danger-card">
+                    <h3>Zone de Danger</h3>
+                    <p>Ces actions sont irréversibles et affectent l'ensemble de l'application et de tous les utilisateurs.</p>
+                    
+                    <div class="danger-action">
+                        <div class="action-info">
+                            <strong>Purge Globale des Évaluations</strong>
+                            <p>Supprime définitivement TOUTES les évaluations, brouillons, commentaires et plans d'action du Cloud et de vos appareils locaux.</p>
+                        </div>
+                        <button mat-raised-button color="warn" (click)="purgeData()">
+                            <mat-icon>delete_forever</mat-icon> PURGE TOTALE
+                        </button>
+                    </div>
+
+                    <hr class="danger-sep">
+
+                    <div class="danger-action">
+                        <div class="action-info">
+                            <strong>Réinitialiser la Configuration</strong>
+                            <p>Remet les questions et la structure à l'état d'usine. Les données d'évaluation ne sont pas affectées.</p>
+                        </div>
+                        <button mat-stroked-button color="warn" (click)="resetToDefaults()">
+                            <mat-icon>auto_fix_high</mat-icon> Reset Config
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+
       </mat-tab-group>
     </div>
   `,
@@ -344,6 +376,27 @@ import { AdminService } from '../../../core/admin/admin.service';
     .dense { margin-bottom: -16px; font-size: 0.9rem; width: 100%; }
 
     .threshold-inputs { display: flex; gap: 24px; }
+
+    /* Danger Zone */
+    .danger-zone { padding: 24px; }
+    .danger-card { 
+        border: 2px solid #ff5252; 
+        border-radius: 12px; 
+        padding: 24px; 
+        background: #fffbfa; 
+    }
+    .danger-card h3 { color: #d32f2f; margin-top: 0; }
+    .danger-action { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 16px 0; 
+        gap: 24px;
+    }
+    .action-info { flex: 1; }
+    .action-info strong { display: block; margin-bottom: 4px; color: #333; }
+    .action-info p { margin: 0; font-size: 0.9rem; color: #666; }
+    .danger-sep { border: none; border-top: 1px solid #ffcdd2; margin: 8px 0; }
   `]
 })
 export class AdminConfigComponent {
@@ -571,5 +624,52 @@ export class AdminConfigComponent {
         if (confirm('Supprimer cette expertise ? Cela ne la retirera pas des questions existantes mais elle ne sera plus proposée.')) {
             this.config().transversalExpertises.splice(index, 1);
         }
+    }
+
+    // --- Danger actions ---
+    purgeData() {
+        const confirmCode = window.prompt('ATTENTION : Cette action supprimera TOUTES les données de tous les utilisateurs.\nTapez "PURGE" pour confirmer :');
+        
+        if (confirmCode === 'PURGE') {
+            this.snackBar.open('Purge en cours...', 'Patienter', { duration: 5000 });
+            
+            this.adminService.purgeAllAssessments().subscribe({
+                next: (res) => {
+                    // 1. Success message
+                    this.snackBar.open(`Purge terminée ! ${res.deletedCount} évaluations supprimées.`, 'OK', { duration: 5000 });
+                    
+                    // 2. Clear Local Storage
+                    this.clearLocalData();
+                    
+                    // 3. Reload to force fresh state
+                    setTimeout(() => {
+                        window.location.href = '/assessment/list';
+                    }, 2000);
+                },
+                error: (err) => {
+                    console.error('Purge failure', err);
+                    this.snackBar.open('Erreur lors de la purge. Vérifiez vos droits.', 'Fermer');
+                }
+            });
+        } else if (confirmCode !== null) {
+            this.snackBar.open('Code incorrect. Action annulée.', 'Fermer');
+        }
+    }
+
+    private clearLocalData() {
+        // Clear history
+        localStorage.removeItem('elat-history');
+        
+        // Clear all assessment drafts
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('elat-assessment-')) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+        
+        console.log('[ADMIN] Local storage cleared after global purge');
     }
 }
