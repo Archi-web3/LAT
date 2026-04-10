@@ -160,18 +160,27 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions" stickyEnd>
                   <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.ACTIONS' | translate }}</th>
-                  <td mat-cell *matCellDef="let element">
-                      <!-- Toujours visible : Voir / Modifier si proprio + DRAFT -->
-                      <button mat-icon-button color="accent" (click)="resume(element)"
-                          [matTooltip]="element.userId === currentUserId() && element.status === 'DRAFT' ? 'Modifier' : 'Voir'">
-                          <mat-icon>{{ element.userId === currentUserId() && element.status === 'DRAFT' ? 'edit' : 'visibility' }}</mat-icon>
+                  <td mat-cell *matCellDef="let element" class="actions-cell">
+
+                      <!-- Voir (toujours visible) -->
+                      <button mat-icon-button color="primary" (click)="resume(element)" matTooltip="Voir">
+                          <mat-icon>visibility</mat-icon>
                       </button>
-                      <!-- Supprimer : visible si proprio + DRAFT -->
+
+                      <!-- Modifier : seulement si c'est son propre DRAFT -->
+                      <button mat-icon-button color="accent"
+                          *ngIf="isOwnDraft(element)"
+                          (click)="resume(element)" matTooltip="Modifier">
+                          <mat-icon>edit</mat-icon>
+                      </button>
+
+                      <!-- Supprimer : proprio+DRAFT OU super admin -->
                       <button mat-icon-button color="warn"
-                          *ngIf="element.userId === currentUserId() && element.status === 'DRAFT'"
+                          *ngIf="isOwnDraft(element) || isAdmin()"
                           (click)="deleteDraft(element)" matTooltip="Supprimer">
                           <mat-icon>delete</mat-icon>
                       </button>
+
                   </td>
                 </ng-container>
       
@@ -310,6 +319,16 @@ export class AssessmentListComponent implements OnInit {
 
   currentUserId(): string | undefined {
     return this.user()?.id;
+  }
+
+  isOwnDraft(element: AssessmentState): boolean {
+    const uid = this.user()?.id;
+    if (!uid) return false;
+    return element.userId === uid && element.status === 'DRAFT';
+  }
+
+  isAdmin(): boolean {
+    return ['SUPER_ADMIN', 'POOL_COORDINATOR'].includes(this.user()?.role || '');
   }
 
   resume(assessment: AssessmentState) {
