@@ -262,19 +262,23 @@ export class AssessmentListComponent implements OnInit {
 
   // Categorized Assessments
   myAssessments = computed(() => {
-    const userId = this.user()?.id;
-    return this.assessmentService.allAssessments().filter(a => a.userId === userId && a.status === 'DRAFT');
+    const userId = this.user()?.id?.toString();
+    return this.assessmentService.allAssessments().filter(a => {
+        const aUid = a.userId?.toString();
+        return aUid === userId && a.status === 'DRAFT';
+    });
   });
 
   baseAssessments = computed(() => {
-    const userId = this.user()?.id;
+    const userId = this.user()?.id?.toString();
     const base = this.user()?.assignedBase;
     
     return this.assessmentService.allAssessments().filter(a => {
+        const aUid = a.userId?.toString();
         // Own assessments that are NOT drafts go here
-        const isMineAndFinal = a.userId === userId && a.status !== 'DRAFT';
+        const isMineAndFinal = aUid === userId && a.status !== 'DRAFT';
         // Assessments by others in my base
-        const isOthersInMyBase = a.context?.base === base && a.userId !== userId;
+        const isOthersInMyBase = a.context?.base === base && aUid !== userId;
 
         return isMineAndFinal || isOthersInMyBase;
     });
@@ -322,9 +326,10 @@ export class AssessmentListComponent implements OnInit {
   }
 
   isOwnDraft(element: AssessmentState): boolean {
-    const uid = this.user()?.id;
-    if (!uid) return false;
-    return element.userId === uid && element.status === 'DRAFT';
+    const uid = this.user()?.id?.toString();
+    const aUid = element.userId?.toString();
+    if (!uid || !aUid) return false;
+    return aUid === uid && element.status === 'DRAFT';
   }
 
   isAdmin(): boolean {

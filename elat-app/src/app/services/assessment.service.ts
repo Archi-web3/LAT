@@ -87,18 +87,27 @@ export class AssessmentService {
     });
 
     // Merge local
+    const currentUser = this.authService.currentUser();
     local.forEach(loc => {
       if (!loc.context) return;
       const key = this.getStorageKey(loc.context);
       const existing = mergedMap.get(key);
 
-      // If local has more complete metadata (like author name or userId) and remote is empty/generic, keep local
+      // --- CRITICAL METADATA PROTECTION ---
+      // If we have a remote version (existing) and a local version (loc)
       if (existing) {
-          if (!existing.submittedBy && loc.submittedBy) {
-              existing.submittedBy = loc.submittedBy;
-          }
-          if (!existing.userId && loc.userId) {
-              existing.userId = loc.userId;
+          // 1. Normalize IDs to strings for robust comparison
+          const locUid = loc.userId?.toString();
+          const extUid = existing.userId?.toString();
+          
+          // 2. If it's MY assessment (local knows better), force my metadata into the remote object
+          if (currentUser && (locUid === currentUser.id || loc.submittedBy === currentUser.name)) {
+              existing.userId = currentUser.id;
+              existing.submittedBy = currentUser.name;
+          } else {
+              // 3. Otherwise, just fill gaps
+              if (!existing.submittedBy && loc.submittedBy) existing.submittedBy = loc.submittedBy;
+              if (!existing.userId && loc.userId) existing.userId = loc.userId;
           }
       }
 
@@ -107,7 +116,14 @@ export class AssessmentService {
       }
     });
 
-    const final = Array.from(mergedMap.values()).sort((a, b) => 
+    // Final sorting and normalization pass on the resulting array
+    const final = Array.from(mergedMap.values()).map(a => {
+        // Force userId to string to avoid MongoDB object leakage
+        if (a.userId && typeof a.userId !== 'string') {
+            a.userId = (a.userId as any).toString();
+        }
+        return a;
+    }).sort((a, b) => 
       new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
 
@@ -860,27 +876,27 @@ export class AssessmentService {
       }
 
       // === KEY FIX: Preserve local userId and submittedBy ===
-      // The server returns userId as a MongoDB ObjectId. The client compares against
-      // authService.currentUser().id which is a plain string from JWT.
-      // To avoid a mismatch that breaks tab filtering and action buttons,
-      // we always keep the locally-stored userId and submittedBy.
+      // Always normalize to strings and prioritize current user session info
+      const currentUser = this.authService.currentUser();
       if (localJson) {
         try {
           const localDoc = JSON.parse(localJson);
-          if (localDoc.userId && !serverDoc.userId) {
-            serverDoc.userId = localDoc.userId;
-          }
-          if (localDoc.submittedBy && !serverDoc.submittedBy) {
-            serverDoc.submittedBy = localDoc.submittedBy;
-          }
-          // Always prefer local userId string to avoid ObjectId mismatch
-          if (localDoc.userId) {
-            serverDoc.userId = localDoc.userId;
-          }
-          if (localDoc.submittedBy) {
-            serverDoc.submittedBy = localDoc.submittedBy;
+          
+          // Robust mapping: if local says it's mine, keep it mine
+          if (currentUser && (localDoc.userId === currentUser.id || localDoc.submittedBy === currentUser.name)) {
+             serverDoc.userId = currentUser.id;
+             serverDoc.submittedBy = currentUser.name;
+          } else {
+             // Fallback to localDoc values if server is missing them
+             if (!serverDoc.userId) serverDoc.userId = localDoc.userId;
+             if (!serverDoc.submittedBy) serverDoc.submittedBy = localDoc.submittedBy;
           }
         } catch (e) {}
+      }
+      
+      // Safety: Ensure userId is always a string after sync
+      if (serverDoc.userId && typeof serverDoc.userId !== 'string') {
+          serverDoc.userId = (serverDoc.userId as any).toString();
       }
 
       localStorage.setItem(key, JSON.stringify(serverDoc));
