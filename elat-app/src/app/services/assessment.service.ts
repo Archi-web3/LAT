@@ -35,6 +35,7 @@ export class AssessmentService {
   context = signal<import('../models/assessment.model').AssessmentContext | null>(null);
 
   // Metadata Signals
+  userId = signal<string | undefined>(undefined);
   submittedBy = signal<string | undefined>(undefined);
   submittedAt = signal<string | undefined>(undefined);
   validatedBy = signal<string | undefined>(undefined);
@@ -140,6 +141,15 @@ export class AssessmentService {
 
   initializeAssessment(ctx: import('../models/assessment.model').AssessmentContext) {
     this.context.set(ctx);
+    
+    // Set default owner/creator info for a NEW assessment
+    const currentUser = this.authService.currentUser();
+    if (currentUser) {
+        this.userId.set(currentUser.id);
+        // Default submittedBy to current user for drafts so they don't show "Inconnu"
+        this.submittedBy.set(currentUser.name);
+    }
+    
     this.loadStateForContext(ctx);
   }
 
@@ -363,12 +373,14 @@ export class AssessmentService {
 
     const existingRaw = localStorage.getItem(this.getStorageKey(ctx));
     let existingId: string | undefined;
+    let existingUserId: string | undefined;
     let existingCreatedAt: string | undefined;
 
     if (existingRaw) {
         try {
             const parsed = JSON.parse(existingRaw);
             existingId = parsed.id;
+            existingUserId = parsed.userId;
             existingCreatedAt = parsed.createdAt;
         } catch (e) {}
     }
@@ -389,6 +401,7 @@ export class AssessmentService {
       score: this.getGlobalScore(),
 
       // Save logs
+      userId: this.userId() || existingUserId,
       submittedBy: this.submittedBy(),
       submittedAt: this.submittedAt(),
       validatedBy: this.validatedBy(),
@@ -420,6 +433,7 @@ export class AssessmentService {
         this.status.set(state.status || 'DRAFT');
 
         // Load Logs
+        this.userId.set(state.userId);
         this.submittedBy.set(state.submittedBy);
         this.submittedAt.set(state.submittedAt);
         this.validatedBy.set(state.validatedBy);
