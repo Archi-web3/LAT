@@ -335,6 +335,10 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
 
         this.rawData = cleanData;
 
+        // --- UNIFICATION: Feed back to global assessments signal ---
+        // This ensures the home page sees the same synced data as coordination
+        this.assessmentService.refreshAllAssessments(this.rawData);
+
         // Extract available countries for filter
         this.availableCountries = [...new Set(this.rawData.map((i: any) => i.country))].sort();
 
@@ -535,9 +539,8 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
         return;
     }
 
-    // Call service delete (handles both local and remote if element has an ID)
-    // We wrap it in a pseudo-AssessmentState as the table uses a slightly flatter format
-    this.assessmentService.deleteAssessment({
+    // Call service delete (handles both local and remote correctly using IDs and Auth headers)
+    const assessmentForDeletion = {
         id: element.id || element._id,
         context: {
             country: element.country,
@@ -545,9 +548,11 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
             evaluationMonth: element.evaluationMonth,
             date: element.date
         }
-    } as any);
+    };
+    
+    this.assessmentService.deleteAssessment(assessmentForDeletion);
 
-    // Refresh current view immediately
+    // Update local local view immediately for better UX
     this.rawData = this.rawData.filter(a => (a.id || a._id) !== (element.id || element._id));
     this.applyFilters();
   }

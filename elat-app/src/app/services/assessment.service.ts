@@ -569,22 +569,34 @@ export class AssessmentService {
     return assessments;
   }
 
-  deleteAssessment(assessment: import('../models/assessment.model').AssessmentState) {
+  deleteAssessment(assessment: any) {
     if (!assessment.context) return;
     const key = this.getStorageKey(assessment.context);
     
     // Attempt local removal
     localStorage.removeItem(key);
     
-    // If it has an ID, request server deletion (ignoring any online/offline check for simplicity, or we can use navigator.onLine)
-    if (navigator.onLine && assessment.id) {
-       this.http.delete(`${this.apiUrl}/${assessment.id}`).subscribe({
-           next: () => console.log('Successfully deleted draft on server'),
-           error: (err) => console.error('Failed to delete on server', err)
-       });
-    }
+    // Ensure we have a valid ID for server deletion
+    const serverId = assessment.id || assessment._id;
+    const token = localStorage.getItem('token');
+    const headers = { 'x-auth-token': token || '' };
 
-    this.refreshAllAssessments();
+    if (navigator.onLine && serverId) {
+       console.log(`[SERVICE] Requesting permanent deletion of assessment ${serverId}`);
+       this.http.delete(`${this.apiUrl}/${serverId}`, { headers }).subscribe({
+           next: () => {
+               console.log('✅ Successfully deleted from server');
+               this.refreshAllAssessments();
+           },
+           error: (err) => {
+               console.error('❌ Failed to delete on server', err);
+               // Even if server fails, we refresh local view
+               this.refreshAllAssessments();
+           }
+       });
+    } else {
+        this.refreshAllAssessments();
+    }
   }
 
 
@@ -954,7 +966,14 @@ export class AssessmentService {
   getRemoteHistory() {
     const token = localStorage.getItem('token');
     const headers = { 'x-auth-token': token || '' };
-    return this.http.get<any[]>(`${this.apiUrl}/history`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/history`, { headers }).pipe(
+      tap(res => {
+        // Normalize IDs for consistency
+        res.forEach(item => {
+          if (item._id && !item.id) item.id = item._id;
+        });
+      })
+    );
   }
 
   deleteRemoteAssessment(id: string) {
