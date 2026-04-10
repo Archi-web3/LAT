@@ -30,11 +30,8 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
   template: `
     <div class="container">
       <div class="header">
-        <h1>Assessments Dashboard</h1>
+        <h1>{{ 'COMMON.ASSESSMENTS_DASHBOARD' | translate }}</h1>
         <div class="header-actions">
-            <button mat-icon-button class="sync-btn" [class.syncing]="assessmentService.isSyncing()" (click)="assessmentService.sync()" matTooltip="Sync data now">
-                <mat-icon>sync</mat-icon>
-            </button>
             <button mat-raised-button color="primary" routerLink="/assessment/init">
                 <mat-icon>add</mat-icon> New Assessment
             </button>
@@ -97,69 +94,72 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
                 
                 <!-- Sync Status Column -->
                 <ng-container matColumnDef="sync">
-                  <th mat-header-cell *matHeaderCellDef></th>
+                  <th mat-header-cell *matHeaderCellDef [matTooltip]="'COMMON.SYNC_STATUS' | translate">
+                    <mat-icon>sync</mat-icon>
+                  </th>
                   <td mat-cell *matCellDef="let element">
                     <mat-icon *ngIf="element.synced" class="sync-icon synced" matTooltip="Synced with Cloud">cloud_done</mat-icon>
                     <mat-icon *ngIf="!element.synced" class="sync-icon local" matTooltip="Local Draft Only">phonelink_setup</mat-icon>
                   </td>
                 </ng-container>
 
-                <!-- Owner Column (New) -->
+                <!-- Owner Column -->
                 <ng-container matColumnDef="owner">
-                  <th mat-header-cell *matHeaderCellDef> Auteur </th>
-                  <td mat-cell *matCellDef="let element"> 
-                      <div class="owner-cell">
-                          <mat-icon class="small-icon">account_circle</mat-icon>
-                          <span>{{element.submittedBy || 'Inconnu'}}</span>
-                      </div>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.AUTHOR' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="owner-cell">
+                      <span class="owner-name">{{ element.submittedBy || ('COMMON.USER' | translate) + ' Inconnu' }}</span>
+                    </div>
                   </td>
                 </ng-container>
 
                 <!-- Country Column -->
                 <ng-container matColumnDef="country">
-                  <th mat-header-cell *matHeaderCellDef> Pays </th>
-                  <td mat-cell *matCellDef="let element"> {{element.context.country}} </td>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.COUNTRY' | translate }}</th>
+                  <td mat-cell *matCellDef="let element"> {{element.context?.country}} </td>
                 </ng-container>
       
                 <!-- Base Column -->
                 <ng-container matColumnDef="base">
-                  <th mat-header-cell *matHeaderCellDef> Base </th>
-                  <td mat-cell *matCellDef="let element"> {{element.context.base}} </td>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.BASE' | translate }}</th>
+                  <td mat-cell *matCellDef="let element"> {{element.context?.base}} </td>
                 </ng-container>
       
                 <!-- Month Column -->
                 <ng-container matColumnDef="month">
-                  <th mat-header-cell *matHeaderCellDef> Mois </th>
-                  <td mat-cell *matCellDef="let element"> {{element.context.evaluationMonth}} </td>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.MONTH' | translate }}</th>
+                  <td mat-cell *matCellDef="let element"> {{element.context?.evaluationMonth}} </td>
                 </ng-container>
       
                 <!-- Status Column -->
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef> Statut </th>
-                  <td mat-cell *matCellDef="let element"> 
-                      <span class="status-badge" [class.draft]="element.status === 'DRAFT'" [class.submitted]="element.status === 'SUBMITTED'" [class.validated]="element.status === 'VALIDATED'">
-                          {{element.status}}
-                      </span>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-chip [color]="getStatusColor(element.status)" selected [disableRipple]="true">
+                      {{element.status}}
+                    </mat-chip>
                   </td>
                 </ng-container>
 
                 <!-- Score Column -->
                 <ng-container matColumnDef="score">
-                  <th mat-header-cell *matHeaderCellDef> Score </th>
-                  <td mat-cell *matCellDef="let element"> 
-                      <span class="metric-value score">{{ element.score ?? calculateScore(element) }}%</span> 
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.SCORE' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <span class="score-badge" [class]="getScoreClass(element.score)">
+                      {{ (element.score | number:'1.0-1') || '0' }}%
+                    </span>
                   </td>
                 </ng-container>
       
                 <!-- Updated At Column -->
                 <ng-container matColumnDef="updatedAt">
-                  <th mat-header-cell *matHeaderCellDef> Mis à jour </th>
-                  <td mat-cell *matCellDef="let element"> {{ (element.updatedAt || element.createdAt) | date:'dd/MM/yy HH:mm' }} </td>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.LAST_UPDATE' | translate }}</th>
+                  <td mat-cell *matCellDef="let element"> {{element.updatedAt | date:'short'}} </td>
                 </ng-container>
       
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions" stickyEnd>
-                  <th mat-header-cell *matHeaderCellDef> </th>
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.ACTIONS' | translate }}</th>
                   <td mat-cell *matCellDef="let element">
                       <button mat-icon-button color="accent" (click)="resume(element)" [matTooltip]="isOwner && element.status === 'DRAFT' ? 'Continuer' : 'Voir'">
                           <mat-icon>{{ isOwner && element.status === 'DRAFT' ? 'edit' : 'visibility' }}</mat-icon>
@@ -362,5 +362,20 @@ export class AssessmentListComponent implements OnInit {
     });
 
     return maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+  }
+
+  getStatusColor(status: string): 'primary' | 'accent' | 'warn' {
+    switch (status) {
+      case 'SUBMITTED': return 'accent';
+      case 'VALIDATED': return 'primary';
+      case 'DRAFT':
+      default: return 'warn';
+    }
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 80) return 'score-high';
+    if (score >= 50) return 'score-medium';
+    return 'score-low';
   }
 }

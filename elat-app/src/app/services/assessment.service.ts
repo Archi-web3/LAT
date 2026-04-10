@@ -92,6 +92,16 @@ export class AssessmentService {
       const key = this.getStorageKey(loc.context);
       const existing = mergedMap.get(key);
 
+      // If local has more complete metadata (like author name or userId) and remote is empty/generic, keep local
+      if (existing) {
+          if (!existing.submittedBy && loc.submittedBy) {
+              existing.submittedBy = loc.submittedBy;
+          }
+          if (!existing.userId && loc.userId) {
+              existing.userId = loc.userId;
+          }
+      }
+
       if (!existing || !loc.synced || new Date(loc.updatedAt).getTime() > new Date(existing.updatedAt).getTime()) {
         mergedMap.set(key, loc);
       }

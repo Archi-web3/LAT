@@ -11,6 +11,7 @@ const AssessmentSchema = new mongoose.Schema({
 
     // Status
     status: { type: String, enum: ['DRAFT', 'SUBMITTED', 'VALIDATED'], default: 'DRAFT' },
+    submittedBy: { type: String },
 
     // The Data (Flexible JSON to match the Angular App's structure)
     answers: { type: Map, of: Number }, // qId -> score
