@@ -152,15 +152,17 @@ export class AssessmentService {
   initializeAssessment(ctx: import('../models/assessment.model').AssessmentContext) {
     this.context.set(ctx);
     
-    // Set default owner/creator info for a NEW assessment
+    // Load any existing saved state first
+    this.loadStateForContext(ctx);
+
+    // Then set owner info: overwrite only if missing (new assessment or old one with no author)
     const currentUser = this.authService.currentUser();
     if (currentUser) {
-        this.userId.set(currentUser.id);
-        // Default submittedBy to current user for drafts so they don't show "Inconnu"
-        this.submittedBy.set(currentUser.name);
+        if (!this.userId()) this.userId.set(currentUser.id);
+        if (!this.submittedBy()) this.submittedBy.set(currentUser.name);
+        // Always save to persist author if it was missing
+        this.saveState();
     }
-    
-    this.loadStateForContext(ctx);
   }
 
   // Generate unique key based on Context
@@ -470,9 +472,7 @@ export class AssessmentService {
     this.proofLinks.set({});
     this.proofPhotos.set({});
     this.status.set('DRAFT');
-
-    // Clear logs
-    this.submittedBy.set(undefined);
+    // NOTE: Do NOT reset userId/submittedBy here - they are set by initializeAssessment after this call
     this.submittedAt.set(undefined);
     this.validatedBy.set(undefined);
     this.validatedAt.set(undefined);
