@@ -852,12 +852,37 @@ export class AssessmentService {
         }
       }
 
-      // Save server version locally
+      // Save server version locally — but preserve critical local metadata
+      // that the server may not have or may return in a different format.
       serverDoc.synced = true;
-      // Ensure updatedAt is preserved
       if (!serverDoc.updatedAt) {
         serverDoc.updatedAt = new Date().toISOString();
       }
+
+      // === KEY FIX: Preserve local userId and submittedBy ===
+      // The server returns userId as a MongoDB ObjectId. The client compares against
+      // authService.currentUser().id which is a plain string from JWT.
+      // To avoid a mismatch that breaks tab filtering and action buttons,
+      // we always keep the locally-stored userId and submittedBy.
+      if (localJson) {
+        try {
+          const localDoc = JSON.parse(localJson);
+          if (localDoc.userId && !serverDoc.userId) {
+            serverDoc.userId = localDoc.userId;
+          }
+          if (localDoc.submittedBy && !serverDoc.submittedBy) {
+            serverDoc.submittedBy = localDoc.submittedBy;
+          }
+          // Always prefer local userId string to avoid ObjectId mismatch
+          if (localDoc.userId) {
+            serverDoc.userId = localDoc.userId;
+          }
+          if (localDoc.submittedBy) {
+            serverDoc.submittedBy = localDoc.submittedBy;
+          }
+        } catch (e) {}
+      }
+
       localStorage.setItem(key, JSON.stringify(serverDoc));
       console.log(`✅ Applied server update for ${key}`);
     });
