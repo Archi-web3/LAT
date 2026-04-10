@@ -45,7 +45,7 @@ import { computed } from '@angular/core';
         <mat-tab>
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">person</mat-icon>
-                <span>Mes Assessments ({{ myAssessments().length }})</span>
+                <span>Évaluations en cours / Ongoing assessments ({{ myAssessments().length }})</span>
             </ng-template>
             <ng-template matTabContent>
                 <ng-container *ngTemplateOutlet="assessmentTable; context: { $implicit: myAssessments(), isOwner: true }"></ng-container>
@@ -240,19 +240,28 @@ export class AssessmentListComponent implements OnInit {
 
   user = this.authService.currentUser;
 
-  displayedColumns: string[] = ['sync', 'country', 'base', 'month', 'status', 'score', 'updatedAt', 'actions'];
+  // Columns for both personal and shared views should include Auteur (owner)
+  displayedColumns: string[] = ['sync', 'owner', 'country', 'base', 'month', 'status', 'score', 'updatedAt', 'actions'];
   sharedColumns: string[] = ['owner', 'country', 'base', 'month', 'status', 'score', 'updatedAt', 'actions'];
 
   // Categorized Assessments
   myAssessments = computed(() => {
     const userId = this.user()?.id;
-    return this.assessmentService.allAssessments().filter(a => a.userId === userId);
+    return this.assessmentService.allAssessments().filter(a => a.userId === userId && a.status === 'DRAFT');
   });
 
   baseAssessments = computed(() => {
     const userId = this.user()?.id;
     const base = this.user()?.assignedBase;
-    return this.assessmentService.allAssessments().filter(a => a.context?.base === base && a.userId !== userId);
+    
+    return this.assessmentService.allAssessments().filter(a => {
+        // Own assessments that are NOT drafts go here
+        const isMineAndFinal = a.userId === userId && a.status !== 'DRAFT';
+        // Assessments by others in my base
+        const isOthersInMyBase = a.context?.base === base && a.userId !== userId;
+
+        return isMineAndFinal || isOthersInMyBase;
+    });
   });
 
   countryAssessments = computed(() => {
