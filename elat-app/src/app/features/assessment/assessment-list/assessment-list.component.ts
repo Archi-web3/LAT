@@ -161,10 +161,15 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
                 <ng-container matColumnDef="actions" stickyEnd>
                   <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.ACTIONS' | translate }}</th>
                   <td mat-cell *matCellDef="let element">
-                      <button mat-icon-button color="accent" (click)="resume(element)" [matTooltip]="isOwner && element.status === 'DRAFT' ? 'Continuer' : 'Voir'">
-                          <mat-icon>{{ isOwner && element.status === 'DRAFT' ? 'edit' : 'visibility' }}</mat-icon>
+                      <!-- Toujours visible : Voir / Modifier si proprio + DRAFT -->
+                      <button mat-icon-button color="accent" (click)="resume(element)"
+                          [matTooltip]="element.userId === currentUserId() && element.status === 'DRAFT' ? 'Modifier' : 'Voir'">
+                          <mat-icon>{{ element.userId === currentUserId() && element.status === 'DRAFT' ? 'edit' : 'visibility' }}</mat-icon>
                       </button>
-                      <button mat-icon-button color="warn" *ngIf="isOwner && element.status === 'DRAFT'" (click)="deleteDraft(element)" matTooltip="Supprimer">
+                      <!-- Supprimer : visible si proprio + DRAFT -->
+                      <button mat-icon-button color="warn"
+                          *ngIf="element.userId === currentUserId() && element.status === 'DRAFT'"
+                          (click)="deleteDraft(element)" matTooltip="Supprimer">
                           <mat-icon>delete</mat-icon>
                       </button>
                   </td>
@@ -301,6 +306,10 @@ export class AssessmentListComponent implements OnInit {
   ngOnInit() {
     this.assessmentService.clearActiveContext();
     this.assessmentService.sync(); 
+  }
+
+  currentUserId(): string | undefined {
+    return this.user()?.id;
   }
 
   resume(assessment: AssessmentState) {
