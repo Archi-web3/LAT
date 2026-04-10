@@ -102,12 +102,16 @@ import Chart from 'chart.js/auto';
 
              <mat-card class="chart-card">
                  <h3>Score Evolution</h3>
-                 <canvas id="evolutionChart"></canvas>
+                 <div class="canvas-wrapper">
+                    <canvas id="evolutionChart"></canvas>
+                 </div>
              </mat-card>
 
              <mat-card class="chart-card">
                  <h3>Score by Country</h3>
-                 <canvas id="countryChart"></canvas>
+                 <div class="canvas-wrapper">
+                    <canvas id="countryChart"></canvas>
+                 </div>
              </mat-card>
           </div>
 
@@ -154,12 +158,21 @@ import Chart from 'chart.js/auto';
                     </td>
                   </ng-container>
 
+                  <!-- Author Column -->
+                  <ng-container matColumnDef="author">
+                    <th mat-header-cell *matHeaderCellDef> Author </th>
+                    <td mat-cell *matCellDef="let element"> {{element.submittedBy || 'Unknown'}} </td>
+                  </ng-container>
+
                   <!-- Actions Column -->
                   <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let element">
                       <button mat-icon-button color="primary" (click)="viewAssessment(element)" matTooltip="View">
                         <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteAssessment(element)" matTooltip="Delete">
+                        <mat-icon>delete</mat-icon>
                       </button>
                     </td>
                   </ng-container>
@@ -195,7 +208,8 @@ import Chart from 'chart.js/auto';
     .map-card { padding: 0; overflow: hidden; }
     .map-card h3 { padding: 15px; margin: 0; background: #fff; border-bottom: 1px solid #eee; }
     
-    .chart-card { padding: 20px; margin-top: 20px; }
+    .chart-card { padding: 15px; margin-top: 20px; }
+    .canvas-wrapper { position: relative; height: 280px; width: 100%; }
 
     table { width: 100%; }
     .score-badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
@@ -216,7 +230,7 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
   router = inject(Router);
   fb = inject(FormBuilder);
 
-  displayedColumns: string[] = ['country', 'base', 'date', 'status', 'score', 'actions'];
+  displayedColumns: string[] = ['country', 'base', 'date', 'author', 'status', 'score', 'actions'];
 
   // Raw data from server
   rawData: any[] = [];
@@ -308,13 +322,24 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
   refreshData() {
     this.assessmentService.getRemoteHistory().subscribe({
       next: (res) => {
-        this.rawData = res;
+        // --- DATA CLEANUP: De-duplication ---
+        // We filter out records that have the exact same context AND status AND score
+        // to avoid "clones" in the list if sync/persistence had a glitch.
+        const seen = new Set();
+        const cleanData = res.filter((item: any) => {
+            const key = `${item.country}-${item.base}-${item.evaluationMonth}-${item.status}-${item.score}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+
+        this.rawData = cleanData;
 
         // Extract available countries for filter
-        this.availableCountries = [...new Set(res.map((i: any) => i.country))].sort();
+        this.availableCountries = [...new Set(this.rawData.map((i: any) => i.country))].sort();
 
         // Extract all base/country pairs
-        this.allBasesData = res.map((i: any) => ({ country: i.country, base: i.base })).filter((i: any) => i.base);
+        this.allBasesData = this.rawData.map((i: any) => ({ country: i.country, base: i.base })).filter((i: any) => i.base);
         this.updateAvailableBases([]); // Init with all
 
         this.applyFilters();
@@ -503,5 +528,27 @@ export class CoordinationDashboardComponent implements OnInit, AfterViewInit, On
       const firstSection = this.assessmentService.sections()[0];
       if (firstSection) this.router.navigate(['/assessment', firstSection.id]);
     }
+  }
+
+  deleteAssessment(element: any) {
+    if (!confirm('Are you sure you want to delete this assessment? This action is permanent.')) {
+        return;
+    }
+
+    // Call service delete (handles both local and remote if element has an ID)
+    // We wrap it in a pseudo-AssessmentState as the table uses a slightly flatter format
+    this.assessmentService.deleteAssessment({
+        id: element.id || element._id,
+        context: {
+            country: element.country,
+            base: element.base,
+            evaluationMonth: element.evaluationMonth,
+            date: element.date
+        }
+    } as any);
+
+    // Refresh current view immediately
+    this.rawData = this.rawData.filter(a => (a.id || a._id) !== (element.id || element._id));
+    this.applyFilters();
   }
 }
