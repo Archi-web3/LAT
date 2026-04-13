@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AssessmentQuestion, AssessmentOption } from '../../../models/assessment.model';
 import { AssessmentService } from '../../../services/assessment.service';
@@ -32,6 +33,7 @@ import { AdminService } from '../../../core/admin/admin.service';
     MatChipsModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
     MatProgressBarModule,
     LocalizePipe,
     TranslatePipe
@@ -94,9 +96,14 @@ import { AdminService } from '../../../core/admin/admin.service';
             <!-- Photo Preview -->
             <div *ngIf="proofPhoto()" class="photo-preview">
                 <img [src]="proofPhoto()" alt="Proof">
-                <button mat-icon-button color="warn" (click)="removePhoto()" [disabled]="readonly" class="remove-btn">
-                    <mat-icon>delete</mat-icon>
-                </button>
+                <div class="photo-actions">
+                  <button mat-icon-button color="primary" (click)="downloadPhoto()" matTooltip="{{ 'QUESTION_CARD.DOWNLOAD_PHOTO' | translate }}" class="download-btn">
+                      <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="removePhoto()" [disabled]="readonly" matTooltip="{{ 'COMMON.DELETE' | translate }}" class="remove-btn">
+                      <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
             </div>
          </div>
       </div>
@@ -171,7 +178,15 @@ import { AdminService } from '../../../core/admin/admin.service';
         max-width: 100%;
     }
     .photo-preview img { max-height: 250px; width: auto; max-width: 100%; display: block; object-fit: contain; }
-    .remove-btn { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.8); }
+    .photo-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        background: rgba(255,255,255,0.8);
+        border-bottom-left-radius: 4px;
+    }
+    .remove-btn, .download-btn { transform: scale(0.9); }
 
     .comment-field { width: 100%; margin-top: 16px; }
 
@@ -276,6 +291,42 @@ export class QuestionCardComponent {
   removePhoto() {
     if (this.readonly) return;
     this.assessmentService.setProofPhoto(this.question.id, '');
+  }
+
+  downloadPhoto() {
+    const photoUrl = this.proofPhoto();
+    if (!photoUrl) return;
+
+    // Determine filename
+    const qLabel = this.question.id || 'photo';
+    const fileName = `proof-${qLabel}.jpg`;
+
+    if (photoUrl.startsWith('data:')) {
+      // Handle Base64 (Local/Offline)
+      const link = document.createElement('a');
+      link.href = photoUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Handle Remote URL (Cloudinary)
+      // Attempt generic download or open in new tab if cross-origin policy prevents direct download
+      const link = document.createElement('a');
+      
+      // Cloudinary specific: we can append 'fl_attachment' to force download if it's a cloudinary URL
+      let downloadUrl = photoUrl;
+      if (photoUrl.includes('cloudinary.com')) {
+          downloadUrl = photoUrl.replace('/upload/', '/upload/fl_attachment/');
+      }
+      
+      link.href = downloadUrl;
+      link.target = '_blank';
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
   resizeImage(file: File): Promise<Blob> {

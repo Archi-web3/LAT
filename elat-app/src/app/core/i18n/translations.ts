@@ -63,6 +63,7 @@ export const TOP_LEVEL_TRANSLATIONS = {
             LINK_LABEL: 'Link (URL)',
             ADD_PHOTO: 'Add Photo',
             CHANGE_PHOTO: 'Change Photo',
+            DOWNLOAD_PHOTO: 'Download Photo',
             UPLOADING: 'Uploading...',
             COMMENTS_LABEL: 'Comments',
             COMMENTS_PLACEHOLDER: 'Specific observation...'

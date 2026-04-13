@@ -20,6 +20,7 @@ export interface AuthResponse {
 }
 
 import { environment } from '../../../environments/environment';
+import { InactivityService } from './inactivity.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private inactivityService = inject(InactivityService);
 
   // Determine API URL based on environment
   private apiUrl = `${environment.apiUrl}/api/auth`;
@@ -87,6 +89,7 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(authResult.user));
     this.currentUser.set(authResult.user);
     this.isAuthenticated.set(true);
+    this.inactivityService.startMonitoring();
     this.router.navigate(['/assessment/list']);
   }
 }

@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
+import { InactivityService } from './core/auth/inactivity.service';
 
 @Component({
   selector: 'app-root',
@@ -36,13 +37,19 @@ export class AppComponent implements OnInit {
   appVersion = environment.appVersion;
   showVersion = true;
 
-  constructor(
-    private updates: SwUpdate,
-    private snackBar: MatSnackBar,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
+  private updates = inject(SwUpdate);
+  private snackBar = inject(MatSnackBar);
+  private platformId = inject(PLATFORM_ID);
+  private inactivityService = inject(InactivityService);
+
+  constructor() { }
 
   ngOnInit() {
+    // Start inactivity monitoring
+    if (isPlatformBrowser(this.platformId)) {
+        this.inactivityService.startMonitoring();
+    }
+
     if (isPlatformBrowser(this.platformId) && this.updates.isEnabled) {
       this.updates.versionUpdates
         .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
