@@ -18,20 +18,22 @@ exports.getConfig = async (req, res) => {
 // Save Configuration
 exports.saveConfig = async (req, res) => {
     try {
-        const { sections, settings } = req.body;
+        const { sections, settings, roadmap } = req.body;
 
         let config = await Config.findOne({ key: 'app-config' });
 
         if (config) {
             config.sections = sections;
             config.settings = settings;
+            config.roadmap = roadmap;
             config.updatedAt = Date.now();
             await config.save();
         } else {
             config = new Config({
                 key: 'app-config',
                 sections,
-                settings
+                settings,
+                roadmap
             });
             await config.save();
         }

@@ -107,8 +107,8 @@ export class AssessmentLayoutComponent {
     }
   }
 
-  exportCSV() {
-    this.assessmentService.exportToCSV();
+  exportExcel() {
+    this.assessmentService.exportToExcel();
   }
 
   exportPDF() {

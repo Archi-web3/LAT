@@ -1,9 +1,10 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, of, tap, throwError } from 'rxjs';
 import { AssessmentData, AssessmentSection } from '../models/assessment.model';
 import { AuthService } from '../core/auth/auth.service';
 import { environment } from '../../environments/environment';
+import * as XLSX from 'xlsx';
 
 import { AdminService } from '../core/admin/admin.service';
 import { ConnectivityService } from '../core/services/connectivity.service';
@@ -983,35 +984,67 @@ export class AssessmentService {
   }
 
   // --- Export Logic ---
-  exportToCSV() {
+  exportToExcel() {
     const context = this.context();
     const sections = this.sections();
     const answers = this.answers();
+    const comments = this.comments();
 
     if (!context || !sections) return;
 
-    // 1. Flatten Data
-    let csvContent = '\uFEFF'; // BOM
-    csvContent += 'Section,Category,Question,Weight,Score,Comment\n';
+    // 1. Prepare Data structure for XLSX
+    const data: any[][] = [];
+    
+    // Header Info Row
+    data.push(["LAT ASSESSMENT REPORT"]);
+    data.push(["Country", context.country]);
+    data.push(["Base", context.base]);
+    data.push(["Month", context.evaluationMonth]);
+    data.push(["Global Score", this.getGlobalScore().toFixed(1) + "%"]);
+    data.push([]); // Empty row separator
 
+    // Table Headers
+    data.push(["Section", "Category", "Question", "Weight", "Score", "Comment"]);
+
+    // Fill Data
     sections.forEach(section => {
       section.questions.forEach(q => {
         const score = answers[q.id] ?? 'N/A';
-        const comment = (this.comments()[q.id] || "").replace(/,/g, ' '); // Escape commas
-        const line = `"${section.title}","${q.category || ''}","${q.text.replace(/"/g, '""')}",${q.weight},${score},"${comment}"\n`;
-        csvContent += line;
+        const comment = comments[q.id] || "";
+        data.push([
+          section.title,
+          q.category || '',
+          q.text,
+          q.weight,
+          score,
+          comment
+        ]);
       });
     });
 
-    // 2. Download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `LAT_${context.country}_${context.base}_${context.evaluationMonth}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 2. Create Workbook & Worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Assessment");
+
+    // 3. Set column widths (approximate)
+    const wscols = [
+      {wch: 25}, // Section
+      {wch: 15}, // Category
+      {wch: 60}, // Question
+      {wch: 8},  // Weight
+      {wch: 8},  // Score
+      {wch: 40}  // Comment
+    ];
+    worksheet['!cols'] = wscols;
+
+    // 4. Download file
+    const fileName = `LAT_${context.country}_${context.base}_${context.evaluationMonth}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+  }
+
+  exportToCSV() {
+    this.exportToExcel(); // Backward compatibility redirect
   }
 }
 

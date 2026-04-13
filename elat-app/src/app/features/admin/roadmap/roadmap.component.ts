@@ -81,33 +81,38 @@ import { FormsModule } from '@angular/forms';
                         </div>
                         <div class="doc-row">
                             <span class="label">Database:</span>
-                            <span class="value">MongoDB Atlas</span>
+                            <span class="value">MongoDB Atlas (Offre Cloud)</span>
                         </div>
+                    </div>
+
+                    <h3>Sécurité & Session</h3>
+                    <div class="doc-section">
+                        <h4>1. Déconnexion automatique</h4>
+                        <p>Pour des raisons de sécurité, une session est automatiquement terminée après <strong>60 minutes d'inactivité</strong> (clics, mouvements de souris, clavier).</p>
+                        
+                        <h4>2. Protection des données</h4>
+                        <p>Les données sont isolées par pays et par base. Un évaluateur ne peut voir que les données de son périmètre assigné.</p>
                     </div>
 
                     <h3>Dépannage & Correctifs Récents</h3>
                     <div class="doc-section">
-                        <h4>1. Erreurs de Connexion (504 / CORS)</h4>
-                        <p>Si l'application affiche "Offline" ou des erreurs réseaux :</p>
-                        <ul>
-                            <li>Vérifier que l'URL API dans <code>environment.prod.ts</code> est bien <strong>https://elat.onrender.com</strong>.</li>
-                            <li>Le backend sur Render peut s'endormir (Free Tier). La première requête peut prendre jusqu'à 50s.</li>
-                            <li>CORS est configuré pour autoriser explicitement le domaine Vercel.</li>
-                        </ul>
+                        <h4>1. Stockage des preuves (Photos)</h4>
+                        <p>Les photos sont stockées sur <strong>Cloudinary</strong> pour optimiser le poids de la base de données. Seul le lien sécurisé est enregistré dans MongoDB.</p>
 
-                        <h4>2. Base de Données</h4>
-                        <p>Timeout de connexion configuré à <strong>5 secondes</strong> pour éviter que le serveur ne freeze indéfiniment si la DB est inaccessible.</p>
+                        <h4>2. Travail Mobile & Hors-ligne</h4>
+                        <p>L'application utilise le Service Worker pour fonctionner sans internet. Les données sont sauvegardées localement et synchronisées dès que la connexion revient.</p>
 
-                        <h4>3. Interface Utilisateur</h4>
-                        <p>Les boutons d'export (PDF, CSV) doivent être visibles sur fond bleu (Toolbar). S'ils disparaissent, vérifier qu'ils n'ont pas l'attribut <code>color="primary"</code>.</p>
-
-                        <h4>4. Synchronisation & Conflits</h4>
+                        <h4>3. Synchronisation & Conflits</h4>
                         <p>Le système gère automatiquement les conflits de données entre l'utilisateur et le serveur :</p>
                         <ul>
                             <li>Si une version serveur plus récente est détectée, elle écrase la version locale.</li>
                             <li>La version locale écrasée est <strong>sauvegardée</strong> en tant que "Copie de Conflit".</li>
-                            <li>Ces copies sont accessibles via l'onglet <strong>Historique</strong> et peuvent être restaurées manuellement.</li>
                         </ul>
+                    </div>
+
+                    <h3>Scalabilité</h3>
+                    <div class="doc-section">
+                        <p>L'architecture actuelle permet de supporter des milliers d'évaluations et une centaine de pays simultanément grâce à l'hébergement élastique sur Vercel et Render.</p>
                     </div>
 
                     <h3>Maintenance</h3>
