@@ -5,7 +5,7 @@ import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
-import { InactivityService } from './core/auth/inactivity.service';
+// import { InactivityService } from './core/auth/inactivity.service'; // Removed to fix circular dependency
 
 @Component({
   selector: 'app-root',
@@ -40,15 +40,12 @@ export class AppComponent implements OnInit {
   private updates = inject(SwUpdate);
   private snackBar = inject(MatSnackBar);
   private platformId = inject(PLATFORM_ID);
-  private inactivityService = inject(InactivityService);
+  // private inactivityService = inject(InactivityService); // Removed
 
   constructor() { }
 
   ngOnInit() {
-    // Start inactivity monitoring
-    if (isPlatformBrowser(this.platformId)) {
-        this.inactivityService.startMonitoring();
-    }
+    // Inactivity service now auto-monitors via effect()
 
     if (isPlatformBrowser(this.platformId) && this.updates.isEnabled) {
       this.updates.versionUpdates

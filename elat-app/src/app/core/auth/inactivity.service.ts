@@ -1,4 +1,4 @@
-import { Injectable, inject, NgZone } from '@angular/core';
+import { Injectable, inject, NgZone, effect } from '@angular/core';
 import { AuthService } from './auth.service';
 import { fromEvent, merge, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -15,7 +15,16 @@ export class InactivityService {
   
   private stop$ = new Subject<void>();
 
-  constructor() {}
+  constructor() {
+    // Automatically start/stop based on auth state (Self-Link)
+    effect(() => {
+        if (this.authService.isAuthenticated()) {
+            this.startMonitoring();
+        } else {
+            this.stopMonitoring();
+        }
+    });
+  }
 
   /**
    * Starts monitoring user activity.
