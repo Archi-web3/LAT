@@ -16,6 +16,8 @@ const AssessmentSchema = new mongoose.Schema({
     // The Data (Flexible JSON to match the Angular App's structure)
     answers: { type: Map, of: Number }, // qId -> score
     comments: { type: Map, of: String }, // qId -> comment
+    proofLinks: { type: Map, of: String }, // qId -> external link
+    proofPhotos: { type: Map, of: String }, // qId -> cloudinary URL
 
     // Snapshot of scores calculated at submission
     score: { type: Number },

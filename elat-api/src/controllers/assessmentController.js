@@ -45,6 +45,9 @@ exports.sync = async (req, res) => {
                         });
                     };
 
+                    if (!existing.proofLinks) existing.proofLinks = new Map();
+                    if (!existing.proofPhotos) existing.proofPhotos = new Map();
+
                     mergeMap(existing.answers, item.answers);
                     mergeMap(existing.comments, item.comments);
                     mergeMap(existing.proofLinks, item.proofLinks);
